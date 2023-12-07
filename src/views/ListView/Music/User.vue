@@ -67,9 +67,7 @@
             <vs-th sort @click="users_data = $vs.sortData($event, users_data, 'u_sex')">
               用户性别
             </vs-th>
-            <vs-th sort @click="
-              users_data = $vs.sortData($event, users_data, 'u_address')
-              ">
+            <vs-th sort @click="users_data = $vs.sortData($event, users_data, 'u_address')">
               用户地址
             </vs-th>
             <vs-th sort @click="users_data = $vs.sortData($event, users_data, 'u_phone')">
@@ -113,17 +111,136 @@
             </vs-td>
             <vs-td>
               <vs-switch v-model="tr.u_state">
-                <template #off> No </template>
-                <template #on> Yes</template>
+                <template #off> <i class="bx bx-x"></i> </template>
+                <template #on> <i class="bx bx-check"></i></template>
               </vs-switch>
             </vs-td>
           </vs-tr>
         </template>
         <template #footer>
-          <vs-pagination v-model="page" :length="$vs.getLength($vs.getSearch(users_data, search), max)" />
+          <vs-pagination v-model="page" :length="$vs.getLength($vs.getSearch(users_data), max)" />
         </template>
       </vs-table>
     </div>
+
+    <vs-dialog blur v-model="add">
+      <template #header>
+        <h4 class="not-margin">
+          <b>添加用户</b>
+        </h4>
+      </template>
+      <div class="con-form">
+        <div class="form-list">
+          <vs-avatar size="34">
+            <i class='bx bx-user' style="font-size: 16px;"></i>
+          </vs-avatar>
+          <vs-input v-model="input1" placeholder="名称">
+          </vs-input>
+        </div>
+
+        <div class="form-list">
+          <vs-avatar size="34">
+            <i class='bx bx-cake' style="font-size: 16px;"></i>
+          </vs-avatar>
+          <vs-input v-model="input1" placeholder="年龄" min="0" type="number">
+          </vs-input>
+        </div>
+
+        <div class="form-list">
+          <vs-avatar size="34">
+            <i class='bx bx-male-female' style="font-size: 16px;"></i>
+          </vs-avatar>
+          <vs-radio v-model="picked" val="1">
+            男
+          </vs-radio>
+          <vs-radio v-model="picked" val="2">
+            女
+          </vs-radio>
+        </div>
+
+        <div class="form-list">
+          <vs-avatar size="34">
+            <i class='bx bx-map-alt' style="font-size: 16px;"></i>
+          </vs-avatar>
+          <vs-input v-model="input1" placeholder="地址">
+          </vs-input>
+        </div>
+
+        <div class="form-list">
+          <vs-avatar size="34">
+            <i class='bx bx-phone' style="font-size: 16px;"></i>
+          </vs-avatar>
+          <vs-input v-model="input1" placeholder="电话">
+          </vs-input>
+        </div>
+
+        <div class="form-list">
+          <vs-avatar size="34">
+            <i class='bx bx-envelope' style="font-size: 16px;"></i>
+          </vs-avatar>
+          <vs-input v-model="input1" placeholder="邮箱">
+          </vs-input>
+        </div>
+
+
+      </div>
+
+      <template #footer>
+        <div class="footer-dialog">
+          <vs-button>
+            确认
+          </vs-button>
+          <vs-button dark>
+            取消
+          </vs-button>
+        </div>
+      </template>
+    </vs-dialog>
+
+    <vs-dialog blur v-model="del">
+      <template #header>
+        <h4 class="not-margin">
+          <b>确认删除用户？</b>
+        </h4>
+      </template>
+      <div style="margin: 20px 0 40px 0; ">
+        <p>删除成功后该用户将无法找回并且id将永久删除！</p>
+      </div>
+
+      <template #footer>
+        <div class="footer-dialog">
+          <vs-button>
+            确认
+          </vs-button>
+          <vs-button dark>
+            取消
+          </vs-button>
+        </div>
+      </template>
+    </vs-dialog>
+
+    <vs-dialog blur v-model="fis" not-close>
+      <template #header>
+        <h4 class="not-margin">
+          <b>新增成功</b>
+        </h4>
+      </template>
+      <div style="margin: 20px 0 40px 0;">
+        <p>新增用户id为：111111111</p>
+        <p>新增用户密码为：1111111</p>
+      </div>
+
+      <template #footer>
+        <div class="footer-dialog">
+          <vs-button>
+            确认
+          </vs-button>
+        </div>
+      </template>
+    </vs-dialog>
+
+
+
   </div>
 </template>
 
@@ -172,15 +289,54 @@ export default {
           u_emil: "223@qq.com",
           u_state: false,
         },
+        {
+          u_id: 222222222,
+          u_name: "Ervin Howell",
+          u_age: 22,
+          u_sex: 2,
+          u_address: "北京市",
+          u_phone: "12345678910",
+          u_emil: "223@qq.com",
+          u_state: false,
+        },
+        {
+          u_id: 222222222,
+          u_name: "Ervin Howell",
+          u_age: 22,
+          u_sex: 2,
+          u_address: "北京市",
+          u_phone: "12345678910",
+          u_emil: "223@qq.com",
+          u_state: false,
+        },
+        {
+          u_id: 222222222,
+          u_name: "Ervin Howell",
+          u_age: 22,
+          u_sex: 2,
+          u_address: "北京市",
+          u_phone: "12345678910",
+          u_emil: "223@qq.com",
+          u_state: false,
+        },
+        {
+          u_id: 222222222,
+          u_name: "Ervin Howell",
+          u_age: 22,
+          u_sex: 2,
+          u_address: "北京市",
+          u_phone: "12345678910",
+          u_emil: "223@qq.com",
+          u_state: false,
+        },
       ],
-      edit: null,
-      editProp: {},
-      search: "",
       allCheck: false,
       page: 1,
-      max: 5,
-      active: 0,
+      max: 4,
       selected: [],
+      add: false,
+      del: false,
+      fis: true,
     };
   },
   watch: {},
@@ -246,4 +402,63 @@ export default {
 .vs-switch {
   max-width: 48px;
 }
+</style>
+
+<style lang="stylus">
+getColor(vsColor, alpha = 1)
+    unquote("rgba(var(--vs-"+vsColor+"), "+alpha+")")
+getVar(var)
+    unquote("var(--vs-"+var+")")
+.not-margin
+  margin 0px
+  font-weight normal
+  padding 10px
+.con-form
+  width 100%
+  .form-list
+     display flex
+     align-items center
+     .vs-avatar-content
+      margin-right 10px
+     .vs-select
+      width 300px
+      &:hover
+        background none
+        box-shadow none
+        transform none
+  .flex
+    display flex
+    align-items center
+    justify-content space-between
+    a
+      font-size .8rem
+      opacity .7
+      &:hover
+        opacity 1
+  .vs-checkbox-label
+    font-size .8rem
+  .vs-input-content
+    margin 10px 0px
+    width calc(100%)
+    .vs-input
+      width 300px
+    
+.footer-dialog
+  display flex
+  align-items center
+  justify-content space-around
+  flex-direction row
+  width calc(100%)
+  .new
+    margin 0px
+    margin-top 20px
+    padding: 0px
+    font-size .7rem
+    a
+      color getColor('primary') !important
+      margin-left 6px
+      &:hover
+        text-decoration underline
+  .vs-button
+    margin 0px
 </style>
