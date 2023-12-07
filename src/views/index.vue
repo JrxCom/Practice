@@ -110,7 +110,10 @@ export default {
 
 <style lang="less" scoped>
 .index {
+<<<<<<< HEAD
   background-color: #f4f7f8;
+=======
+>>>>>>> 6fdef78819c2cad57abc3a2b21054d30333ff7f8
   display: flex;
   flex-direction: row;
   .right {
