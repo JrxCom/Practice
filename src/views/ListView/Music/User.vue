@@ -563,6 +563,7 @@ export default {
 
 <style lang="less" scoped>
 .music_user {
+	padding: 40px;
   .top {
     display: flex;
     flex-direction: row;

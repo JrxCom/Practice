@@ -4,7 +4,6 @@ import Index from '../views/index.vue';
 import Login from '../views/Login/Login.vue';
 import Home from '../views/Home/Home.vue';
 import MusicUser from '../views/ListView/Music/User.vue';
-import MusicAll from '../views/ListView/Music/All.vue';
 import MusicGroup from '../views/ListView/Music/Group.vue';
 import VideoUser from '../views/ListView/Video/User.vue';
 import VideoAll from '../views/ListView/Video/All.vue';
@@ -28,11 +27,6 @@ const routes = [
 				path: '/music_user',
 				name: 'musicUser',
 				component: MusicUser
-			},
-			{
-				path: '/music_all',
-				name: 'musicAll',
-				component: MusicAll
 			},
 			{
 				path: '/music_group',

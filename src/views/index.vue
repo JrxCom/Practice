@@ -58,7 +58,7 @@
           </vs-button>
         </div>
       </div>
-	  <div style="padding: 40px;">
+	  <div>
 		<router-view></router-view>
 
 	  </div>

@@ -25,17 +25,10 @@ export const home_use = {
 					ischid:false
 				  },
 				  {
-					id: "musicAll",
-					to: "/music_all",
-					name: "歌曲管理",
-					icon: "bx bxs-grid",
-					ischid:false
-				  },
-				  {
 					id: "musicGroup",
 					to: "/music_group",
-					name: "分类管理",
-					icon: "bx bx-layer-plus",
+					name: "歌曲管理",
+					icon: "bx bx-headphone",
 					ischid:false
 				  }
 				],
