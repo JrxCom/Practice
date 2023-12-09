@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="music_group">
     <vs-navbar square color='#F4F7F8' center-collapsed v-model="active">
       <template #left>
         <img src="/logo2.png" alt="">
@@ -24,14 +24,35 @@
             <i class='bx bxl-deezer'></i>
           </template>
         </vs-alert>
+        <div class="btns">
+          <vs-button gradient>
+            <i class='bx bxs-message-alt-add'></i>添加歌曲
+          </vs-button>
+          <vs-button success gradient>
+            <i class='bx bxs-message-alt-edit'></i>修改歌曲信息
+          </vs-button>
+          <vs-button danger gradient>
+            <i class='bx bxs-message-alt-x'></i>删除歌曲
+          </vs-button>
+        </div>
       </div>
-
       <div class="song_list">
         <vs-alert>
           <template #icon>
             <i class='bx bxs-star-half'></i>
           </template>
         </vs-alert>
+        <div class="btns">
+          <vs-button flat>
+            <i class='bx bxs-folder-plus' ></i>添加歌单
+          </vs-button>
+          <vs-button success flat>
+            <i class='bx bxs-message-alt-edit'></i>修改歌单信息
+          </vs-button>
+          <vs-button danger flat>
+            <i class='bx bxs-message-alt-x'></i>删除歌单
+          </vs-button>
+        </div>
       </div>
 
       <div class="album">
@@ -40,6 +61,17 @@
             <i class='bx bxs-playlist'></i>
           </template>
         </vs-alert>
+        <div class="btns">
+          <vs-button border>
+            <i class='bx bxs-folder-plus' ></i>添加专辑
+          </vs-button>
+          <vs-button success border>
+            <i class='bx bxs-message-alt-edit'></i>修改专辑信息
+          </vs-button>
+          <vs-button danger border>
+            <i class='bx bxs-message-alt-x'></i>删除专辑
+          </vs-button>
+        </div>
       </div>
 
       <div class="singer">
@@ -48,6 +80,17 @@
             <i class='bx bxs-user-detail'></i>
           </template>
         </vs-alert>
+        <div class="btns">
+          <vs-button>
+            <i class='bx bxs-folder-plus' ></i>添加歌手
+          </vs-button>
+          <vs-button success>
+            <i class='bx bxs-message-alt-edit'></i>修改歌手信息
+          </vs-button>
+          <vs-button danger>
+            <i class='bx bxs-message-alt-x'></i>删除歌手
+          </vs-button>
+        </div>
       </div>
     </div>
   </div>
@@ -68,6 +111,16 @@ export default {
 @font-face {
   font-family: "show_date";
   src: url("../../../font/ShowDate.otf");
+}
+
+.music_group {
+  .content {
+    .btns {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+  }
 }
 
 .vs-navbar-content {
