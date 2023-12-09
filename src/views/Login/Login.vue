@@ -20,7 +20,7 @@
       </vs-button>
     </div>
 
-    <vs-dialog v-model="login_dia">
+    <vs-dialog v-model="login_dia" auto-width>
       <template #header>
         <h4 class="not-margin"><b>Login</b></h4>
       </template>
