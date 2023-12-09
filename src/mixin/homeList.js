@@ -48,17 +48,10 @@ export const home_use = {
 					ischid:false
 				  },
 				  {
-					id: "videoAll",
-					to: "/video_all",
-					name: "视频管理",
-					icon: "bx bxs-grid",
-					ischid:false
-				  },
-				  {
 					id: "videoGroup",
 					to: "/video_group",
-					name: "分类管理",
-					icon: "bx bx-layer-plus",
+					name: "视频管理",
+					icon: "bx bxs-videos",
 					ischid:false
 				  }
 				],

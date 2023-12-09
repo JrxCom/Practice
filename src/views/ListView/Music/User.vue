@@ -1,10 +1,22 @@
 <template>
   <div class="music_user">
+    <!-- 网站图标 -->
+   <div class="tag">
+    <vs-button
+        icon
+        dark
+        shadow
+        :active="active == 0"
+        @click="active = 0"
+      >
+        <i class='bx bxs-music'></i>
+      </vs-button>
+   </div>
     <!-- 筛选与搜索 -->
     <div class="top">
       <!-- 筛选 -->
       <div class="filtrate">
-        <i class="bx bx-filter-alt"></i>
+        <i class="bx bx-filter-alt" style="margin-right: 20px;"></i>
         <vs-select
           state="primary"
           placeholder="请选择筛选条件"
@@ -24,10 +36,11 @@
       <!-- 搜索 -->
       <div class="search">
         <i
+        style="margin-right: 20px;"
           v-if="filtrate.class === 'radio_'"
           class="bx bx-radio-circle-marked"
         ></i>
-        <i v-else class="bx bx-search"></i>
+        <i v-else class="bx bx-search" style="margin-right: 20px;"></i>
 
         <div class="radio" v-if="search.class === 'sex_'">
           <vs-radio v-model="search.radio" val="1">
@@ -564,6 +577,11 @@ export default {
 <style lang="less" scoped>
 .music_user {
 	padding: 40px;
+  .tag{
+    position: fixed;
+    right: 20px;
+    top: 60px;
+  }
   .top {
     display: flex;
     flex-direction: row;

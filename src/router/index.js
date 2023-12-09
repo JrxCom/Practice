@@ -6,7 +6,6 @@ import Home from '../views/Home/Home.vue';
 import MusicUser from '../views/ListView/Music/User.vue';
 import MusicGroup from '../views/ListView/Music/Group.vue';
 import VideoUser from '../views/ListView/Video/User.vue';
-import VideoAll from '../views/ListView/Video/All.vue';
 import VideoGroup from '../views/ListView/Video/Group.vue';
 
 Vue.use(VueRouter)
@@ -37,11 +36,6 @@ const routes = [
 				path: '/video_user',
 				name: 'videoUser',
 				component: VideoUser
-			},
-			{
-				path: '/video_all',
-				name: 'videoAll',
-				component: VideoAll
 			},
 			{
 				path: '/video_group',
