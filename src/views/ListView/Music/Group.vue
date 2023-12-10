@@ -25,15 +25,24 @@
           </template>
         </vs-alert>
         <div class="btns">
-          <vs-button gradient @click="song.dialog_add_edit = true">
-            <i class='bx bxs-message-alt-add'></i>添加歌曲
-          </vs-button>
-          <vs-button success gradient>
-            <i class='bx bxs-message-alt-edit'></i>修改歌曲信息
-          </vs-button>
-          <vs-button danger gradient>
-            <i class='bx bxs-message-alt-x'></i>删除歌曲
-          </vs-button>
+          <div>
+            <vs-button gradient @click="song.dialog_add_edit = true">
+              <i class='bx bxs-message-alt-add'></i>添加歌曲
+            </vs-button>
+            <vs-button success gradient @click="song.dialog_add_edit = true">
+              <i class='bx bxs-message-alt-edit'></i>修改歌曲信息
+            </vs-button>
+            <vs-button danger gradient @click="song.dialog_remove = true">
+              <i class='bx bxs-message-alt-x'></i>删除歌曲
+            </vs-button>
+          </div>
+          <vs-button
+        square
+        danger
+        border
+      >
+        <i class="bx bxs-heart"></i> Like
+      </vs-button>
         </div>
         <div class="table">
           <vs-table v-model="song.selected">
@@ -146,6 +155,29 @@
             </div>
           </template>
         </vs-dialog>
+
+        <vs-dialog blur v-model="song.dialog_remove" not-center prevent-close>
+          <template #header>
+            <h4 class="not-margin">
+              <b>确认删除歌曲</b>
+            </h4>
+          </template>
+
+          <div class="con-form">
+            <p>删除歌曲将无法找回!</p>
+          </div>
+
+          <template #footer>
+            <div class="footer-dialog">
+              <vs-button>
+                确认
+              </vs-button>
+              <vs-button border dark>
+                取消
+              </vs-button>
+            </div>
+          </template>
+        </vs-dialog>
       </div>
 
 
@@ -219,10 +251,56 @@ export default {
         search: '',
         allCheck: false,
         page: 1,
-        max: 5,
+        max: 7,
         selected: [],
         data: [
           {
+            "s_id": 12312312301,
+            "s_name": "Leanne Graham",
+            "s_singer": "Bret",
+            "s_src": "Sincere@april.biz",
+            "s_time": '02:02',
+            "s_lyric": true,
+          },
+          {
+            "s_id": 21231231230,
+            "s_name": "Ervin Howell",
+            "s_singer": "Antonette",
+            "s_src": "Shanna@melissa.tv",
+            "s_time": '02:02',
+            "s_lyric": false,
+          },
+          {
+            "s_id": 12312312301,
+            "s_name": "Leanne Graham",
+            "s_singer": "Bret",
+            "s_src": "Sincere@april.biz",
+            "s_time": '02:02',
+            "s_lyric": true,
+          },
+          {
+            "s_id": 21231231230,
+            "s_name": "Ervin Howell",
+            "s_singer": "Antonette",
+            "s_src": "Shanna@melissa.tv",
+            "s_time": '02:02',
+            "s_lyric": false,
+          }, {
+            "s_id": 12312312301,
+            "s_name": "Leanne Graham",
+            "s_singer": "Bret",
+            "s_src": "Sincere@april.biz",
+            "s_time": '02:02',
+            "s_lyric": true,
+          },
+          {
+            "s_id": 21231231230,
+            "s_name": "Ervin Howell",
+            "s_singer": "Antonette",
+            "s_src": "Shanna@melissa.tv",
+            "s_time": '02:02',
+            "s_lyric": false,
+          }, {
             "s_id": 12312312301,
             "s_name": "Leanne Graham",
             "s_singer": "Bret",
@@ -263,7 +341,15 @@ export default {
       display: flex;
       flex-direction: row;
       align-items: center;
-      margin: 10px 0;
+      justify-content: space-between;
+
+      div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 10px 0;
+      }
+
     }
 
     .table {
