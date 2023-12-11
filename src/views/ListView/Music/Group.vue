@@ -22,13 +22,13 @@
           </template>
         </vs-alert>
         <div class="btns">
-          <vs-button gradient @click="filtrate.dialog_add_edit = true">
+          <vs-button relief @click="filtrate.dialog_add_edit = true">
             <i class='bx bxs-message-alt-add'></i>添加歌单类别
           </vs-button>
-          <vs-button success gradient @click="filtrate.dialog_add_edit = true">
+          <vs-button success relief @click="filtrate.dialog_add_edit = true">
             <i class='bx bxs-message-alt-edit'></i>修改歌单类别
           </vs-button>
-          <vs-button danger gradient @click="filtrate.dialog_remove = true">
+          <vs-button danger relief @click="filtrate.dialog_remove = true">
             <i class='bx bxs-message-alt-x'></i>删除歌单类别
           </vs-button>
         </div>
@@ -133,13 +133,13 @@
           </template>
         </vs-alert>
         <div class="btns">
-          <vs-button gradient @click="song.dialog_add_edit = true">
+          <vs-button relief @click="song.dialog_add_edit = true">
             <i class='bx bxs-message-alt-add'></i>添加歌曲
           </vs-button>
-          <vs-button success gradient @click="song.dialog_add_edit = true">
+          <vs-button success relief @click="song.dialog_add_edit = true">
             <i class='bx bxs-message-alt-edit'></i>修改歌曲信息
           </vs-button>
-          <vs-button danger gradient @click="song.dialog_remove = true">
+          <vs-button danger relief @click="song.dialog_remove = true">
             <i class='bx bxs-message-alt-x'></i>删除歌曲
           </vs-button>
         </div>
@@ -292,13 +292,13 @@
           </template>
         </vs-alert>
         <div class="btns">
-          <vs-button gradient @click="singer.dialog_add_edit = true">
+          <vs-button relief @click="singer.dialog_add_edit = true">
             <i class='bx bxs-user'></i>添加歌手
           </vs-button>
-          <vs-button success gradient>
+          <vs-button success relief>
             <i class='bx bxs-message-alt-edit'></i>修改歌手信息
           </vs-button>
-          <vs-button danger gradient @click="singer.dialog_remove = true">
+          <vs-button danger relief @click="singer.dialog_remove = true">
             <i class='bx bxs-message-alt-x'></i>删除歌手
           </vs-button>
 
@@ -522,6 +522,87 @@ export default {
       edit: null,
       editProp: {},
       menucode: 'guide',
+      filtrate:{
+        search: '',
+        allCheck: false,
+        page: 1,
+        max: 7,
+        selected: [],
+        data: [
+          {
+            "s_id": 12312312301,
+            "s_name": "Leanne Graham",
+            "s_singer": "Bret",
+            "s_src": "Sincere@april.biz",
+            "s_time": '02:02',
+            "s_creatime": '2023-16-09',
+            "s_lyric": true,
+          },
+          {
+            "s_id": 21231231230,
+            "s_name": "Ervin Howell",
+            "s_singer": "Antonette",
+            "s_src": "Shanna@melissa.tv",
+            "s_time": '02:02',
+            "s_creatime": '2023-16-09',
+            "s_lyric": false,
+          },
+          {
+            "s_id": 12312312301,
+            "s_name": "Leanne Graham",
+            "s_singer": "Bret",
+            "s_src": "Sincere@april.biz",
+            "s_time": '02:02',
+            "s_creatime": '2023-16-09',
+            "s_lyric": true,
+          },
+          {
+            "s_id": 21231231230,
+            "s_name": "Ervin Howell",
+            "s_singer": "Antonette",
+            "s_src": "Shanna@melissa.tv",
+            "s_time": '02:02',
+            "s_creatime": '2023-16-09',
+            "s_lyric": false,
+          }, {
+            "s_id": 12312312301,
+            "s_name": "Leanne Graham",
+            "s_singer": "Bret",
+            "s_src": "Sincere@april.biz",
+            "s_time": '02:02',
+            "s_creatime": '2023-16-09',
+            "s_lyric": true,
+          },
+          {
+            "s_id": 21231231230,
+            "s_name": "Ervin Howell",
+            "s_singer": "Antonette",
+            "s_src": "Shanna@melissa.tv",
+            "s_time": '02:02',
+            "s_creatime": '2023-16-09',
+            "s_lyric": false,
+          }, {
+            "s_id": 12312312301,
+            "s_name": "Leanne Graham",
+            "s_singer": "Bret",
+            "s_src": "Sincere@april.biz",
+            "s_time": '02:02',
+            "s_creatime": '2023-16-09',
+            "s_lyric": true,
+          },
+          {
+            "s_id": 21231231230,
+            "s_name": "Ervin Howell",
+            "s_singer": "Antonette",
+            "s_src": "Shanna@melissa.tv",
+            "s_time": '02:02',
+            "s_creatime": '2023-16-09',
+            "s_lyric": false,
+          }
+        ],
+        dialog_add_edit: false,
+        dialog_remove: false,
+      },
       song: {
         search: '',
         allCheck: false,
