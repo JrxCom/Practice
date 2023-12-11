@@ -33,94 +33,42 @@
           </vs-button>
         </div>
         <div class="table">
-          <vs-table v-model="song.selected">
+          <vs-table v-model="filtrate.selected">
             <template #header>
-              <vs-input v-model="song.search" border placeholder="Search" />
+              <vs-input v-model="filtrate.search" border placeholder="Search" />
             </template>
             <template #thead>
               <vs-tr>
                 <vs-th>
-                  <vs-checkbox :indeterminate="song.selected.length == song.data.length" v-model="song.allCheck"
-                    @change="song.selected = $vs.checkAll(song.selected, song.data)" />
+                  <vs-checkbox :indeterminate="filtrate.selected.length == filtrate.data.length" v-model="song.allCheck"
+                    @change="filtrate.selected = $vs.checkAll(filtrate.selected, filtrate.data)" />
                 </vs-th>
                 <vs-th>
-                  歌曲Id
-                </vs-th>
-                <vs-th>
-                  歌曲名称
-                </vs-th>
-                <vs-th>
-                  歌手
-                </vs-th>
-                <vs-th>
-                  发行时间
-                </vs-th>
-                <vs-th>
-                  时长
-                </vs-th>
-                <vs-th>
-                  歌词
+                  标签名称
                 </vs-th>
               </vs-tr>
             </template>
             <template #tbody>
-              <vs-tr :key="i" v-for="(tr, i) in $vs.getPage($vs.getSearch(song.data, song.search), song.page, song.max)"
-                :data="tr" :is-selected="!!song.selected.includes(tr)" not-click-selected open-expand-only-td>
+              <vs-tr :key="i" v-for="(tr, i) in $vs.getPage($vs.getSearch(filtrate.data, filtrate.search), filtrate.page, filtrate.max)"
+                :data="tr" :is-selected="!!filtrate.selected.includes(tr)" not-click-selected open-expand-only-td>
                 <vs-td checkbox>
-                  <vs-checkbox :val="tr" v-model="song.selected" />
+                  <vs-checkbox :val="tr" v-model="filtrate.selected" />
                 </vs-td>
                 <vs-td>
-                  {{ tr.s_id }}
-                </vs-td>
-                <vs-td>
-                  {{ tr.s_name }}
-                </vs-td>
-                <vs-td>
-                  {{ tr.s_singer }}
-                </vs-td>
-                <vs-td>
-                  {{ tr.s_time }}
-                </vs-td>
-                <vs-td>
-                  {{ tr.s_creatime }}
-                </vs-td>
-                <vs-td>
-                  <vs-avatar v-if="tr.s_lyric">
-                    <i class='bx bxs-checkbox-checked'></i>
-                  </vs-avatar>
-                  <vs-avatar v-else>
-                    <i class='bx bxs-x-square'></i>
-                  </vs-avatar>
+                  {{ tr.name }}
                 </vs-td>
                 <template #expand>
               <div class="con-content">
-                <div>
-                  <vs-avatar>
-                    <img :src="`/avatars/avatar-${i + 1}.png`" alt="">
-                  </vs-avatar>
-                  <p>
-                    {{ tr.name }}
-                  </p>
-                </div>
-                <div>
-                  <vs-button flat icon>
-                    <i class='bx bx-lock-open-alt' ></i>
-                  </vs-button>
-                  <vs-button flat icon>
-                    Send Email
-                  </vs-button>
-                  <vs-button border danger>
-                    Remove User
-                  </vs-button>
-                </div>
+                
+               
               </div>
             </template>
               </vs-tr>
             </template>
             
             <template #footer>
-              <vs-pagination v-model="song.page"
-                :length="$vs.getLength($vs.getSearch(song.data, song.search), song.max)" />
+              <vs-pagination v-model="filtrate.page"
+                :length="$vs.getLength($vs.getSearch(filtrate.data, filtrate.search), filtrate.max)" />
             </template>
           </vs-table>
         </div>
@@ -530,74 +478,13 @@ export default {
         selected: [],
         data: [
           {
-            "s_id": 12312312301,
-            "s_name": "Leanne Graham",
-            "s_singer": "Bret",
-            "s_src": "Sincere@april.biz",
-            "s_time": '02:02',
-            "s_creatime": '2023-16-09',
-            "s_lyric": true,
+            "name": "Leanne Graham",
           },
           {
-            "s_id": 21231231230,
-            "s_name": "Ervin Howell",
-            "s_singer": "Antonette",
-            "s_src": "Shanna@melissa.tv",
-            "s_time": '02:02',
-            "s_creatime": '2023-16-09',
-            "s_lyric": false,
+            "name": "Ervin Howell",
           },
           {
-            "s_id": 12312312301,
-            "s_name": "Leanne Graham",
-            "s_singer": "Bret",
-            "s_src": "Sincere@april.biz",
-            "s_time": '02:02',
-            "s_creatime": '2023-16-09',
-            "s_lyric": true,
-          },
-          {
-            "s_id": 21231231230,
-            "s_name": "Ervin Howell",
-            "s_singer": "Antonette",
-            "s_src": "Shanna@melissa.tv",
-            "s_time": '02:02',
-            "s_creatime": '2023-16-09',
-            "s_lyric": false,
-          }, {
-            "s_id": 12312312301,
-            "s_name": "Leanne Graham",
-            "s_singer": "Bret",
-            "s_src": "Sincere@april.biz",
-            "s_time": '02:02',
-            "s_creatime": '2023-16-09',
-            "s_lyric": true,
-          },
-          {
-            "s_id": 21231231230,
-            "s_name": "Ervin Howell",
-            "s_singer": "Antonette",
-            "s_src": "Shanna@melissa.tv",
-            "s_time": '02:02',
-            "s_creatime": '2023-16-09',
-            "s_lyric": false,
-          }, {
-            "s_id": 12312312301,
-            "s_name": "Leanne Graham",
-            "s_singer": "Bret",
-            "s_src": "Sincere@april.biz",
-            "s_time": '02:02',
-            "s_creatime": '2023-16-09',
-            "s_lyric": true,
-          },
-          {
-            "s_id": 21231231230,
-            "s_name": "Ervin Howell",
-            "s_singer": "Antonette",
-            "s_src": "Shanna@melissa.tv",
-            "s_time": '02:02',
-            "s_creatime": '2023-16-09',
-            "s_lyric": false,
+            "name": "Leanne Graham",
           }
         ],
         dialog_add_edit: false,
