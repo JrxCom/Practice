@@ -44,12 +44,18 @@
                     @change="filtrate.selected = $vs.checkAll(filtrate.selected, filtrate.data)" />
                 </vs-th>
                 <vs-th>
-                  标签名称
+                  <div style="display: flex;align-items: center;">
+                    <p>标签名称</p>
+                    <vs-button icon>
+                      <i class='bx bx-add-to-queue'></i>
+                    </vs-button>
+                  </div>
                 </vs-th>
               </vs-tr>
             </template>
             <template #tbody>
-              <vs-tr :key="i" v-for="(tr, i) in $vs.getPage($vs.getSearch(filtrate.data, filtrate.search), filtrate.page, filtrate.max)"
+              <vs-tr :key="i"
+                v-for="(tr, i) in $vs.getPage($vs.getSearch(filtrate.data, filtrate.search), filtrate.page, filtrate.max)"
                 :data="tr" :is-selected="!!filtrate.selected.includes(tr)" not-click-selected open-expand-only-td>
                 <vs-td checkbox>
                   <vs-checkbox :val="tr" v-model="filtrate.selected" />
@@ -58,20 +64,131 @@
                   {{ tr.name }}
                 </vs-td>
                 <template #expand>
-              <div class="con-content">
-                
-               
-              </div>
-            </template>
+                  <div class="con-content">
+                    <div style="display: flex;align-items: center;">
+                      <vs-avatar>
+                        Lily
+                        <template #icons>
+                          <i @click="a()" class='bx bx-edit' style="color: rgb(23, 201, 100);"></i>
+                          <i class='bx bx-x' style="color: rgb(242, 19, 93);"></i>
+                        </template>
+                      </vs-avatar>
+
+                    </div>
+                  </div>
+                </template>
               </vs-tr>
             </template>
-            
+
             <template #footer>
               <vs-pagination v-model="filtrate.page"
                 :length="$vs.getLength($vs.getSearch(filtrate.data, filtrate.search), filtrate.max)" />
             </template>
           </vs-table>
         </div>
+
+        <vs-dialog blur v-model="filtrate.dialog_add_edit" not-center prevent-close auto-width>
+          <template #header>
+            <h4 class="not-margin">
+              <b>添加标签</b>
+            </h4>
+          </template>
+
+          <div class="con-form">
+            <vs-input type="text" v-model="filtrate.parent" placeholder="标签名称">
+              <template #icon>
+                <i class='bx bxl-dropbox'></i>
+              </template>
+            </vs-input>
+
+          </div>
+
+          <template #footer>
+            <div class="footer-dialog">
+              <vs-button>
+                确认
+              </vs-button>
+              <vs-button border dark>
+                取消
+              </vs-button>
+            </div>
+          </template>
+        </vs-dialog>
+
+        <vs-dialog blur v-model="filtrate.dialog_remove" not-center prevent-close>
+          <template #header>
+            <h4 class="not-margin">
+              <b>确认删除标签</b>
+            </h4>
+          </template>
+
+          <div class="con-form">
+            <p>删除标签将无法找回!</p>
+          </div>
+
+          <template #footer>
+            <div class="footer-dialog">
+              <vs-button>
+                确认
+              </vs-button>
+              <vs-button border dark>
+                取消
+              </vs-button>
+            </div>
+          </template>
+        </vs-dialog>
+
+        <vs-dialog blur v-model="filtrate.dialog_add_edit_child" not-center prevent-close auto-width>
+          <template #header>
+            <h4 class="not-margin">
+              <b>添加子标签</b>
+            </h4>
+          </template>
+
+          <div class="con-form">
+            <vs-input type="text" v-model="filtrate.child" placeholder="子标签名称">
+              <template #icon>
+                <i class='bx bxs-checkbox'></i>
+              </template>
+            </vs-input>
+
+          </div>
+
+          <template #footer>
+            <div class="footer-dialog">
+              <vs-button>
+                确认
+              </vs-button>
+              <vs-button border dark>
+                取消
+              </vs-button>
+            </div>
+          </template>
+        </vs-dialog>
+
+        <vs-dialog blur v-model="filtrate.dialog_remove_child" not-center prevent-close>
+          <template #header>
+            <h4 class="not-margin">
+              <b>确认删除子标签</b>
+            </h4>
+          </template>
+
+          <div class="con-form">
+            <p>删除子标签将无法找回!</p>
+          </div>
+
+          <template #footer>
+            <div class="footer-dialog">
+              <vs-button>
+                确认
+              </vs-button>
+              <vs-button border dark>
+                取消
+              </vs-button>
+            </div>
+          </template>
+        </vs-dialog>
+
       </div>
 
       <div class="song">
@@ -169,13 +286,13 @@
           </template>
 
           <div class="con-form">
-            <vs-input type="text" v-model="input2" placeholder="歌曲名称">
+            <vs-input type="text" v-model="song.form.name" placeholder="歌曲名称">
               <template #icon>
                 <i class='bx bxs-paint'></i>
               </template>
             </vs-input>
 
-            <vs-input type="text" v-model="input2" placeholder="歌手">
+            <vs-input type="text" v-model="song.form.singer" placeholder="歌手">
               <template #icon>
                 <i class='bx bxs-user-circle'></i>
               </template>
@@ -338,7 +455,8 @@
           <template #header>
             歌手简介
           </template>
-          <b style="margin: 10px;background-color: #F4F7F8;padding: 10px;font-size: 12px;border-radius: 10px;">{{ singer.intro }}</b>
+          <b style="margin: 10px;background-color: #F4F7F8;padding: 10px;font-size: 12px;border-radius: 10px;">{{
+            singer.intro }}</b>
         </vs-dialog>
 
         <vs-dialog blur v-model="singer.dialog_add_edit" not-center prevent-close auto-width>
@@ -349,7 +467,7 @@
           </template>
 
           <div class="con-form">
-            <vs-input type="text" v-model="input2" placeholder="姓名">
+            <vs-input type="text" v-model="singer.form.name" placeholder="姓名">
               <template #icon>
                 <i class='bx bxs-user-circle'></i>
               </template>
@@ -358,7 +476,7 @@
             <vs-button block dark border animation-type="vertical">
               头像上传
               <template #animate>
-                <i class='bx bx-cloud-upload'></i>
+                <i class='bx bx-image'></i>
               </template>
             </vs-button>
 
@@ -367,20 +485,20 @@
                 <i class='bx bx-male-female'></i>
               </vs-avatar>
               <div style="margin-right: 20px;"></div>
-              <vs-radio v-model="picked" val="1">
+              <vs-radio v-model="singer.form.sex" val="1">
                 <i class='bx bx-male-sign'></i>
               </vs-radio>
-              <vs-radio v-model="picked" val="2">
+              <vs-radio v-model="singer.form.sex" val="2">
                 <i class='bx bx-female-sign'></i>
               </vs-radio>
             </div>
 
             <div style="display: flex;align-items: flex-start;margin-top: 10px;">
               <vs-avatar size="30" square>
-                <i class='bx bxs-receipt' ></i>
+                <i class='bx bxs-receipt'></i>
               </vs-avatar>
               <div style="margin-right: 20px;"></div>
-              <textarea
+              <textarea v-model="singer.form.intor" placeholder="简介"
                 style="border-radius: 10px;background-color: #F4F7F8;border: 1px solid #F4F7F8;padding: 6px;font-weight: 600;font-family: fangsong;"
                 name="" id="" cols="30" rows="8"></textarea>
             </div>
@@ -390,34 +508,34 @@
                 <i class='bx bxs-flag-alt'></i>
               </vs-avatar>
               <div style="margin-right: 20px;"></div>
-              <vs-select placeholder="Select" v-model="value">
-                <vs-option label="Vuesax" value="1">
-                  Vuesax
+              <vs-select placeholder="选择歌手国籍" v-model="singer.form.country">
+                <vs-option label="中国" value="中国">
+                  中国
                 </vs-option>
-                <vs-option label="Vue" value="2">
-                  Vue
+                <vs-option label="美国" value="美国">
+                  美国
                 </vs-option>
               </vs-select>
             </div>
 
             <div style="display: flex;align-items: center;margin-top: 10px;">
               <vs-avatar size="30" square>
-                <i class='bx bxs-label' ></i>
+                <i class='bx bxs-label'></i>
               </vs-avatar>
               <div style="margin-right: 20px;"></div>
-              <vs-select placeholder="Select" v-model="value">
-                <vs-option label="Vuesax" value="1">
-                  Vuesax
+              <vs-select placeholder="选择歌手类型" v-model="singer.form.label">
+                <vs-option label="Vuesax" value="男歌手">
+                  男歌手
                 </vs-option>
-                <vs-option label="Vue" value="2">
-                  Vue
+                <vs-option label="Vue" value="女歌手">
+                  女歌手
                 </vs-option>
               </vs-select>
             </div>
 
-            <vs-input type="date" v-model="input2" placeholder="生日">
+            <vs-input type="date" v-model="singer.form.birthday" placeholder="生日">
               <template #icon>
-                <i class='bx bxs-cake' ></i>
+                <i class='bx bxs-cake'></i>
               </template>
             </vs-input>
 
@@ -470,7 +588,7 @@ export default {
       edit: null,
       editProp: {},
       menucode: 'guide',
-      filtrate:{
+      filtrate: {
         search: '',
         allCheck: false,
         page: 1,
@@ -489,6 +607,10 @@ export default {
         ],
         dialog_add_edit: false,
         dialog_remove: false,
+        parent: '',
+        dialog_add_edit_child: false,
+        dialog_remove_child: false,
+        child: '',
       },
       song: {
         search: '',
@@ -568,6 +690,10 @@ export default {
             "s_lyric": false,
           }
         ],
+        form: {
+          name: '',
+          singer: '',
+        },
         dialog_add_edit: false,
         dialog_remove: false,
         form_add_edit: {
@@ -585,12 +711,21 @@ export default {
         ],
         dialog_add_edit: false,
         dialog_remove: false,
-        dialog_intro:false,
-        intro:'',
-
+        dialog_intro: false,
+        intro: '',
+        form: {
+          name: '',
+          sex: '',
+          intor:'',
+          country: '',
+          label: '',
+          birthday: ''
+        }
       },
     }
   },
+  methods: {
+  }
 }
 </script>
   
