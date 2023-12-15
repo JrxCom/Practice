@@ -1,24 +1,21 @@
 <template>
   <div class="music_group">
     <vs-navbar square color='#F4F7F8' center-collapsed v-model="menucode">
-      <template #left>
-        <img src="/logo2.png" alt="">
-      </template>
-      <vs-navbar-item :active="menucode == 'license'" id="license">
+      <vs-navbar-item :active="menucode == 'filtrate'" id="filtrate" @click='menucode = "filtrate"'>
         标签管理
       </vs-navbar-item>
-      <vs-navbar-item :active="menucode == 'guide'" id="guide">
+      <vs-navbar-item :active="menucode == 'song'" id="song" @click='menucode = "song"'>
         单曲
       </vs-navbar-item>
-      <vs-navbar-item :active="menucode == 'license'" id="license">
+      <vs-navbar-item :active="menucode == 'singer'" id="singer" @click='menucode == "singer"'>
         歌手
       </vs-navbar-item>
     </vs-navbar>
     <div class="content">
-      <div class="filtrate">
+      <div class="filtrate" v-show="menucode === 'filtrate'">
         <vs-alert>
           <template #icon>
-            <i class='bx bx-filter-alt'></i>
+            <i class='bx bx-filter'></i>
           </template>
         </vs-alert>
         <div class="btns">
@@ -46,7 +43,7 @@
                 <vs-th>
                   <div style="display: flex;align-items: center;">
                     <p>标签名称</p>
-                    <vs-button icon>
+                    <vs-button icon @click="filtrate.dialog_add_edit_child = true">
                       <i class='bx bx-add-to-queue'></i>
                     </vs-button>
                   </div>
@@ -66,14 +63,14 @@
                 <template #expand>
                   <div class="con-content">
                     <div style="display: flex;align-items: center;">
-                      <vs-avatar>
-                        Lily
-                        <template #icons>
-                          <i @click="a()" class='bx bx-edit' style="color: rgb(23, 201, 100);"></i>
-                          <i class='bx bx-x' style="color: rgb(242, 19, 93);"></i>
-                        </template>
-                      </vs-avatar>
-
+                      <div
+                        style="width: 100px;background-color: #195BFF;color: #FFF;border-radius: 10px;padding: 8px 16px;display: flex;align-items: center;justify-content: space-between;">
+                        <p>Vue</p>
+                        <div>
+                          <i class='bx bxs-edit' style="color: #FFF;font-size: 20px;"></i>
+                          <i class='bx bxs-x-square' style="color: #FFF;font-size: 20px;"></i>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </template>
@@ -93,16 +90,16 @@
               <b>添加标签</b>
             </h4>
           </template>
-
           <div class="con-form">
-            <vs-input type="text" v-model="filtrate.parent" placeholder="标签名称">
-              <template #icon>
-                <i class='bx bxl-dropbox'></i>
-              </template>
-            </vs-input>
-
+            <!-- 标签名称 -->
+            <div class="form-list">
+              <vs-avatar size="34">
+                <i class="bx bxs-box" style="font-size: 16px"></i>
+              </vs-avatar>
+              <vs-input v-model="filtrate.parent" placeholder="标签名称">
+              </vs-input>
+            </div>
           </div>
-
           <template #footer>
             <div class="footer-dialog">
               <vs-button>
@@ -123,7 +120,9 @@
           </template>
 
           <div class="con-form">
-            <p>删除标签将无法找回!</p>
+            <div class="message">
+              <p>删除标签将无法找回!</p>
+            </div>
           </div>
 
           <template #footer>
@@ -146,12 +145,14 @@
           </template>
 
           <div class="con-form">
-            <vs-input type="text" v-model="filtrate.child" placeholder="子标签名称">
-              <template #icon>
-                <i class='bx bxs-checkbox'></i>
-              </template>
-            </vs-input>
-
+            <!-- 子标签名称 -->
+            <div class="form-list">
+              <vs-avatar size="34">
+                <i class="bx bxs-file-blank" style="font-size: 16px"></i>
+              </vs-avatar>
+              <vs-input v-model="filtrate.child" placeholder="子标签名称">
+              </vs-input>
+            </div>
           </div>
 
           <template #footer>
@@ -174,7 +175,9 @@
           </template>
 
           <div class="con-form">
-            <p>删除子标签将无法找回!</p>
+            <div class="message">
+              <p>删除子标签将无法找回!</p>
+            </div>
           </div>
 
           <template #footer>
@@ -191,7 +194,7 @@
 
       </div>
 
-      <div class="song">
+      <div class="song" v-show="menucode === 'song'">
         <vs-alert>
           <template #icon>
             <i class='bx bxs-playlist'></i>
@@ -286,18 +289,25 @@
           </template>
 
           <div class="con-form">
-            <vs-input type="text" v-model="song.form.name" placeholder="歌曲名称">
-              <template #icon>
-                <i class='bx bxs-paint'></i>
-              </template>
-            </vs-input>
+            <!-- 歌曲名称 -->
+            <div class="form-list">
+              <vs-avatar size="34">
+                <i class="bx bx-paint" style="font-size: 16px"></i>
+              </vs-avatar>
+              <vs-input v-model="song.form.name" placeholder="歌曲名称">
+              </vs-input>
+            </div>
 
-            <vs-input type="text" v-model="song.form.singer" placeholder="歌手">
-              <template #icon>
-                <i class='bx bxs-user-circle'></i>
-              </template>
-            </vs-input>
+            <!-- 歌手 -->
+            <div class="form-list">
+              <vs-avatar size="34">
+                <i class="bx bxs-user-circle" style="font-size: 16px"></i>
+              </vs-avatar>
+              <vs-input v-model="song.form.singer" placeholder="歌手">
+              </vs-input>
+            </div>
 
+            <!-- 歌曲上传 -->
             <vs-button block dark border animation-type="vertical">
               歌曲上传
               <template #animate>
@@ -305,6 +315,7 @@
               </template>
             </vs-button>
 
+            <!-- 歌词上传 -->
             <vs-button block dark border animation-type="vertical">
               歌词上传
               <template #animate>
@@ -334,7 +345,9 @@
           </template>
 
           <div class="con-form">
-            <p>删除歌曲将无法找回!</p>
+            <div class="message">
+              <p>删除歌曲将无法找回!</p>
+            </div>
           </div>
 
           <template #footer>
@@ -350,7 +363,7 @@
         </vs-dialog>
       </div>
 
-      <div class="singer">
+      <div class="singer" v-show="menucode === 'singer'">
         <vs-alert>
           <template #icon>
             <i class='bx bxs-user-detail'></i>
@@ -455,8 +468,12 @@
           <template #header>
             歌手简介
           </template>
-          <b style="margin: 10px;background-color: #F4F7F8;padding: 10px;font-size: 12px;border-radius: 10px;">{{
-            singer.intro }}</b>
+
+          <div class="con-form">
+            <div class="text">
+              <p>{{singer.intro}}</p>
+            </div>
+          </div>
         </vs-dialog>
 
         <vs-dialog blur v-model="singer.dialog_add_edit" not-center prevent-close auto-width>
@@ -467,12 +484,16 @@
           </template>
 
           <div class="con-form">
-            <vs-input type="text" v-model="singer.form.name" placeholder="姓名">
-              <template #icon>
-                <i class='bx bxs-user-circle'></i>
-              </template>
-            </vs-input>
+            <!-- 姓名 -->
+            <div class="form-list">
+              <vs-avatar size="34">
+                <i class="bx bxs-user-pin" style="font-size: 16px"></i>
+              </vs-avatar>
+              <vs-input v-model="singer.form.name" placeholder="姓名">
+              </vs-input>
+            </div>
 
+            <!-- 头像上传 -->
             <vs-button block dark border animation-type="vertical">
               头像上传
               <template #animate>
@@ -480,64 +501,62 @@
               </template>
             </vs-button>
 
-            <div style="display: flex;align-items: center;">
-              <vs-avatar size="30" square>
-                <i class='bx bx-male-female'></i>
+            <!-- 歌手性别 -->
+            <div class="form-list" style="margin: 6px 0;">
+              <vs-avatar size="34">
+                <i class="bx bx-male-female" style="font-size: 16px"></i>
               </vs-avatar>
-              <div style="margin-right: 20px;"></div>
-              <vs-radio v-model="singer.form.sex" val="1">
-                <i class='bx bx-male-sign'></i>
-              </vs-radio>
-              <vs-radio v-model="singer.form.sex" val="2">
-                <i class='bx bx-female-sign'></i>
-              </vs-radio>
-            </div>
-
-            <div style="display: flex;align-items: flex-start;margin-top: 10px;">
-              <vs-avatar size="30" square>
-                <i class='bx bxs-receipt'></i>
-              </vs-avatar>
-              <div style="margin-right: 20px;"></div>
-              <textarea v-model="singer.form.intor" placeholder="简介"
-                style="border-radius: 10px;background-color: #F4F7F8;border: 1px solid #F4F7F8;padding: 6px;font-weight: 600;font-family: fangsong;"
-                name="" id="" cols="30" rows="8"></textarea>
-            </div>
-
-            <div style="display: flex;align-items: center;margin-top: 10px;">
-              <vs-avatar size="30" square>
-                <i class='bx bxs-flag-alt'></i>
-              </vs-avatar>
-              <div style="margin-right: 20px;"></div>
-              <vs-select placeholder="选择歌手国籍" v-model="singer.form.country">
-                <vs-option label="中国" value="中国">
-                  中国
+              <vs-select placeholder="性别" v-model="singer.form.sex">
+                <vs-option label="男" value="1">
+                  男
                 </vs-option>
-                <vs-option label="美国" value="美国">
-                  美国
+                <vs-option label="女" value="2">
+                  女
                 </vs-option>
               </vs-select>
             </div>
 
-            <div style="display: flex;align-items: center;margin-top: 10px;">
-              <vs-avatar size="30" square>
-                <i class='bx bxs-label'></i>
+            <!-- 简介 -->
+            <div class="form-list" style="margin: 10px 0;">
+              <vs-avatar size="34">
+                <i class="bx bxs-receipt" style="font-size: 16px"></i>
               </vs-avatar>
-              <div style="margin-right: 20px;"></div>
-              <vs-select placeholder="选择歌手类型" v-model="singer.form.label">
-                <vs-option label="Vuesax" value="男歌手">
+              <textarea v-model="singer.form.intor" placeholder="简介" class="vs-textarea" cols="37" rows="6 "></textarea>
+            </div>
+
+            <!-- 国籍 -->
+            <div class="form-list">
+              <vs-avatar size="34">
+                <i class="bx bxs-flag" style="font-size: 16px"></i>
+              </vs-avatar>
+              <vs-input v-model="singer.form.country" placeholder="国籍">
+              </vs-input>
+            </div>
+
+            <!-- 歌手类型 -->
+            <div class="form-list" style="margin: 6px 0;">
+              <vs-avatar size="34">
+                <i class="bx bxs-label" style="font-size: 16px"></i>
+              </vs-avatar>
+              <vs-select placeholder="歌手类型" v-model="singer.form.sex">
+                <vs-option label="男歌手" value="男歌手">
                   男歌手
                 </vs-option>
-                <vs-option label="Vue" value="女歌手">
+                <vs-option label="女歌手" value="女歌手">
                   女歌手
                 </vs-option>
               </vs-select>
             </div>
 
-            <vs-input type="date" v-model="singer.form.birthday" placeholder="生日">
-              <template #icon>
-                <i class='bx bxs-cake'></i>
-              </template>
-            </vs-input>
+            <!-- 生日 -->
+            <div class="form-list">
+              <vs-avatar size="34">
+                <i class="bx bxs-cake" style="font-size: 16px"></i>
+              </vs-avatar>
+              <vs-input type="date" v-model="singer.form.birthday" placeholder="生日">
+              </vs-input>
+            </div>
+
 
           </div>
           <template #footer>
@@ -560,7 +579,9 @@
           </template>
 
           <div class="con-form">
-            <p>删除歌手将无法找回!</p>
+            <div class="message">
+              <p>删除歌手将无法找回!</p>
+            </div>
           </div>
 
           <template #footer>
@@ -587,7 +608,7 @@ export default {
       editActive: false,
       edit: null,
       editProp: {},
-      menucode: 'guide',
+      menucode: 'filtrate',
       filtrate: {
         search: '',
         allCheck: false,
@@ -716,7 +737,7 @@ export default {
         form: {
           name: '',
           sex: '',
-          intor:'',
+          intor: '',
           country: '',
           label: '',
           birthday: ''
@@ -726,7 +747,9 @@ export default {
   },
   methods: {
   }
+
 }
+
 </script>
   
 <style lang='less' scoped>
@@ -777,6 +800,21 @@ export default {
 }
 </style>
 <style lang="stylus">
+.vs-textarea
+  border 2px solid transparent
+  background rgb(244, 247, 248)
+  color rgb(44, 62, 80)
+  padding: 8px 14px
+  border-radius 18px
+  transition all 0.25s ease
+  padding-left 10px
+  font-family Arial
+  transition: all 0.25s ease;
+  &::placeholder
+    font-family Microsoft YaHei
+    color #C0C7CC
+</style>
+<style lang="stylus">
 getColor(vsColor, alpha = 1)
     unquote("rgba(var(--vs-"+vsColor+"), "+alpha+")")
 getVar(var)
@@ -787,6 +825,19 @@ getVar(var)
   padding 10px
 .con-form
   width 100%
+  .form-list
+     display flex
+     align-items center
+     .vs-avatar-content
+      margin-right 10px
+     .vs-select
+      width 300px
+      &:hover
+        background none
+        box-shadow none
+        transform none
+  .message
+    margin 20px 0 30px 0
   .flex
     display flex
     align-items center
@@ -802,7 +853,8 @@ getVar(var)
     margin 10px 0px
     width calc(100%)
     .vs-input
-      width 100%
+      width 300px
+
 .footer-dialog
   display flex
   align-items center

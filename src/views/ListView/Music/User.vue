@@ -6,8 +6,6 @@
         icon
         dark
         shadow
-        :active="active == 0"
-        @click="active = 0"
       >
         <i class='bx bxs-music'></i>
       </vs-button>
@@ -255,7 +253,7 @@
         <!-- 用户年龄 -->
         <div class="form-list">
           <vs-avatar size="34">
-            <i class="bx bx-cake" style="font-size: 16px"></i>
+            <i class="bx bxs-hourglass" style="font-size: 16px"></i>
           </vs-avatar>
           <vs-input
             v-model="dialog_add_edit.form.age"
@@ -266,12 +264,18 @@
           </vs-input>
         </div>
         <!-- 用户性别 -->
-        <div class="form-list">
+        <div class="form-list" style="margin: 6px 0;">
           <vs-avatar size="34">
             <i class="bx bx-male-female" style="font-size: 16px"></i>
           </vs-avatar>
-          <vs-radio v-model="dialog_add_edit.form.sex" val="1"> 男 </vs-radio>
-          <vs-radio v-model="dialog_add_edit.form.sex" val="2"> 女 </vs-radio>
+          <vs-select placeholder="性别" v-model="dialog_add_edit.form.sex">
+                <vs-option label="男" value="1">
+                  男
+                </vs-option>
+                <vs-option label="女" value="2">
+                  女
+                </vs-option>
+              </vs-select>
         </div>
         <!-- 用户地址 -->
         <div class="form-list">

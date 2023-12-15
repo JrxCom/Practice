@@ -68,12 +68,12 @@
 <script>
 import { home_use } from "@/mixin/homeList";
 export default {
-  name: "user",
+  name: "index",
   mixins: [home_use],
   components: {},
   data() {
     return {
-      menuCode: "home",
+      menuCode: "",
     };
   },
   watch: {
@@ -81,7 +81,8 @@ export default {
       deep: true,
       immediate: true,
       handler(newVal, oldVal) {
-        console.log(newVal, oldVal);
+        this.menuCode = newVal.name
+        console.log(newVal);
         this.homeList.forEach((item) => {
           if (item.to === "") {
             item.to = "/" + item.id;
