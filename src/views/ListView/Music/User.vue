@@ -10,81 +10,6 @@
         <i class='bx bxs-music'></i>
       </vs-button>
    </div>
-    <!-- 筛选与搜索 -->
-    <div class="top">
-      <!-- 筛选 -->
-      <div class="filtrate">
-        <i class="bx bx-filter-alt" style="margin-right: 20px;"></i>
-        <vs-select
-          state="primary"
-          placeholder="请选择筛选条件"
-          v-model="filtrate.code"
-          @change="change_filtrate($event)"
-        >
-          <vs-option
-            v-for="(item, index) in filtrate.list"
-            :key="index"
-            :label="item.label"
-            :value="item.value + '-' + item.label"
-          >
-            <h4>{{ item.label }}</h4>
-          </vs-option>
-        </vs-select>
-      </div>
-      <!-- 搜索 -->
-      <div class="search">
-        <i
-        style="margin-right: 20px;"
-          v-if="filtrate.class === 'radio_'"
-          class="bx bx-radio-circle-marked"
-        ></i>
-        <i v-else class="bx bx-search" style="margin-right: 20px;"></i>
-
-        <div class="radio" v-if="search.class === 'sex_'">
-          <vs-radio v-model="search.radio" val="1">
-            <i class="bx bx-male-sign"></i>
-          </vs-radio>
-          <vs-radio v-model="search.radio" val="2"
-            ><i class="bx bx-female-sign"></i
-          ></vs-radio>
-        </div>
-
-        <div class="radio" v-else-if="search.class === 'state_'">
-          <vs-radio v-model="search.radio" val="1"
-            ><i class="bx bx-check"></i
-          ></vs-radio>
-          <vs-radio v-model="search.radio" val="2"
-            ><i class="bx bx-x"></i
-          ></vs-radio>
-        </div>
-
-        <vs-input
-          v-else-if="search.class === 'age_'"
-          state="primary"
-          type="number"
-          v-model="search.value"
-          min="1"
-          :placeholder="search.placeholder"
-        ></vs-input>
-
-        <vs-input
-          v-else-if="search.class === 'creat_'"
-          state="primary"
-          type="date"
-          v-model="search.value"
-        ></vs-input>
-
-        <vs-input
-          v-else
-          :disabled="search.disabled"
-          primary
-          v-model="search.value"
-          state="primary"
-          :placeholder="search.placeholder"
-        >
-        </vs-input>
-      </div>
-    </div>
     <!-- 用户按钮组 -->
     <div class="btns">
       <!-- 添加用户按钮 -->
@@ -101,6 +26,15 @@
       </vs-button>
     </div>
     <!-- 表格 -->
+    <div style="margin: 10px 0 20px 0;">
+      <vs-input v-model="user_table.search" placeholder="搜索用户"  primary state="primary">
+            <template #icon>
+              <i class='bx bx-search-alt'></i>
+        </template>
+      </vs-input>
+    </div>
+   
+
     <div class="table">
       <vs-table v-model="user_table.selected">
         <template #thead>
@@ -166,7 +100,7 @@
           <vs-tr
             :key="i"
             v-for="(tr, i) in $vs.getPage(
-              $vs.getSearch(user_table.data),
+              $vs.getSearch(user_table.data,user_table.search),
               user_table.page,
               user_table.max
             )"
@@ -228,7 +162,7 @@
           <vs-pagination
             v-model="user_table.page"
             :length="
-              $vs.getLength($vs.getSearch(user_table.data), user_table.max)
+              $vs.getLength($vs.getSearch(user_table.data,user_table.search), user_table.max)
             "
           />
         </template>
@@ -372,30 +306,6 @@ export default {
   name: "user",
   data() {
     return {
-      /* 类型参数 */
-      filtrate: {
-        code: "",
-        class: "",
-        list: [
-          { label: "Id", value: "u_id" },
-          { label: "名称", value: "u_name" },
-          { label: "年龄", value: "u_age" },
-          { label: "性别", value: "u_sex" },
-          { label: "地址", value: "u_address" },
-          { label: "电话", value: "u_phone" },
-          { label: "邮箱", value: "u_emil" },
-          { label: "创建时间", value: "u_creat" },
-          { label: "状态", value: "u_state" },
-        ],
-      },
-      /* 搜索类别 */
-      search: {
-        class: "",
-        placeholder: "请先选择搜索类型",
-        value: "",
-        radio: "",
-        disabled: true,
-      },
       /* 表格数据 */
       user_table: {
         data: [
@@ -426,6 +336,7 @@ export default {
         page: 1,
         max: 4,
         selected: [],
+        search:''
       },
       /* 添加、修改用户弹窗 */
       dialog_add_edit: {
@@ -455,34 +366,6 @@ export default {
   },
   watch: {},
   methods: {
-    /* 更改搜索类型 */
-    change_filtrate(val) {
-      this.search.value = "";
-      this.search.radio = "";
-      val = val.split("-");
-      if (val[0] === "u_sex") {
-        this.filtrate.class = "radio_";
-        this.search.class = "sex_";
-      } else if (val[0] === "u_state") {
-        this.filtrate.class = "radio_";
-        this.search.class = "state_";
-      } else if (val[0] === "u_creat") {
-        this.filtrate.class = "search_";
-        this.search.class = "creat_";
-        this.search.placeholder = `请输入用户${val[1]}`;
-        this.search.disabled = false;
-      } else if (val[0] === "u_age") {
-        this.filtrate.class = "search_";
-        this.search.class = "age_";
-        this.search.placeholder = `请输入用户${val[1]}`;
-        this.search.disabled = false;
-      } else {
-        this.filtrate.class = "search_";
-        this.search.class = "other_";
-        this.search.placeholder = `请输入用户${val[1]}`;
-        this.search.disabled = false;
-      }
-    },
     /* 添加用户 */
     add_user() {
       Object.keys(this.dialog_add_edit.form).forEach((key) => {
@@ -580,38 +463,14 @@ export default {
 
 <style lang="less" scoped>
 .music_user {
-	padding: 40px;
+	padding: 20px;
   .tag{
     position: fixed;
     right: 20px;
     top: 60px;
   }
-  .top {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .filtrate {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .search {
-      .filtrate();
-      margin-left: 40px;
-
-      .radio {
-        display: flex;
-        background-color: #e9eff8;
-        padding: 7px 13px;
-        border-radius: 12px;
-      }
-    }
-  }
 
   .btns {
-    margin: 20px 0;
     display: flex;
     flex-direction: row;
     align-items: center;

@@ -1,23 +1,19 @@
 <template>
   <div class="music_group">
     <vs-navbar square color='#F4F7F8' center-collapsed v-model="menucode">
-      <vs-navbar-item :active="menucode == 'filtrate'" id="filtrate" @click='menucode = "filtrate"'>
+      <vs-navbar-item :active="menucode === 'filtrate'" id="filtrate" @click='changeMenu("filtrate")'>
         标签管理
       </vs-navbar-item>
-      <vs-navbar-item :active="menucode == 'song'" id="song" @click='menucode = "song"'>
+      <vs-navbar-item :active="menucode === 'song'" id="song" @click='changeMenu("song")'>
         单曲
       </vs-navbar-item>
-      <vs-navbar-item :active="menucode == 'singer'" id="singer" @click='menucode == "singer"'>
+      <vs-navbar-item :active="menucode === 'singer'" id="singer" @click='changeMenu("singer")'>
         歌手
       </vs-navbar-item>
     </vs-navbar>
-    <div class="content">
-      <div class="filtrate" v-show="menucode === 'filtrate'">
-        <vs-alert>
-          <template #icon>
-            <i class='bx bx-filter'></i>
-          </template>
-        </vs-alert>
+    <div class="content" v-show="menucode === 'filtrate'">
+      <div class="filtrate">
+       
         <div class="btns">
           <vs-button relief @click="filtrate.dialog_add_edit = true">
             <i class='bx bxs-message-alt-add'></i>添加歌单类别
@@ -29,11 +25,13 @@
             <i class='bx bxs-message-alt-x'></i>删除歌单类别
           </vs-button>
         </div>
+          <vs-input v-model="filtrate.search" placeholder="搜索标签"  primary>
+            <template #icon>
+              <i class='bx bx-search-alt'></i>
+        </template>
+      </vs-input>
         <div class="table">
-          <vs-table v-model="filtrate.selected">
-            <template #header>
-              <vs-input v-model="filtrate.search" border placeholder="Search" />
-            </template>
+          <vs-table v-model="filtrate.selected" striped>
             <template #thead>
               <vs-tr>
                 <vs-th>
@@ -76,13 +74,19 @@
                 </template>
               </vs-tr>
             </template>
-
             <template #footer>
-              <vs-pagination v-model="filtrate.page"
-                :length="$vs.getLength($vs.getSearch(filtrate.data, filtrate.search), filtrate.max)" />
+              <div style="height: 6px;"></div>
             </template>
           </vs-table>
         </div>
+        <vs-pagination v-model="filtrate.page" :length="$vs.getLength($vs.getSearch(filtrate.data, filtrate.search), filtrate.max)">
+                <vs-select v-model="filtrate.page">
+                  <vs-option 
+                    v-for="numberPage in filtrate.max" :label="numberPage" :value="numberPage" :key="numberPage">
+                    {{ numberPage }}
+                  </vs-option>
+                </vs-select>
+              </vs-pagination>
 
         <vs-dialog blur v-model="filtrate.dialog_add_edit" not-center prevent-close auto-width>
           <template #header>
@@ -194,7 +198,10 @@
 
       </div>
 
-      <div class="song" v-show="menucode === 'song'">
+    </div>
+
+    <div class="content" v-show="menucode === 'song'">
+      <div class="song">
         <vs-alert>
           <template #icon>
             <i class='bx bxs-playlist'></i>
@@ -211,11 +218,16 @@
             <i class='bx bxs-message-alt-x'></i>删除歌曲
           </vs-button>
         </div>
+      
+          <vs-input v-model="song.search" placeholder="搜索歌曲" primary>
+            <template #icon>
+              <i class='bx bx-search-alt'></i>
+        </template>
+      </vs-input>
+        
+        
         <div class="table">
-          <vs-table v-model="song.selected">
-            <template #header>
-              <vs-input v-model="song.search" border placeholder="Search" />
-            </template>
+          <vs-table v-model="song.selected" striped>
             <template #thead>
               <vs-tr>
                 <vs-th>
@@ -274,12 +286,18 @@
               </vs-tr>
             </template>
             <template #footer>
-              <vs-pagination v-model="song.page"
-                :length="$vs.getLength($vs.getSearch(song.data, song.search), song.max)" />
+              <div style="height: 6px;"></div>
             </template>
           </vs-table>
         </div>
-
+        <vs-pagination v-model="song.page" :length="$vs.getLength($vs.getSearch(song.data, song.search), song.max)">
+                <vs-select v-model="song.page">
+                  <vs-option 
+                    v-for="numberPage in song.max" :label="numberPage" :value="numberPage" :key="numberPage">
+                    {{ numberPage }}
+                  </vs-option>
+                </vs-select>
+              </vs-pagination>
 
         <vs-dialog blur v-model="song.dialog_add_edit" not-center prevent-close auto-width>
           <template #header>
@@ -362,8 +380,10 @@
           </template>
         </vs-dialog>
       </div>
+    </div>
 
-      <div class="singer" v-show="menucode === 'singer'">
+    <div class="content" v-show="menucode === 'singer'">
+      <div class="singer">
         <vs-alert>
           <template #icon>
             <i class='bx bxs-user-detail'></i>
@@ -381,11 +401,14 @@
           </vs-button>
 
         </div>
+        <vs-input v-model="singer.search" placeholder="搜索歌手"  primary>
+            <template #icon>
+              <i class='bx bx-search-alt'></i>
+        </template>
+      </vs-input>
         <div class="table">
           <vs-table v-model="singer.selected">
-            <template #header>
-              <vs-input v-model="singer.search" border placeholder="Search" />
-            </template>
+            
             <template #thead>
               <vs-tr>
                 <vs-th>
@@ -458,8 +481,7 @@
               </vs-tr>
             </template>
             <template #footer>
-              <vs-pagination v-model="singer.page"
-                :length="$vs.getLength($vs.getSearch(singer.data, singer.search), singer.max)" />
+             <div style="height: 6px;"></div>
             </template>
           </vs-table>
         </div>
@@ -471,11 +493,18 @@
 
           <div class="con-form">
             <div class="text">
-              <p>{{singer.intro}}</p>
+              <p>{{ singer.intro }}</p>
             </div>
           </div>
         </vs-dialog>
-
+        <vs-pagination v-model="singer.page" :length="$vs.getLength($vs.getSearch(singer.data, singer.search), song.max)">
+                <vs-select v-model="singer.page">
+                  <vs-option 
+                    v-for="numberPage in singer.max" :label="numberPage" :value="numberPage" :key="numberPage">
+                    {{ numberPage }}
+                  </vs-option>
+                </vs-select>
+              </vs-pagination>
         <vs-dialog blur v-model="singer.dialog_add_edit" not-center prevent-close auto-width>
           <template #header>
             <h4 class="not-margin">
@@ -637,7 +666,7 @@ export default {
         search: '',
         allCheck: false,
         page: 1,
-        max: 7,
+        max: 6,
         selected: [],
         data: [
           {
@@ -745,6 +774,9 @@ export default {
       },
     }
   },
+  created(){
+    console.log(this.filtrate.max);
+  },
   methods: {
   }
 
@@ -759,9 +791,11 @@ export default {
 }
 
 .music_group {
+  
   .content {
-    padding: 20px;
-    overflow: auto;
+    padding: 10px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
     height: 82vh;
 
     .btns {
@@ -873,4 +907,5 @@ getVar(var)
         text-decoration underline
   .vs-button
     margin 0px
+
 </style>
