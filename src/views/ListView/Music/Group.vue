@@ -5,20 +5,19 @@
         标签管理
       </vs-navbar-item>
       <vs-navbar-item :active="menucode === 'song'" id="song" @click='changeMenu("song")'>
-        单曲
+        歌曲管理
       </vs-navbar-item>
       <vs-navbar-item :active="menucode === 'singer'" id="singer" @click='changeMenu("singer")'>
-        歌手
+        歌手管理
       </vs-navbar-item>
     </vs-navbar>
     <div class="content" v-show="menucode === 'filtrate'">
       <div class="filtrate">
-       
         <div class="btns">
-          <vs-button relief @click="filtrate.dialog_add_edit = true">
+          <vs-button success relief @click="filtrate.dialog_add_edit = true">
             <i class='bx bxs-message-alt-add'></i>添加歌单类别
           </vs-button>
-          <vs-button success relief @click="filtrate.dialog_add_edit = true">
+          <vs-button warn  relief @click="filtrate.dialog_add_edit = true">
             <i class='bx bxs-message-alt-edit'></i>修改歌单类别
           </vs-button>
           <vs-button danger relief @click="filtrate.dialog_remove = true">
@@ -197,21 +196,15 @@
         </vs-dialog>
 
       </div>
-
     </div>
 
     <div class="content" v-show="menucode === 'song'">
       <div class="song">
-        <vs-alert>
-          <template #icon>
-            <i class='bx bxs-playlist'></i>
-          </template>
-        </vs-alert>
         <div class="btns">
-          <vs-button relief @click="song.dialog_add_edit = true">
+          <vs-button success relief @click="song.dialog_add_edit = true">
             <i class='bx bxs-message-alt-add'></i>添加歌曲
           </vs-button>
-          <vs-button success relief @click="song.dialog_add_edit = true">
+          <vs-button warn relief @click="song.dialog_add_edit = true">
             <i class='bx bxs-message-alt-edit'></i>修改歌曲信息
           </vs-button>
           <vs-button danger relief @click="song.dialog_remove = true">
@@ -384,16 +377,11 @@
 
     <div class="content" v-show="menucode === 'singer'">
       <div class="singer">
-        <vs-alert>
-          <template #icon>
-            <i class='bx bxs-user-detail'></i>
-          </template>
-        </vs-alert>
         <div class="btns">
-          <vs-button relief @click="singer.dialog_add_edit = true">
+          <vs-button success relief @click="singer.dialog_add_edit = true">
             <i class='bx bxs-user'></i>添加歌手
           </vs-button>
-          <vs-button success relief>
+          <vs-button warn relief>
             <i class='bx bxs-message-alt-edit'></i>修改歌手信息
           </vs-button>
           <vs-button danger relief @click="singer.dialog_remove = true">
@@ -799,7 +787,7 @@ export default {
     height: 82vh;
 
     .btns {
-      margin: 10px 0;
+      margin: 0 0 10px 0;
       display: flex;
       flex-direction: row;
       align-items: center;
