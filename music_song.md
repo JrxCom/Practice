@@ -1,0 +1,9 @@
+| 字段名称   | 字段类型     | 字段值   |
+| ---------- | ------------ | -------- |
+| id         | int(7)       | 歌曲id   |
+| name       | varchar(50)  | 歌曲名称 |
+| singer     | varchar(50)  | 歌手     |
+| issue_date | date         | 发行时间 |
+| duration   | varchar(50)  | 时长     |
+| lyric_path | varchar(225) | 歌词路径 |
+| song_path  | varchar(225) | 歌曲路径 |

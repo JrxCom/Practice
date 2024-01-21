@@ -1,0 +1,9 @@
+| 字段名称 | 字段类型     | 字段值   |
+| -------- | ------------ | -------- |
+| id       | int(7)       | 歌手id   |
+| name     | varchar(50)  | 歌手名称 |
+| photo    | varchar(255) | 歌手照片 |
+| intro    | varchar(255) | 歌手简介 |
+| country  | varchar(50)  | 歌手国籍 |
+| label    | enum(1,2,3)  | 歌手标签 |
+| birthday | date         | 歌手生日 |
