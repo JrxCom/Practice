@@ -1,0 +1,74 @@
+@import 'vuesax/dist/vuesax.css'
+  // vuesax弹窗修改
+getColor(vsColor, alpha = 1)
+    unquote("rgba(var(--vs-"+vsColor+"), "+alpha+")")
+getVar(var)
+    unquote("var(--vs-"+var+")")
+.not-margin
+  margin 0px
+  font-weight normal
+  padding 10px
+.con-form
+  width 100%
+  .form-list
+     display flex
+     align-items center
+     .vs-avatar-content
+      margin-right 10px
+     .vs-select
+      width 300px
+      &:hover
+        background none
+        box-shadow none
+        transform none
+  .message
+    margin 20px 0 30px 0
+  .flex
+    display flex
+    align-items center
+    justify-content space-between
+    a
+      font-size .8rem
+      opacity .7
+      &:hover
+        opacity 1
+  .vs-checkbox-label
+    font-size .8rem
+  .vs-input-content
+    margin 10px 0px
+    width calc(100%)
+    .vs-input
+      width 300px
+.footer-dialog
+  display flex
+  align-items center
+  justify-content space-around
+  flex-direction row
+  width calc(100%)
+  .new
+    margin 0px
+    margin-top 20px
+    padding: 0px
+    font-size .7rem
+    a
+      color getColor('primary') !important
+      margin-left 6px
+      &:hover
+        text-decoration underline
+  .vs-button
+    margin 0px
+
+// vuesax 新增vs-textarea
+.vs-textarea
+  border 2px solid transparent
+  background rgb(244, 247, 248)
+  color rgb(44, 62, 80)
+  padding: 8px 14px
+  border-radius 18px
+  transition all 0.25s ease
+  padding-left 10px
+  font-family Arial
+  transition: all 0.25s ease;
+  &::placeholder
+    font-family Microsoft YaHei
+    color #C0C7CC

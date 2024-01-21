@@ -1,6 +1,16 @@
-## Practice_WEB
+# 前台页面
 
+## 模块引入
 ```
-管理系统前端项目(Vue2 less Vuesax)
+npm install
 ```
 
+### 项目启动
+```
+npm run serve
+```
+
+### 项目打包
+```
+npm run build
+```
