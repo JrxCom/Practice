@@ -13,7 +13,9 @@ let routes = [
 		children: []
 	}
 ]
+//TODO 1.获取项目中的vue文件
 const router_context = require.context('../views/', true, /\.vue$/)
+//TODO 2.筛选哪些vue是页面，哪些是组件
 router_context.keys().forEach(item => {
 	if (item.split('/').length - 1 > 2 && item.indexOf('Component') == -1) {
 		let path = (item.slice(item.indexOf('/', 2) + 1, item.lastIndexOf('/'))).replace(/\//g, '_')
@@ -42,8 +44,7 @@ const router = new VueRouter({
 	routes
 })
 
-
-
+//TODO 路由守卫控制用户是否登录
 router.beforeEach((to, from, next) => {
 	if(document.cookie && document.cookie.length > 13){
 		if(to.path != '/login'){

@@ -1,15 +1,25 @@
 import request from "@/config/axios"
 
+//获取歌曲列表
 export const getsong = () => {
     return request({
-        url: "/getsong",
+        url: "/node/music/song/get",
         method:"get"
     })
 }
 
+//获取歌手信息下拉
+export const selectsinger = () => {
+    return request({
+        url: "/node/music/song/select",
+        method:"get"
+    })
+}
+
+//上传歌曲
 export const uploadsong = (formData) => {
     return request({
-        url: "/uploadsong",
+        url: "/node/music/song/uploadsong",
         method: "post",
         headers: {
             'Content-Type': 'multipart/form-data'
@@ -18,9 +28,10 @@ export const uploadsong = (formData) => {
     })
 }
 
+//上传歌词
 export const uploadlyric = (formData) => {
     return request({
-        url: "/uploadlyric",
+        url: "/node/music/song/uploadlyric",
         method: "post",
         headers: {
             'Content-Type': 'multipart/form-data'
@@ -29,9 +40,10 @@ export const uploadlyric = (formData) => {
     })
 }
 
+//添加歌曲信息
 export const addsong = (params) => {
     return request({
-        url: "/addsong",
+        url: "/node/music/song/add",
         method:"post",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -40,9 +52,10 @@ export const addsong = (params) => {
     })
 }
 
+//修改歌曲信息
 export const editsong = (params,id) => {
     return request({
-        url: "/editsong/?id=" + id,
+        url: "/node/music/song/edit/?id=" + id,
         method:"put",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -51,9 +64,10 @@ export const editsong = (params,id) => {
     })
 }
 
+//删除歌曲信息
 export const deletesong = (id_group) => {
         return request({
-        url: "/deletesong",
+        url: "/node/music/song/delete",
         method:"delete",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'

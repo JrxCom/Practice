@@ -1,5 +1,7 @@
 import request from "@/config/axios"
 
+
+//登录
 export const login = (params) => {
     return request({
         url: "/login",
@@ -11,6 +13,7 @@ export const login = (params) => {
     })
 }
 
+//获取用户信息
 export const get_info = () =>{
     return request({
         url:"/getinfo",
@@ -18,7 +21,7 @@ export const get_info = () =>{
     })
 }
 
-
+//退出
 export const logout = () =>{
     return request({
         url:"/logout",

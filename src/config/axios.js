@@ -25,9 +25,6 @@ request.interceptors.request.use(config => {
     config.headers["appkey"] = "";
     config.headers["token"] = "";
     config.headers["Authorization"] = 'Bearer ' + document.cookie.slice(13);
-    // if (config.method == "post") {
-    //     config.data = qs.stringify(config.data)
-    // }
     return config;
 }, error => {
     return Promise.reject(error)

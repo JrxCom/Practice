@@ -1,27 +1,24 @@
 <template>
   <div class="music_user">
-    <!-- 网站图标 -->
+    <!--? 网站图标 -->
     <div class="tag">
       <vs-button icon dark shadow>
         <i class='bx bxs-music'></i>
       </vs-button>
     </div>
-    <!-- 用户按钮组 -->
+    <!--? 用户添加、修改、删除按钮组 -->
     <div class="btns">
-      <!-- 添加用户按钮 -->
       <vs-button color="success" relief @click="showAddUserDia()">
         <i class="bx bx-message-square-add"></i> 添加用户
       </vs-button>
-      <!-- 修改用户按钮 -->
       <vs-button color="warn" relief @click="showEditUserDia()">
         <i class="bx bx-message-square-edit"></i> 修改用户
       </vs-button>
-      <!-- 删除用户按钮 -->
       <vs-button color="danger" relief @click="showDeleteUserDia()">
         <i class="bx bx-message-square-x"></i> 删除用户
       </vs-button>
     </div>
-    <!-- 表格 -->
+    <!--? 用户信息搜索 -->
     <div style="margin: 10px 0 20px 0;">
       <vs-input v-model="user_table.search" placeholder="搜索用户" state="primary">
         <template #icon>
@@ -29,7 +26,7 @@
         </template>
       </vs-input>
     </div>
-
+    <!--? 用户信息表格 -->
     <div class="table">
       <vs-table v-model="user_table.selected">
         <template #thead>
@@ -95,7 +92,7 @@
               {{ tr.age }}
             </vs-td>
             <vs-td>
-              <i v-if="tr.sex == 1" class="bx bx-male-sign" style="color: blue; font-size: 20px"></i>
+              <i v-if="tr.sex == '男'" class="bx bx-male-sign" style="color: blue; font-size: 20px"></i>
               <i v-else class="bx bx-female-sign" style="color: pink; font-size: 20px"></i>
             </vs-td>
             <vs-td>
@@ -135,7 +132,7 @@
         </template>
       </vs-table>
     </div>
-    <!-- 添加或修改弹窗 -->
+    <!--* 添加或修改用户信息弹窗 -->
     <vs-dialog blur v-model="dialog_add_edit.code" prevent-close>
       <template #header>
         <h4 class="not-margin">
@@ -165,10 +162,10 @@
             <i class="bx bx-male-female" style="font-size: 16px"></i>
           </vs-avatar>
           <vs-select placeholder="性别" v-model="dialog_add_edit.form.sex">
-            <vs-option label="男" value="1">
+            <vs-option label="男" value="男">
               男
             </vs-option>
-            <vs-option label="女" value="2">
+            <vs-option label="女" value="女">
               女
             </vs-option>
           </vs-select>
@@ -210,7 +207,7 @@
         </div>
       </template>
     </vs-dialog>
-    <!-- 完成添加弹窗 -->
+    <!--* 完成添加信息弹窗 -->
     <vs-dialog blur v-model="dialog_finsh.code" not-close prevent-close>
       <template #header>
         <h4 class="not-margin">
@@ -240,7 +237,7 @@
         </div>
       </template>
     </vs-dialog>
-    <!-- 删除用户弹窗 -->
+    <!--* 删除用户信息弹窗 -->
     <vs-dialog blur v-model="dialog_remove.code">
       <template #header>
         <h4 class="not-margin">
@@ -307,6 +304,7 @@ export default {
     // 获取用户信息列表
     get_user() {
       getuser().then(res => {
+        this.user_table.selected = []
         this.user_table.data = res.data.obj.records
         this.user_table.data.filter((i => {
           i.state = Boolean(Number(i.state))
@@ -423,16 +421,16 @@ export default {
     /* 禁止用户 */
     ban_state(id, val) {
       const isban = val == true ? '0' : '1'
-      banuser({state:isban},id).then(res=>{
+      banuser({ state: isban }, id).then(res => {
         this.$vs.notification({
-            color: "success",
-            position: "top-center",
-            text: res.data.message,
-            duration: "4000",
-            square: true,
-            flat: true,
-            icon: `<i class='bx bx-check'></i>`,
-          });
+          color: "success",
+          position: "top-center",
+          text: res.data.message,
+          duration: "4000",
+          square: true,
+          flat: true,
+          icon: `<i class='bx bx-check'></i>`,
+        });
       })
     }
   },
