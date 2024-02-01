@@ -3,72 +3,91 @@ const {router} = require('../app/app')
 // 管理相关api路径、方法
 const _Path = require('./_/path')
 const _Handler = require('./_/handler')
-// 音乐web管理相关api路径、方法
-const M_Path = require('./_music/path')
-const M_Handler = require('./_music/handler')
+// 音乐web管理相关用户api路径、方法
+const MusicUserPath = require('./_music/user/path')
+const MusicUserHandler = require('./_music/user/handler')
+// 音乐web管理相关类别api路径、方法
+const MusicFiltratePath = require('./_music/filtrate/path')
+const MusicFiltrateHandler = require('./_music/filtrate/handler')
+// 音乐web管理相关歌手api路径、方法
+const MusicSingerPath = require('./_music/singer/path')
+const MusicSingerHandler = require('./_music/singer/handler')
+// 音乐web管理相关歌曲api路径、方法
+const MusicSongPath = require('./_music/song/path')
+const MusicSongHandler = require('./_music/song/handler')
 
 /**
  * @method (管理员相关api集合)
  */
-// 登录
+//*登录
 router.post(_Path.login,_Handler.login)
-// 退出登录
+//*退出登录
 router.post(_Path.logout,_Handler.logout)
-// 获取用户信息
+//*获取用户信息
 router.get(_Path.getinfo,_Handler.getinfo)
 /**
  * @method (音乐web管理相关api)
  */
-//?用户相关
+//?用户
 //*获取用户信息
-router.get(M_Path.getUser,M_Handler.getUser)
-//*添加用户
-router.post(M_Path.addUser,M_Handler.addUser)
-//*修改用户
-router.put(M_Path.editUser,M_Handler.editUser)
-//*删除用户
-router.delete(M_Path.deleteUser,M_Handler.deleteUser)
-//*禁用用户
-router.post(M_Path.banUser,M_Handler.banUser)
-//?标签相关
-//*获取父标签
-router.get(M_Path.getFiltrate,M_Handler.getFiltrate)
-//*添加父标签
-router.post(M_Path.addFiltrate,M_Handler.addFiltrate)
-//*修改父标签
-router.put(M_Path.editFiltrate,M_Handler.editFiltrate)
-//*删除父标签
-router.delete(M_Path.deleteFiltrate,M_Handler.deleteFiltrate)
-////获取子标签
-router.get(M_Path.getLabel,M_Handler.getLabel)
-//*添加子标签
-router.post(M_Path.addLabel,M_Handler.addLabel)
-//*修改子标签
-router.put(M_Path.editLabel,M_Handler.editLabel)
-//*删除子标签
-router.delete(M_Path.deleteLabel,M_Handler.deleteLabel)
-//?歌曲相关
-//*上传歌曲
-router.post(M_Path.uploadSong,M_Handler.uploadSong)
-//*上传歌词
-router.post(M_Path.uploadLyric,M_Handler.uploadLyric)
-//*添加歌曲
-router.post(M_Path.addSong,M_Handler.addSong)
-//*修改歌曲
-router.put(M_Path.editSong,M_Handler.editSong)
-//*删除歌曲
-router.delete(M_Path.deleteSong,M_Handler.deleteSong)
-//?歌手相关
+router.get(MusicUserPath.GetUser,MusicUserHandler.GetUser)
+//*添加用户信息
+router.post(MusicUserPath.AddUser,MusicUserHandler.AddUser)
+//*修改用户信息
+router.put(MusicUserPath.EditUser,MusicUserHandler.EditUser)
+//*删除用户信息
+router.delete(MusicUserPath.DeleteUser,MusicUserHandler.DeleteUser)
+//*禁用用户信息
+router.post(MusicUserPath.BanUser,MusicUserHandler.BanUser)
+
+//?类别
+//*获取类别信息
+router.get(MusicFiltratePath.GetFiltrate,MusicFiltrateHandler.GetFiltrate)
+//*添加类别信息
+router.post(MusicFiltratePath.AddFiltrate,MusicFiltrateHandler.AddFiltrate)
+//*修改类别信息
+router.put(MusicFiltratePath.EditFiltrate,MusicFiltrateHandler.EditFiltrate)
+//*删除类别信息
+router.delete(MusicFiltratePath.DeleteFiltrate,MusicFiltrateHandler.DeleteFiltrate)
+////获取标签信息
+router.get(MusicFiltratePath.GetLabel,MusicFiltrateHandler.GetLabel)
+//*添加标签信息
+router.post(MusicFiltratePath.AddLabel,MusicFiltrateHandler.AddLabel)
+//*修改标签信息
+router.put(MusicFiltratePath.EditLabel,MusicFiltrateHandler.EditLabel)
+//*删除标签信息
+router.delete(MusicFiltratePath.DeleteLabel,MusicFiltrateHandler.DeleteLabel)
+
+//?歌手
 //*获取歌手
-router.get(M_Path.getSinger,M_Handler.getSinger)
+router.get(MusicSingerPath.GetSinger,MusicSingerHandler.GetSinger)
 //*上传歌手头像
-router.post(M_Path.uploadSinger,M_Handler.uploadSinger)
+router.post(MusicSingerPath.UploadSinger,MusicSingerHandler.UploadSinger)
+//*获取歌手类别
+router.get(MusicSingerPath.SelectSingerLabel,MusicSingerHandler.SelectSingerLabel)
 //*添加歌手
-router.post(M_Path.addSinger,M_Handler.addSinger)
+router.post(MusicSingerPath.AddSinger,MusicSingerHandler.AddSinger)
 //*修改歌手
-router.post(M_Path.editSinger,M_Handler.editSinger)
+router.put(MusicSingerPath.EditSinger,MusicSingerHandler.EditSinger)
 //*删除歌手
-router.post(M_Path.deleteSinger,M_Handler.deleteSinger)
+router.delete(MusicSingerPath.DeleteSinger,MusicSingerHandler.DeleteSinger)
+
+//?歌曲
+//*获取歌曲
+router.get(MusicSongPath.GetSong,MusicSongHandler.GetSong)
+//*获取歌手下拉
+router.get(MusicSongPath.SelectSinger,MusicSongHandler.SelectSinger)
+//*上传歌曲
+router.post(MusicSongPath.UploadSong,MusicSongHandler.UploadSong)
+//*上传歌词
+router.post(MusicSongPath.UploadLyric,MusicSongHandler.UploadLyric)
+//*添加歌曲
+router.post(MusicSongPath.AddSong,MusicSongHandler.AddSong)
+//*修改歌曲
+router.put(MusicSongPath.EditSong,MusicSongHandler.EditSong)
+//*删除歌曲
+router.delete(MusicSongPath.DeleteSong,MusicSongHandler.DeleteSong)
+
 
 // 共享路由
 module.exports = router
