@@ -1,18 +1,19 @@
-## Practice_WEB
-
+## 引入插件
 ```
-前端(Vue2 less Vuesax)	版本号(1.0.1)
-```
-
-## Practice_RORT
-
-```
-后端(node)	版本号(1.0.1)
+npm install
 ```
 
-## Practice_SQL
-
+### 启动项目
 ```
-数据库(mysql)	版本号(1.0.1)
+npm run serve
 ```
 
+### 项目打包
+```
+npm run build
+```
+
+### 代码检查
+```
+npm run lint
+```

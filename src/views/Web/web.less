@@ -1,0 +1,233 @@
+.web {
+    .header_view {
+      background-color: var(--theme-background-color_);
+      .navList {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+  
+        .nav {
+          padding: 10px 0;
+          font-family: "cFont";
+          font-size: 16px;
+          color: #808b96;
+          border-bottom: 2px solid var(--theme-background-color_);
+          &:hover {
+            cursor: pointer;
+            color: var(--theme-font-color);
+          }
+        }
+        .nav_ {
+          color: var(--theme-font-color);
+          border-bottom: 2px solid var(--theme-font-color);
+        }
+      }
+    }
+    .main_view {
+      .tools {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        padding: 10px 20px;
+        img {
+          width: 14px;
+          height: 14px;
+        }
+      }
+      .table {
+        img {
+          width: 14px;
+          height: 14px;
+        }
+        background-color: var(--theme-background-color_);
+        padding: 20px;
+        height: 80vh;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+  
+        table {
+          margin-top: 20px;
+          background-color: var(--theme-background-color_);
+          border-radius: 20px;
+          th {
+            background-color: var(--theme-background-color);
+            color: var(--theme-font-color);
+          }
+          tr {
+            background-color: var(--theme-background-color_);
+          }
+          td {
+            color: var(--theme-font-color);
+          }
+        }
+      }
+    }
+    .dialog_view {
+      .mark {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        z-index: 999;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+      .card {
+        padding: 10px 20px;
+        border-radius: 20px;
+        background-color: var(--theme-background-color_);
+        position: relative;
+        left: 50%;
+        top: 40%;
+        transform: translate3d(-50%, -50%, 0);
+      }
+      .add_edit {
+        .mark();
+        .card {
+          .card();
+          width: 300px;
+          .header {
+            color: var(--theme-font-color);
+            font-family: "eFontB";
+            text-align: center;
+            font-size: 20px;
+          }
+          .main {
+            padding: 30px 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            .formList {
+              .formItem {
+                width: 200px;
+                position: relative;
+                img{
+                  width: 14px;
+                  height: 14px;
+                }
+                .label {
+                  color: var(--theme-font-color);
+                  position: absolute;
+                  top: -18px;
+                  left: 10px;
+                  font-size: 12px;
+                }
+                .value {
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  flex-wrap: wrap;
+                  padding: 10px;
+                  box-sizing: border-box;
+                  gap: 10px;
+                }
+                label {
+                  color: var(--theme-font-color);
+                }
+              }
+            }
+          }
+          .footer {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -20px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            img {
+              width: 14px;
+              height: 14px;
+            }
+          }
+          .close {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            img {
+              width: 14px;
+              height: 14px;
+            }
+          }
+        }
+      }
+      .remove {
+          .mark();
+          .card_remove {
+            .card();
+            width: 300px;
+            .header {
+              color: var(--theme-font-color);
+              font-family: "eFontB";
+              text-align: center;
+              font-size: 20px;
+            }
+            .main {
+              padding: 30px 0 20px 0;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 10px;
+              p {
+                font-size: 16px;
+                font-family: "eFontM";
+                color: var(--theme-font-color);
+              }
+              span {
+                font-size: 12px;
+                font-family: "eFontL";
+                color: #808b96;
+              }
+            }
+            .footer {
+              position: absolute;
+              left: 50%;
+              transform: translateX(-50%);
+              bottom: -20px;
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              justify-content: center;
+              gap: 60px;
+              img {
+                width: 14px;
+                height: 14px;
+              }
+            }
+            .close {
+              position: absolute;
+              right: -10px;
+              top: -10px;
+              img {
+                width: 14px;
+                height: 14px;
+              }
+            }
+          }
+        }
+  
+      .dialog-leave-active,
+      .dialog-enter-active {
+        transition: all 1s ease;
+      }
+      .dialog-leave-active,
+      .dialog-enter {
+        height: 300px !important;
+        opacity: 0;
+      }
+    }
+  }
+  .vs-input-content {
+    label {
+      color: var(--theme-font-color);
+    }
+  }
