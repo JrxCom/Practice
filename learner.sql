@@ -1,5 +1,11 @@
 CREATE DATABASE learner
 
+CREATE TABLE `learner`.`user`  (
+  `id` bigint(0) NOT NULL COMMENT '标识码',
+  `userName` varchar(50) NOT NULL COMMENT '用户名称',
+  `password` varchar(50) NOT NULL COMMENT '用户密码'
+);
+
 CREATE TABLE `learner`.`web`  (
   `id` bigint NOT NULL COMMENT '网站id',
   `name` varchar(10) NOT NULL COMMENT '网站名称',
