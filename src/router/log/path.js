@@ -1,6 +1,18 @@
-/* 登录 */
-exports.login = '/login'
+/* 获取验证码 */
+exports.getCode = {
+    path: '/getCode',
+    method: 'get'
+}
 
-/* 登出 */
-exports.logout = '/logout'
+/* 登录 */
+exports.login = {
+    path: '/login',
+    method: 'post'
+}
+
+/* 退出 */
+exports.logout = {
+    path: '/logout',
+    method: 'get'
+}
 

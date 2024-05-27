@@ -5,6 +5,7 @@ const fs = require("fs")
 
 /* 获取表列表 */
 exports.getTableList = (req, res) => {
+    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     db.query(`SELECT * FROM learner.table WHERE wid = ${req.query.wid}`, (err, results) => {
         if (results) res.send({ status: 200, obj: { records: results } })
         if (err) res.send({ status: 500, message: "获取表列表失败!" })
@@ -13,6 +14,7 @@ exports.getTableList = (req, res) => {
 
 /* 添加表信息 */
 exports.addTableInfo = (req, res) => {
+    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     const data = {
         id: new Date().getTime(),
         wid: req.body['wid'],
@@ -73,6 +75,7 @@ exports.addTableInfo = (req, res) => {
 
 /* 获取表信息 */
 exports.getTableInfo = (req, res) => {
+    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     db.query(`SELECT * FROM learner.table WHERE id = ${req.query.id}`, (err, results) => {
         if (results) res.send({ status: 200, obj: results[0] })
         if (err) res.send({ status: 500, message: "获取表信息失败!" })
@@ -81,6 +84,7 @@ exports.getTableInfo = (req, res) => {
 
 /* 修改表信息 */
 exports.editTableInfo = (req, res) => {
+    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     const data = {
         name: req.body['name'],
         describe: req.body['describe'],
@@ -139,6 +143,7 @@ exports.editTableInfo = (req, res) => {
 
 /* 删除表信息 */
 exports.removeTableInfo = (req, res) => {
+    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
             resolve(results[0]['database'])

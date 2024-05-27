@@ -26,8 +26,9 @@ const uploadRouterPath = require('./upload/path')
 const uploadRouterHandler = require('./upload/handler')
 
 /* log api集合 */
-router.post(logRouterPath['login'],logRouterHandler['login'])
-router.get(logRouterPath['logout'],logRouterHandler['logout'])
+for (item in logRouterPath) {
+    router[logRouterPath[item]['method']](logRouterPath[item]['path'],logRouterHandler[item])
+}
 
 /* web api集合 */
 for (item in WebRouterPath) {
