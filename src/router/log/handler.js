@@ -23,7 +23,7 @@ exports.login = (req, res) => {
     if (req.cookies.code === undefined) return res.send({ status: 500, message: "验证码已失效!" })
         
     const is_user = new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM learner.user WHERE username = '${req.body.user}' AND password = '${req.body.password}'`, (err, results) => {
+        db.query(`SELECT * FROM learner.user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`, (err, results) => {
             if (results.length > 0) {
                 resolve()
             } else {
@@ -32,14 +32,14 @@ exports.login = (req, res) => {
         })
     });
     const is_code = new Promise((resolve, reject) => {
-        if (req.session.code === req.body.code) {
+        if (req.cookies.code === req.body.code) {
             resolve()
         } else {
             reject('验证码输入错误!');
         }
     });
     Promise.all([is_user, is_code]).then(() => {
-        res.cookie("user", req.body.user, { maxAge: 1800 * 1000 })
+        res.cookie("user", 74596852, { maxAge: 1800 * 1000 })
         res.send({ status: 200, message: '登录成功。' })
     }).catch(err => {
         res.send({ status: 500, message: err })
