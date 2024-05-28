@@ -2,7 +2,7 @@
   "name": "leraner_port",
   "version": "1.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "node": "nodemon ./src/main.js",
     "build": "webpack"

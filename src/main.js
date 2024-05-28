@@ -9,6 +9,6 @@ app.use(cors())
 /* 配置路由 */
 app.use(router)
 /* 启动服务器 */
-app.listen(8080, () => { 
+app.listen(80, () => { 
     console.log('启动成功'+ new Date().getTime());
 })
