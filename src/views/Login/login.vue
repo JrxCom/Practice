@@ -169,6 +169,15 @@
                 <img v-else src="@/assets/login/darkLock.png" />
               </template>
             </vs-input>
+            <div class="code">
+              <vs-input primary placeholder="Auth code" v-model="form['code']">
+                <template #icon>
+                  <img v-if="!themeCode" src="@/assets/login/lightCode.png" />
+                  <img v-else src="@/assets/login/darkCode.png" />
+                </template>
+              </vs-input>
+              <div v-html="codeImgSrc" @click="get_code()"></div>
+            </div>
             <vs-checkbox v-model="form['remember']">
               <template #icon>
                 <img v-if="!themeCode" src="@/assets/common/lightCheck.png" />
@@ -178,7 +187,7 @@
             </vs-checkbox>
           </div>
           <div class="footer">
-            <vs-button icon>
+            <vs-button icon @click="log_in()">
               <img src="@/assets/login/loginButton.png" />
             </vs-button>
           </div>
@@ -190,6 +199,7 @@
 
 <script>
 import theme from "@/mixin/theme.js";
+import { getCode, login } from "@/api/log";
 export default {
   name: "login",
   mixins: [theme],
@@ -198,13 +208,30 @@ export default {
       year: new Date().getFullYear().toString().slice(2),
       month: (new Date().getMonth() + 1).toString().padStart(2, "0"),
       date: new Date().getDate().toString().padStart(2, "0"),
+      codeImgSrc: "",
       dialogCode: false,
       form: {
         user: "",
         password: "",
-        remember: "",
+        code: "",
+        remember: false,
       },
     };
+  },
+  created() {
+    this.get_code();
+  },
+  methods: {
+    get_code() {
+      getCode().then((res) => {
+        this.codeImgSrc = res.data;
+      });
+    },
+    log_in() {
+      login(this.form).then(res=>{
+        console.log(res);
+      })
+    },
   },
 };
 </script>

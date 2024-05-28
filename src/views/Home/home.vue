@@ -8,9 +8,7 @@
       <p>
         当数据源发生变化时会根据最新的数据源自动更新页面的结构当表单元素的值发生变化时
       </p>
-      <vs-button border block>
-        www.baidu.com
-      </vs-button>
+      <vs-button border block> www.baidu.com </vs-button>
       <span>MUSIC</span>
       <label>2024-01-01 12:22:01</label>
     </div>
@@ -18,10 +16,17 @@
 </template>
 
 <script>
+import { getWebList } from "@/api/web";
+
 export default {
   name: "home",
   data() {
     return {};
+  },
+  created() {
+    getWebList().then((res) => {
+      console.log(res);
+    });
   },
 };
 </script>
@@ -71,12 +76,11 @@ export default {
       font-family: "eFontM";
       color: var(--theme-font-color);
     }
-    label{
-        font-size: 12px;
-        font-family: 'eFontM';
-        color:#808b96;
+    label {
+      font-size: 12px;
+      font-family: "eFontM";
+      color: #808b96;
     }
-   
   }
 }
 </style>

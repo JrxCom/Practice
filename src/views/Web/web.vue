@@ -299,6 +299,7 @@ export default {
       removeDialog:false,
     };
   },
+  
   methods: {
     data(type) {
       if (type === "add") {
