@@ -13,14 +13,15 @@ exports.getCode = (req, res) => {
         background: "#808b96",
         fontSize: 60
     })
-    req.session.code = img.text
-    console.log(req.session.code);
+    res.cookie("code", img.text, { maxAge: 300 * 1000 })
     res.type("svg")
     res.send(img.data)
 }
 
 /* 登录 */
 exports.login = (req, res) => {
+    if (req.cookies.code === undefined) return res.send({ status: 500, message: "验证码已失效!" })
+        
     const is_user = new Promise((resolve, reject) => {
         db.query(`SELECT * FROM learner.user WHERE username = '${req.body.user}' AND password = '${req.body.password}'`, (err, results) => {
             if (results.length > 0) {
@@ -38,7 +39,7 @@ exports.login = (req, res) => {
         }
     });
     Promise.all([is_user, is_code]).then(() => {
-        res.cookie("user", req.body.user, { maxAge: 1000 * 1000 })
+        res.cookie("user", req.body.user, { maxAge: 1800 * 1000 })
         res.send({ status: 200, message: '登录成功。' })
     }).catch(err => {
         res.send({ status: 500, message: err })
@@ -48,6 +49,6 @@ exports.login = (req, res) => {
 /* 退出 */
 exports.logout = (req, res) => {
     if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
-    res.cookie("user", req.cookies.user, { maxAge: 1 * 1000 })
+    res.cookie("user", undefined, { maxAge: 1 * 1000 })
     res.send({ status: 200, message: '退出成功。' })
 }
