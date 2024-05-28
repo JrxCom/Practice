@@ -152,7 +152,11 @@
           </div>
           <div class="header">Log In</div>
           <div class="main">
-            <vs-input primary placeholder="User name" v-model="form['user']">
+            <vs-input
+              primary
+              placeholder="User name"
+              v-model="form['username']"
+            >
               <template #icon>
                 <img v-if="!themeCode" src="@/assets/login/lightUser.png" />
                 <img v-else src="@/assets/login/darkUser.png" />
@@ -211,7 +215,7 @@ export default {
       codeImgSrc: "",
       dialogCode: false,
       form: {
-        user: "",
+        username: "",
         password: "",
         code: "",
         remember: false,
@@ -219,6 +223,13 @@ export default {
     };
   },
   created() {
+    console.log(Boolean(undefined));
+    this.form = {
+      username: localStorage.getItem("username") || "",
+      password: localStorage.getItem("password") || "",
+      code: "",
+      remember: Boolean(localStorage.getItem("remember")),
+    };
     this.get_code();
   },
   methods: {
@@ -228,9 +239,20 @@ export default {
       });
     },
     log_in() {
-      login(this.form).then(res=>{
-        console.log(res);
-      })
+      login(this.form).then((res) => {
+        if (res.data.status === 200) {
+          if (this.form["remember"]) {
+            localStorage.setItem("username", this.form["username"]);
+            localStorage.setItem("password", this.form["password"]);
+            localStorage.setItem("remember", this.form["remember"]);
+            this.$router.push({path:'/'})
+          } else {
+            localStorage.removeItem("username");
+            localStorage.removeItem("password");
+            localStorage.removeItem("remember");
+          }
+        }
+      });
     },
   },
 };

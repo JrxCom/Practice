@@ -2,7 +2,7 @@ import request from '@/plugins/axios'
 
 export const getCode = () => {
     return request({
-        url: 'api/getCode',
+        url: 'getCode',
         method: 'get',
     })
 }
