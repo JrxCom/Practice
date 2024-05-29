@@ -3,7 +3,7 @@ const db = require('../../db/db')
 
 /* 获取数据列表 */
 exports.getDataList = (req, res) => {
-    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
             resolve(results[0]['database'])
@@ -27,7 +27,7 @@ exports.getDataList = (req, res) => {
 
 /* 添加数据信息 */
 exports.addDataInfo = (req, res) => {
-    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     const data = req.body
     data['id'] = new Date().getTime()
     data['creatime'] = new Date()
@@ -57,7 +57,7 @@ exports.addDataInfo = (req, res) => {
 
 /* 获取数据信息 */
 exports.getDataInfo = (req, res) => {
-    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
             resolve(results[0]['database'])
@@ -80,7 +80,7 @@ exports.getDataInfo = (req, res) => {
 
 /* 修改数据信息 */
 exports.editDataInfo = (req, res) => {
-    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     const data = req.body
 
     const get_database = new Promise((resolve) => {
@@ -107,7 +107,7 @@ exports.editDataInfo = (req, res) => {
 
 /* 删除数据信息 */
 exports.removeDataInfo = (req, res) => {
-    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
             resolve(results[0]['database'])

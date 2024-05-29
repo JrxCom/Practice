@@ -20,7 +20,7 @@ const randomFileName = () => {
 
 /* 上传资源 */
 exports.upload = async (req, res) => {
-    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
             resolve('/' + results[0]['database'])

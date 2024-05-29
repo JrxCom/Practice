@@ -39,7 +39,8 @@ exports.login = (req, res) => {
         }
     });
     Promise.all([is_user, is_code]).then(() => {
-        res.cookie("user", 74596852, { maxAge: 1800 * 1000 })
+        res.cookie("code", undefined, { maxAge: 0 * 1000 })
+        res.cookie("cookieCode", new Date().toUTCString(), { maxAge: 1800 * 1000 })
         res.send({ status: 200, message: '登录成功。' })
     }).catch(err => {
         res.send({ status: 500, message: err })
@@ -48,7 +49,7 @@ exports.login = (req, res) => {
 
 /* 退出 */
 exports.logout = (req, res) => {
-    if (req.cookies.user === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
-    res.cookie("user", undefined, { maxAge: 1 * 1000 })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    res.cookie("cookieCode", undefined, { maxAge: 0 * 1000 })
     res.send({ status: 200, message: '退出成功。' })
 }
