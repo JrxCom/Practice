@@ -1,14 +1,18 @@
 <template>
   <div class="manage">
     <div class="web_view">
-      <vs-select v-model="webCode" state="primary">
+      <vs-select
+        placeholder="请选择"
+        v-model="webCode"
+        state="primary"
+      >
         <vs-option
-          v-for="(item, index) in webArry"
+          v-for="(item,index) in webArray"
           :key="index"
-          :label="item.label + ':' + item.value"
-          :value="item.value"
+          :label="item.name" 
+          :value="item.id"
         >
-          {{ item.label }}
+          {{ item.name }}
         </vs-option>
       </vs-select>
       <vs-button icon color="primary" relief @click="web('add')">
@@ -29,15 +33,16 @@
         <img src="@/assets/manage/addButton.png" /> Add Table
       </vs-button>
       <div class="table_list">
-        <div class="table_cell" v-for="(item, index) in tableArry" :key="index">
+        <div
+          class="table_cell"
+          v-for="(item, index) in tableArray"
+          :key="index"
+        >
           <p>{{ item.name }}</p>
           <span>{{ item.table }}</span>
           <div class="table_tool">
             <img src="@/assets/manage/edit.png" @click="table('edit')" />
-            <img
-              src="@/assets/manage/remove.png"
-              @click="remove('table')"
-            />
+            <img src="@/assets/manage/remove.png" @click="remove('table')" />
           </div>
         </div>
       </div>
@@ -47,7 +52,11 @@
         <img src="@/assets/manage/addButton.png" /> Add Field
       </vs-button>
       <div class="field_list">
-        <div class="field_cell" v-for="(item, index) in fieldArry" :key="index">
+        <div
+          class="field_cell"
+          v-for="(item, index) in fieldArray"
+          :key="index"
+        >
           <h4>{{ item.name }}</h4>
           <p>{{ item.describe }}</p>
           <span>{{ item.type }}</span>
@@ -292,16 +301,20 @@
 </template>
 
 <script>
+import {
+  getWebList,
+  addWebInfo,
+  getWebInfo,
+  editWebInfo,
+  removeWebInfo,
+} from "@/api/web";
 export default {
   name: "manage",
   data() {
     return {
       dialogType: false,
-      webCode: "Music:1",
-      webArry: [
-        { label: "Music", value: "1" },
-        { label: "Video", value: "2" },
-      ],
+      webCode: "",
+      webArray: new Array(20),
       webDialog: false,
       webTitle: "",
       webForm: {
@@ -312,7 +325,7 @@ export default {
         logo: "",
       },
       tableCode: "",
-      tableArry: [
+      tableArray: [
         { id: 1, name: "用户管理", table: "user" },
         { id: 2, name: "音乐管理", table: "music" },
       ],
@@ -324,7 +337,7 @@ export default {
         table: "",
       },
       fieldCode: "",
-      fieldArry: [
+      fieldArray: [
         {
           id: 1,
           name: "名称",
@@ -347,8 +360,8 @@ export default {
       fieldForm: {
         name: "",
         describe: "",
-        creatway:'',
-        showay:'',
+        creatway: "",
+        showay: "",
         type: "",
         size: "",
         field: "",
@@ -358,7 +371,17 @@ export default {
       themeCode: false,
     };
   },
+  created() {
+    this.get_web_list();
+    
+  },
   methods: {
+    get_web_list() {
+      getWebList().then((res) => {
+        this.webArray = res.data.obj.records;
+        this.webCode = this.webArray[0].id;
+      });
+    },
     web(type) {
       if (type === "add") {
         this.webTitle = "Add Web";

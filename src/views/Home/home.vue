@@ -1,16 +1,16 @@
 <template>
   <div class="home">
-    <div class="card">
+    <div class="card" v-for="(item,index) in webArray" :key="index">
       <div class="header">
-        <img src="@/assets/index/Music.png" alt="" />
-        <p>Music</p>
+        <img :src="item.logo" alt="" />
+        <p>{{item.name}}</p>
       </div>
       <p>
-        当数据源发生变化时会根据最新的数据源自动更新页面的结构当表单元素的值发生变化时
+        {{item.describe}}
       </p>
-      <vs-button border block> www.baidu.com </vs-button>
-      <span>MUSIC</span>
-      <label>2024-01-01 12:22:01</label>
+      <vs-button border block> {{item.website}} </vs-button>
+      <span>{{item.database}}</span>
+      <label>{{new Date(item.creatime).toLocaleString()}}</label>
     </div>
   </div>
 </template>
@@ -21,11 +21,13 @@ import { getWebList } from "@/api/web";
 export default {
   name: "home",
   data() {
-    return {};
+    return {
+      webArray:[]
+    };
   },
   created() {
     getWebList().then((res) => {
-      console.log(res);
+      this.webArray = res.data.obj.records
     });
   },
 };

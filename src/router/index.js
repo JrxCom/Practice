@@ -12,7 +12,7 @@ const routes = [
   {
     path: '/',
     name: 'index',
-    redirect:'/home',
+    redirect: '/home',
     component: () => import('@/views/Index/index.vue'),
     children: [{
       path: '/home',
@@ -47,13 +47,13 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // 检查用户是否登录
-  console.log(document.cookie);
-  next()
-  /* if () {
-    next('/login'); // 如果未登录，重定向到登录页面
+  if (document.cookie.indexOf('cookieCode') === -1 && to.path != '/login') {
+    next('/login');
+  } else if (document.cookie.indexOf('cookieCode') != -1 && to.path === '/login') {
+    next('/');
   } else {
-    next(); // 已登录，继续路由导航
-  } */
+    next()
+  }
 });
 
 export default router

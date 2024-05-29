@@ -198,6 +198,20 @@
         </div>
       </div>
     </transition>
+
+    <div class="alert_view">
+      <vs-alert v-model="loginTipsCode" solid>
+        <h4>{{ loginTipsMessage }}</h4>
+      </vs-alert>
+
+      <vs-alert
+        color="warn"
+        solid
+        v-model="loginTipsWarnCode"
+      >
+      <h4>{{ loginTipsMessage }}</h4>
+      </vs-alert>
+    </div>
   </div>
 </template>
 
@@ -215,21 +229,17 @@ export default {
       codeImgSrc: "",
       dialogCode: false,
       form: {
-        username: "",
-        password: "",
+        username: localStorage.getItem("username") || "",
+        password: localStorage.getItem("password") || "",
         code: "",
-        remember: false,
+        remember: Boolean(localStorage.getItem("remember")),
       },
+      loginTipsCode: false,
+      loginTipsWarnCode: false,
+      loginTipsMessage: "",
     };
   },
   created() {
-    console.log(Boolean(undefined));
-    this.form = {
-      username: localStorage.getItem("username") || "",
-      password: localStorage.getItem("password") || "",
-      code: "",
-      remember: Boolean(localStorage.getItem("remember")),
-    };
     this.get_code();
   },
   methods: {
@@ -245,13 +255,25 @@ export default {
             localStorage.setItem("username", this.form["username"]);
             localStorage.setItem("password", this.form["password"]);
             localStorage.setItem("remember", this.form["remember"]);
-            this.$router.push({path:'/'})
+            this.loginTipsMessage = res.data.message;
+            this.loginTipsCode = true;
+            setTimeout(() => {
+              this.loginTipsCode = false
+              this.$router.push({ path: "/" });
+            }, 2000);
           } else {
             localStorage.removeItem("username");
             localStorage.removeItem("password");
             localStorage.removeItem("remember");
           }
+        } else {
+          this.loginTipsMessage = res.data.message;
+          this.loginTipsWarnCode = true;
+          setTimeout(() => {
+              this.loginTipsWarnCode = false
+            }, 2000);
         }
+        this.dialogCode = false;
       });
     },
   },

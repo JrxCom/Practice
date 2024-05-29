@@ -75,23 +75,21 @@
       <router-view></router-view>
     </div>
     <div class="dialog">
-        <transition name="dialog">
+      <transition name="dialog">
         <div class="logout" v-show="dialogCode">
           <div class="card_logout">
             <div class="close" @click="dialogCode = false">
-              <vs-button icon border warn>
-                <img src="@/assets/common/warnClose.png" />
+              <vs-button icon border danger>
+                <img src="@/assets/common/removeClose.png" />
               </vs-button>
             </div>
-            <div class="header">
-              提示
-            </div>
+            <div class="header">提示</div>
             <div class="main">
               <p>是否退出登录?</p>
               <span>说明：退出成功后页面跳转到登录页</span>
             </div>
             <div class="footer">
-              <vs-button icon warn>
+              <vs-button icon danger @click="log_out()">
                 <img src="@/assets/common/confirm.png" />
               </vs-button>
               <vs-button icon color="#808b96" @click="dialogCode = false">
@@ -102,22 +100,45 @@
         </div>
       </transition>
     </div>
+    <div class="alert">
+      <vs-alert v-model="logoutTipsCode" solid>
+        <h4>{{ logoutTipsMessage }}</h4>
+      </vs-alert>
+    </div>
   </div>
 </template>
 
 <script>
 import theme from "@/mixin/theme.js";
+import { logout } from "@/api/log";
 export default {
   name: "index",
   mixins: [theme],
   data() {
     return {
       active: "home",
-      dialogCode:false
+      dialogCode: false,
+      logoutTipsCode: false,
+      logoutTipsMessage: "",
     };
   },
   created() {
     this.active = this.$route.name;
+  },
+  methods: {
+    log_out() {
+      logout().then((res) => {
+        if (res.data.status === 200) {
+          this.logoutTipsMessage = res.data.message;
+          this.logoutTipsCode = true;
+          setTimeout(() => {
+            this.dialogCode = true;
+            this.logoutTipsCode = false;
+            this.$router.push({ path: "/login" });
+          }, 2000);
+        }
+      });
+    },
   },
 };
 </script>
