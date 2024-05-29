@@ -3,7 +3,7 @@ import request from '@/plugins/axios'
 /* 获取验证码 */
 export const getCode = () => {
     return request({
-        url: 'getCode',
+        url: '/getCode',
         method: 'get',
     })
 }

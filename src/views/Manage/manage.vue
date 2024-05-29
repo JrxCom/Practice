@@ -1,15 +1,11 @@
 <template>
   <div class="manage">
     <div class="web_view">
-      <vs-select
-        placeholder="请选择"
-        v-model="webCode"
-        state="primary"
-      >
+      <vs-select placeholder="请选择" v-model="webCode" state="primary">
         <vs-option
-          v-for="(item,index) in webArray"
+          v-for="(item, index) in webArray"
           :key="index"
-          :label="item.name" 
+          :label="item.name"
           :value="item.id"
         >
           {{ item.name }}
@@ -121,13 +117,38 @@
               </vs-input>
               <div class="upload">
                 <label>网站logo</label>
-                <vs-button block :success="dialogType">
-                  <img src="@/assets/common/image.png" /> image
-                </vs-button>
+                <vs-button
+                    block
+                    :success="dialogType"
+                    @click="$refs.fileRef.click()"
+                    v-if='!webShowUpload'
+                  >
+                    <img src="@/assets/common/image.png" /> image
+                  </vs-button>
+
+                <vs-tooltip border right v-else>
+                  <vs-button
+                    block
+                    :success="dialogType"
+                    @click="$refs.fileRef.click()"
+                  >
+                    <img src="@/assets/common/image.png" /> image
+                  </vs-button>
+                  <template #tooltip>
+                    <img style="width:50px" :src="webShowUpload" />
+                     </template>
+                </vs-tooltip>
+
+                <input
+                  v-show="false"
+                  ref="fileRef"
+                  type="file"
+                  @change="upload_image"
+                />
               </div>
             </div>
             <div class="footer">
-              <vs-button icon :success="dialogType">
+              <vs-button icon :success="dialogType" @click="add_web_info()">
                 <img src="@/assets/common/confirm.png" />
               </vs-button>
               <vs-button icon color="#808b96" @click="webDialog = false">
@@ -308,6 +329,7 @@ import {
   editWebInfo,
   removeWebInfo,
 } from "@/api/web";
+import { upload } from "@/api/upload";
 export default {
   name: "manage",
   data() {
@@ -324,6 +346,7 @@ export default {
         website: "",
         logo: "",
       },
+      webShowUpload:"",
       tableCode: "",
       tableArray: [
         { id: 1, name: "用户管理", table: "user" },
@@ -373,13 +396,33 @@ export default {
   },
   created() {
     this.get_web_list();
-    
   },
   methods: {
     get_web_list() {
       getWebList().then((res) => {
-        this.webArray = res.data.obj.records;
-        this.webCode = this.webArray[0].id;
+        if (res.data.status === 200) {
+          this.webArray = res.data.obj.records;
+          this.webCode = this.webArray[0].id;
+        } else if (res.data.status === 403) {
+          this.$router.push({ path: "/login" });
+        } else {
+        }
+      });
+    },
+    upload_image(event) {
+      const file = event.target.files[0];
+      let formData = new FormData();
+      formData.append("resource", file);
+      upload(formData, 1, 1).then((res) => {
+        if (res.data.status === 200) {
+          this.webForm["logo"] = res.data.path;
+          this.webShowUpload = 'http://localhost:5678' + res.data.path
+        }
+      });
+    },
+    add_web_info() {
+      addWebInfo(this.webForm).then((res) => {
+        console.log(res);
       });
     },
     web(type) {
