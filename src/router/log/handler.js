@@ -49,7 +49,7 @@ exports.login = (req, res) => {
 
 /* 退出 */
 exports.logout = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
     res.cookie("cookieCode", undefined, { maxAge: 0 * 1000 })
     res.send({ status: 200, message: '退出成功。' })
 }

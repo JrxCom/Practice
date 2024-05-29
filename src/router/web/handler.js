@@ -6,7 +6,7 @@ const fs = require("fs")
 
 /* 获取网站列表 */
 exports.getWebList = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
     db.query(`SELECT * FROM learner.web`, (err, results) => {
         if (results) res.send({ status: 200, obj: { records: results } })
         if (err) res.send({ status: 500, message: "获取网站列表失败!" })
@@ -15,7 +15,7 @@ exports.getWebList = (req, res) => {
 
 /* 添加网站信息 */
 exports.addWebInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
     const data = {
         id: new Date().getTime(),
         name: req.body['name'],
@@ -66,7 +66,7 @@ exports.addWebInfo = (req, res) => {
 
 /* 获取网站信息 */
 exports.getWebInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
     db.query(`SELECT * FROM learner.web WHERE id = ${req.query.id}`, (err, results) => {
         if (results) res.send({ status: 200, obj: results[0] })
         if (err) res.send({ status: 500, message: "获取网站信息失败!" })
@@ -75,7 +75,7 @@ exports.getWebInfo = (req, res) => {
 
 /* 修改网站信息 */
 exports.editWebInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
     const data = {
         name: req.body['name'],
         describe: req.body['describe'],
@@ -140,7 +140,7 @@ exports.editWebInfo = (req, res) => {
 
 /* 删除网站信息 */
 exports.removeWebInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.id}`, (err, results) => {
             resolve(results[0]['database'])

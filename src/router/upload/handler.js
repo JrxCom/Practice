@@ -20,10 +20,15 @@ const randomFileName = () => {
 
 /* 上传资源 */
 exports.upload = async (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 500, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
-            resolve('/' + results[0]['database'])
+            if (results.length === 0) {
+                resolve('')
+            } else {
+                resolve('/' + results[0]['database'])
+            }
+            
         })
     });
 
@@ -53,6 +58,7 @@ exports.upload = async (req, res) => {
         }).single('resource')
 
         uploadInit(req, res, (err) => {
+            console.log(req.file);
             res.send({ status: 200, message: "上传成功", path: req.file.destination.slice(10) + '/' + req.file.filename})
         })
 
