@@ -6,6 +6,7 @@ module.exports = defineConfig({
   assetsDir: "static",
 })
 
+
 module.exports = {
   devServer:{
     host:'localhost',  // 本地主机

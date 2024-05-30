@@ -1,7 +1,12 @@
 <template>
   <div class="manage">
     <div class="web_view">
-      <vs-select placeholder="请选择" v-model="webCode" state="primary">
+      <vs-select
+        placeholder="请选择"
+        v-model="webCode"
+        state="primary"
+        @change="webCode = $event"
+      >
         <vs-option
           v-for="(item, index) in webArray"
           :key="index"
@@ -31,6 +36,7 @@
       <div class="table_list">
         <div
           class="table_cell"
+          :class="{ table_cell_: tableCode === item.id }"
           v-for="(item, index) in tableArray"
           :key="index"
         >
@@ -118,25 +124,25 @@
               <div class="upload">
                 <label>网站logo</label>
                 <vs-button
-                    block
-                    :success="dialogType"
-                    @click="$refs.fileRef.click()"
-                    v-if='!webShowUpload'
-                  >
-                    <img src="@/assets/common/image.png" /> image
-                  </vs-button>
+                  block
+                  :success="dialogType"
+                  @click="$refs.fileRef.click()"
+                  v-if="!webShowUpload"
+                >
+                  <img src="@/assets/common/image.png" /> image
+                </vs-button>
 
-                <vs-tooltip border right v-else>
+                <vs-tooltip border top v-else>
                   <vs-button
                     block
                     :success="dialogType"
                     @click="$refs.fileRef.click()"
                   >
-                    <img src="@/assets/common/image.png" /> image
+                    <img src="@/assets/common/check.png" />
                   </vs-button>
                   <template #tooltip>
-                    <img style="width:50px" :src="webShowUpload" />
-                     </template>
+                    <img :src="webShowUpload" width="80" height="80" />
+                  </template>
                 </vs-tooltip>
 
                 <input
@@ -148,7 +154,11 @@
               </div>
             </div>
             <div class="footer">
-              <vs-button icon :success="dialogType" @click="add_web_info()">
+              <vs-button
+                icon
+                :success="dialogType"
+                @click="controls_web_info()"
+              >
                 <img src="@/assets/common/confirm.png" />
               </vs-button>
               <vs-button icon color="#808b96" @click="webDialog = false">
@@ -197,7 +207,11 @@
               </vs-input>
             </div>
             <div class="footer">
-              <vs-button icon :success="dialogType">
+              <vs-button
+                icon
+                :success="dialogType"
+                @click="controls_table_info()"
+              >
                 <img src="@/assets/common/confirm.png" />
               </vs-button>
               <vs-button icon color="#808b96" @click="tableDialog = false">
@@ -252,7 +266,14 @@
                 placeholder="Show Way"
                 v-model="fieldForm['showay']"
               >
-                <vs-option label="Vuesax" value="1"> Vuesax </vs-option>
+                <vs-option
+                  v-for="(item, index) in creatWayArray"
+                  :key="index"
+                  :label="item"
+                  :value="item"
+                >
+                  {{ item }}
+                </vs-option>
               </vs-select>
               <vs-select
                 primary
@@ -318,6 +339,12 @@
         </div>
       </transition>
     </div>
+
+    <div class="alert_view">
+      <vs-alert v-if="tipsCode" solid :color="tipsType">
+        <h4>{{ tipsMessage }}</h4>
+      </vs-alert>
+    </div>
   </div>
 </template>
 
@@ -329,37 +356,31 @@ import {
   editWebInfo,
   removeWebInfo,
 } from "@/api/web";
+import {
+  getTableList,
+  addTableInfo,
+  getTableInfo,
+  editTableInfo,
+  removeTableInfo,
+} from "@/api/table";
 import { upload } from "@/api/upload";
 export default {
   name: "manage",
   data() {
     return {
-      dialogType: false,
-      webCode: "",
+      dialogType: Boolean(),
+      webCode: new String(),
       webArray: new Array(20),
-      webDialog: false,
-      webTitle: "",
-      webForm: {
-        name: "",
-        describe: "",
-        database: "",
-        website: "",
-        logo: "",
-      },
-      webShowUpload:"",
-      tableCode: "",
-      tableArray: [
-        { id: 1, name: "用户管理", table: "user" },
-        { id: 2, name: "音乐管理", table: "music" },
-      ],
-      tableDialog: false,
-      tableTitle: "",
-      tableForm: {
-        name: "",
-        describe: "",
-        table: "",
-      },
-      fieldCode: "",
+      webDialog: Boolean(),
+      webTitle: new String(),
+      webForm: Object.create(null),
+      webShowUpload: new String(),
+      tableCode: new String(),
+      tableArray: new Array(30),
+      tableDialog: Boolean(),
+      tableTitle: new String(),
+      tableForm: Object.create(null),
+      fieldCode: new String(),
       fieldArray: [
         {
           id: 1,
@@ -378,37 +399,101 @@ export default {
           field: "sex",
         },
       ],
-      fieldDialog: false,
-      fieldTitle: "",
-      fieldForm: {
-        name: "",
-        describe: "",
-        creatway: "",
-        showay: "",
-        type: "",
-        size: "",
-        field: "",
-      },
-      removeDialog: false,
-      removeTitle: "",
-      themeCode: false,
+      fieldDialog: Boolean(),
+      fieldTitle: new String(),
+      fieldForm: Object.create(null),
+      creatWayArray: new Array(
+        "文本",
+        "上传图片",
+        "上传音频",
+        "上传视频",
+        "下拉",
+        "单选",
+        "多选"
+      ),
+      showWayArray: new Array("文本", "图片", "音频", "视频", "下拉"),
+      fieldTypeArray: new Array(
+        "bigint",
+        "int",
+        "float",
+        "double",
+        "char",
+        "varchar",
+        "enum",
+        "year",
+        "date",
+        "datetime",
+        "time"
+      ),
+      removeDialog: Boolean(),
+      removeTitle: new String(),
+      themeCode: Boolean(),
+      tipsCode: Boolean(),
+      tipsMessage: new String(),
+      tipsType: new String(),
     };
+  },
+  watch: {
+    webCode() {
+      this.get_table_list();
+    },
   },
   created() {
     this.get_web_list();
+  },
+  mounted() {
+    this.webCode = this.webArray[0].id;
+    console.log(this.webCode);
   },
   methods: {
     get_web_list() {
       getWebList().then((res) => {
         if (res.data.status === 200) {
           this.webArray = res.data.obj.records;
-          this.webCode = this.webArray[0].id;
-        } else if (res.data.status === 403) {
-          this.$router.push({ path: "/login" });
+          this.webCode = res.data.obj.records.length > 0 ? res.data.obj.records[0].id : "";
         } else {
+          this.tipsType = "danger";
+          this.tipsMessage = res.data.message;
+          this.tipsCode = true;
+          setTimeout(() => {
+            this.tipsCode = false;
+            this.$router.push({ path: "/login" });
+          }, 2000);
         }
       });
     },
+
+    web(type) {
+      if (type === "add") {
+        this.webTitle = "Add Web";
+        this.webDialog = true;
+        this.dialogType = false;
+        this.webForm = Object.create(null);
+      } else {
+        this.webTitle = "Edit Web";
+        this.webDialog = true;
+        this.dialogType = true;
+        this.get_web_info();
+      }
+    },
+
+    get_web_info() {
+      getWebInfo(this.webCode).then((res) => {
+        if (res.data.status === 200) {
+          const { name, describe, database, website, logo } = res.data.obj;
+          this.webForm = { name, describe, database, website, logo };
+          this.webShowUpload = res.data.obj.logo;
+        } else {
+          this.tipsType = "danger";
+          this.tipsMessage = res.data.message;
+          this.tipsCode = true;
+          setTimeout(() => {
+            this.tipsCode = false;
+          }, 2000);
+        }
+      });
+    },
+
     upload_image(event) {
       const file = event.target.files[0];
       let formData = new FormData();
@@ -416,37 +501,189 @@ export default {
       upload(formData, 1, 1).then((res) => {
         if (res.data.status === 200) {
           this.webForm["logo"] = res.data.path;
-          this.webShowUpload = 'http://localhost:5678' + res.data.path
+          this.webShowUpload = "http://localhost:5678" + res.data.path;
+          this.tipsType = "primary";
+          this.tipsMessage = res.data.message;
+          this.tipsCode = true;
+          setTimeout(() => {
+            this.tipsCode = false;
+          }, 2000);
+        } else if (res.data.status === 403) {
+          this.tipsType = "danger";
+          this.tipsMessage = res.data.message;
+          this.tipsCode = true;
+          setTimeout(() => {
+            this.tipsCode = false;
+          }, 2000);
         }
       });
     },
-    add_web_info() {
-      addWebInfo(this.webForm).then((res) => {
-        console.log(res);
-      });
-    },
-    web(type) {
-      if (type === "add") {
-        this.webTitle = "Add Web";
-        this.webDialog = true;
-        this.dialogType = false;
+
+    controls_web_info() {
+      if (this.webTitle === "Add Web") {
+        addWebInfo(this.webForm).then((res) => {
+          if (res.data.status === 200) {
+            this.tipsType = "primary";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            this.get_web_list();
+            this.webDialog = false;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else if (res.data.status === 403) {
+            this.tipsType = "danger";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else {
+            this.tipsType = "warn";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          }
+        });
       } else {
-        this.webTitle = "Edit Web";
-        this.webDialog = true;
-        this.dialogType = true;
+        editWebInfo(this.webCode, this.webForm).then((res) => {
+          if (res.data.status === 200) {
+            this.tipsType = "primary";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            this.get_web_list();
+            this.webDialog = false;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else if (res.data.status === 403) {
+            this.tipsType = "danger";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else {
+            this.tipsType = "warn";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          }
+        });
       }
     },
+
+    get_table_list() {
+      getTableList(this.webCode).then((res) => {
+        if (res.data.status === 200) {
+          this.tableArray = res.data.obj.records;
+          this.tableCode =
+            res.data.obj.records.length > 0 ? res.data.obj.records[0].id : "";
+        } else {
+          this.tipsType = "danger";
+          this.tipsMessage = res.data.message;
+          this.tipsCode = true;
+          setTimeout(() => {
+            this.tipsCode = false;
+            this.$router.push({ path: "/login" });
+          }, 2000);
+        }
+      });
+    },
+
     table(type) {
       if (type === "add") {
         this.tableTitle = "Add Table";
         this.tableDialog = true;
         this.dialogType = false;
+        this.tableForm = Object.create(null);
       } else {
         this.tableTitle = "Edit Table";
         this.tableDialog = true;
         this.dialogType = true;
+        this.get_table_info();
       }
     },
+
+    get_table_info() {
+      getTableInfo(this.tableCode).then((res) => {
+        if (res.data.status === 200) {
+          const { name, describe, table } = res.data.obj;
+          this.tableForm = { name, describe, table };
+        } else {
+          this.tipsType = "danger";
+          this.tipsMessage = res.data.message;
+          this.tipsCode = true;
+          setTimeout(() => {
+            this.tipsCode = false;
+          }, 2000);
+        }
+      });
+    },
+
+    controls_table_info() {
+      this.tableForm["wid"] = this.webCode;
+      if (this.webTitle === "Add Table") {
+        addTableInfo(this.tableForm).then((res) => {
+          if (res.data.status === 200) {
+            this.tipsType = "primary";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            this.get_table_list();
+            this.tableDialog = false;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else if (res.data.status === 403) {
+            this.tipsType = "danger";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else {
+            this.tipsType = "warn";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          }
+        });
+      } else {
+        editTableInfo(this.tableCode, this.tableForm).then((res) => {
+          if (res.data.status === 200) {
+            this.tipsType = "primary";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            this.get_web_list();
+            this.tableDialog = false;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else if (res.data.status === 403) {
+            this.tipsType = "danger";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else {
+            this.tipsType = "warn";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          }
+        });
+      }
+    },
+
     field(type) {
       if (type === "add") {
         this.fieldTitle = "Add field";
@@ -458,6 +695,7 @@ export default {
         this.dialogType = true;
       }
     },
+
     remove(type) {
       if (type === "web") {
         this.removeTitle = "Remove Web";

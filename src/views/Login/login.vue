@@ -200,16 +200,8 @@
     </transition>
 
     <div class="alert_view">
-      <vs-alert v-model="loginTipsCode" solid>
+      <vs-alert v-if="loginTipsCode" solid :color="loginTipsType">
         <h4>{{ loginTipsMessage }}</h4>
-      </vs-alert>
-
-      <vs-alert
-        color="warn"
-        solid
-        v-model="loginTipsWarnCode"
-      >
-      <h4>{{ loginTipsMessage }}</h4>
       </vs-alert>
     </div>
   </div>
@@ -235,8 +227,8 @@ export default {
         remember: Boolean(localStorage.getItem("remember")),
       },
       loginTipsCode: false,
-      loginTipsWarnCode: false,
       loginTipsMessage: "",
+      loginTipsType: "",
     };
   },
   created() {
@@ -255,10 +247,12 @@ export default {
             localStorage.setItem("username", this.form["username"]);
             localStorage.setItem("password", this.form["password"]);
             localStorage.setItem("remember", this.form["remember"]);
+            this.loginTipsType = "primary";
             this.loginTipsMessage = res.data.message;
             this.loginTipsCode = true;
             setTimeout(() => {
-              this.loginTipsCode = false
+              this.loginTipsCode = false;
+              this.dialogCode = false;
               this.$router.push({ path: "/" });
             }, 2000);
           } else {
@@ -267,13 +261,13 @@ export default {
             localStorage.removeItem("remember");
           }
         } else {
+          this.loginTipsType = "warn";
           this.loginTipsMessage = res.data.message;
-          this.loginTipsWarnCode = true;
+          this.loginTipsCode = true;
           setTimeout(() => {
-              this.loginTipsWarnCode = false
-            }, 2000);
+            this.loginTipsCode = false;
+          }, 2000);
         }
-        this.dialogCode = false;
       });
     },
   },
