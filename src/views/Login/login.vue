@@ -215,20 +215,20 @@ export default {
   mixins: [theme],
   data() {
     return {
-      year: new Date().getFullYear().toString().slice(2),
-      month: (new Date().getMonth() + 1).toString().padStart(2, "0"),
-      date: new Date().getDate().toString().padStart(2, "0"),
-      codeImgSrc: "",
-      dialogCode: false,
-      form: {
-        username: localStorage.getItem("username") || "",
-        password: localStorage.getItem("password") || "",
-        code: "",
+      year: String(new Date().getFullYear().toString().slice(2)),
+      month: String((new Date().getMonth() + 1).toString().padStart(2, "0")),
+      date: String(new Date().getDate().toString().padStart(2, "0")),
+      codeImgSrc: String(""),
+      dialogCode: Boolean(),
+      form: Object.create({
+        username: String(localStorage.getItem("username") || ""),
+        password: String(localStorage.getItem("password") || ""),
+        code: String(""),
         remember: Boolean(localStorage.getItem("remember")),
-      },
-      loginTipsCode: false,
-      loginTipsMessage: "",
-      loginTipsType: "",
+      }),
+      loginTipsCode: Boolean(),
+      loginTipsMessage: String(""),
+      loginTipsType: String(""),
     };
   },
   created() {
