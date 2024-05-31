@@ -1,6 +1,6 @@
 import request from '@/plugins/axios'
 
-/* 获取验证码 */
+/* 上传 */
 export const upload = (param, wid, tid) => {
     return request({
         url: '/upload/?wid=' + wid + '&tid=' + tid,

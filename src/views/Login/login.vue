@@ -14,7 +14,13 @@
         <span>{{ year }}y</span>
         <span>{{ month }}m</span>
         <span>{{ date }}d</span>
-        <vs-button size="large" @click="dialogCode = true">
+        <vs-button
+          size="large"
+          @click="
+            dialogCode = true;
+            get_code();
+          "
+        >
           <img src="@/assets/login/loginButton.png" /> Log In
         </vs-button>
       </div>
@@ -200,47 +206,47 @@
     </transition>
 
     <div class="alert_view">
-      <vs-alert v-if="loginTipsCode" solid :color="loginTipsType">
-        <h4>{{ loginTipsMessage }}</h4>
+      <vs-alert v-if="tipsCode" solid :color="tipsType">
+        <h4>{{ tipsMessage }}</h4>
       </vs-alert>
     </div>
   </div>
 </template>
 
 <script>
+/* 引入主题混合 */
 import theme from "@/mixin/theme.js";
+/* 引入log api */
 import { getCode, login } from "@/api/log";
 export default {
   name: "login",
   mixins: [theme],
   data() {
     return {
-      year: String(new Date().getFullYear().toString().slice(2)),
-      month: String((new Date().getMonth() + 1).toString().padStart(2, "0")),
-      date: String(new Date().getDate().toString().padStart(2, "0")),
-      codeImgSrc: String(""),
-      dialogCode: Boolean(),
-      form: Object.create({
-        username: String(localStorage.getItem("username") || ""),
-        password: String(localStorage.getItem("password") || ""),
-        code: String(""),
+      year: new Date().getFullYear().toString().slice(2),
+      month: (new Date().getMonth() + 1).toString().padStart(2, "0"),
+      date: new Date().getDate().toString().padStart(2, "0"),
+      codeImgSrc: "",
+      dialogCode: false,
+      form: {
+        username: localStorage.getItem("username") || "",
+        password: localStorage.getItem("password") || "",
+        code: "",
         remember: Boolean(localStorage.getItem("remember")),
-      }),
-      loginTipsCode: Boolean(),
-      loginTipsMessage: String(""),
-      loginTipsType: String(""),
+      },
+      tipsCode: false,
+      tipsMessage: "",
+      tipsType: "",
     };
   },
-  created() {
-    this.get_code();
-    console.log(process.env);
-  },
   methods: {
+    /* 获取验证码 */
     get_code() {
       getCode().then((res) => {
         this.codeImgSrc = res.data;
       });
     },
+    /* 登录 */
     log_in() {
       login(this.form).then((res) => {
         if (res.data.status === 200) {
@@ -248,11 +254,11 @@ export default {
             localStorage.setItem("username", this.form["username"]);
             localStorage.setItem("password", this.form["password"]);
             localStorage.setItem("remember", this.form["remember"]);
-            this.loginTipsType = "primary";
-            this.loginTipsMessage = res.data.message;
-            this.loginTipsCode = true;
+            this.tipsType = "primary";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
             setTimeout(() => {
-              this.loginTipsCode = false;
+              this.tipsCode = false;
               this.dialogCode = false;
               this.$router.push({ path: "/" });
             }, 2000);
@@ -262,11 +268,11 @@ export default {
             localStorage.removeItem("remember");
           }
         } else {
-          this.loginTipsType = "warn";
-          this.loginTipsMessage = res.data.message;
-          this.loginTipsCode = true;
+          this.tipsType = "warn";
+          this.tipsMessage = res.data.message;
+          this.tipsCode = true;
           setTimeout(() => {
-            this.loginTipsCode = false;
+            this.tipsCode = false;
           }, 2000);
         }
       });

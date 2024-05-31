@@ -1,5 +1,6 @@
 import request from '@/plugins/axios'
 
+/* 获取表列表 */
 export const getTableList = wid => {
     return request({
         url: '/getTableList/?wid=' + wid,
@@ -7,6 +8,7 @@ export const getTableList = wid => {
     })
 }
 
+/* 添加表信息 */
 export const addTableInfo = param => {
     return request({
         url: '/addTableInfo',
@@ -16,6 +18,7 @@ export const addTableInfo = param => {
     })
 }
 
+/* 获取表信息 */
 export const getTableInfo = id => {
     return request({
         url: '/getTableInfo/?id=' + id,
@@ -23,6 +26,7 @@ export const getTableInfo = id => {
     })
 }
 
+/* 修改表信息 */
 export const editTableInfo = (id,param) => {
     return request({
         url: '/editTableInfo/?id=' + id,
@@ -32,6 +36,7 @@ export const editTableInfo = (id,param) => {
     })
 }
 
+/* 删除表信息 */
 export const removeTableInfo = (id,wid) => {
     return request({
         url: '/removeTableInfo/?id=' + id + '&wid=' + wid,

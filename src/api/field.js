@@ -1,5 +1,6 @@
 import request from '@/plugins/axios'
 
+/* 获取字段列表 */
 export const getFieldList = tid => {
     return request({
         url: '/getFieldList/?tid=' + tid,
@@ -7,6 +8,7 @@ export const getFieldList = tid => {
     })
 }
 
+/* 添加字段信息 */
 export const addFieldInfo = param => {
     return request({
         url: '/addFieldInfo',
@@ -16,6 +18,7 @@ export const addFieldInfo = param => {
     })
 }
 
+/* 获取字段信息 */
 export const getFieldInfo = id => {
     return request({
         url: '/getFieldInfo/?id=' + id,
@@ -23,6 +26,7 @@ export const getFieldInfo = id => {
     })
 }
 
+/* 修改字段信息 */
 export const editFieldInfo = (id,param) => {
     return request({
         url: '/editFieldInfo/?id=' + id,
@@ -32,6 +36,7 @@ export const editFieldInfo = (id,param) => {
     })
 }
 
+/* 删除字段信息 */
 export const removeFieldInfo = id => {
     return request({
         url: '/removeFieldInfo/?id=' + id,

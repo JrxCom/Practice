@@ -376,6 +376,7 @@
 </template>
 
 <script>
+/* 引入web api */
 import {
   getWebList,
   addWebInfo,
@@ -383,6 +384,7 @@ import {
   editWebInfo,
   removeWebInfo,
 } from "@/api/web";
+/* 引入table api */
 import {
   getTableList,
   addTableInfo,
@@ -390,6 +392,7 @@ import {
   editTableInfo,
   removeTableInfo,
 } from "@/api/table";
+/* 引入field api */
 import {
   getFieldList,
   addFieldInfo,
@@ -397,59 +400,55 @@ import {
   editFieldInfo,
   removeFieldInfo,
 } from "@/api/field";
+/* 引入upload api */
 import { upload } from "@/api/upload";
 export default {
   name: "manage",
   data() {
     return {
-      dialogType: Boolean(),
-      webCode: String(),
+      dialogType: false,
+      webCode: "",
       webArray: new Array(20),
-      webDialog: Boolean(),
-      webTitle: String(),
-      webForm: Object.create(null),
-      webShowUpload: String(),
-      tableCode: String(),
-      tableEditCode: String(),
-      tableArray: new Array(),
-      tableDialog: Boolean(),
-      tableTitle: String(),
-      tableForm: Object.create(null),
-      fieldCode: String(),
-      fieldEditCode: String(),
-      fieldArray: new Array(),
-      fieldDialog: Boolean(),
-      fieldTitle: String(),
-      fieldForm: Object.create(null),
-      creatWayCode: String(""),
-      creatWayArray: new Array(
+      webDialog: false,
+      webTitle: "",
+      webForm: {},
+      webShowUpload: "",
+      tableCode: "",
+      tableEditCode: "",
+      tableArray: [],
+      tableDialog: false,
+      tableTitle: "",
+      tableForm: {},
+      fieldCode: "",
+      fieldEditCode: "",
+      fieldArray: [],
+      fieldDialog: false,
+      fieldTitle: "",
+      fieldForm: {},
+      creatWayCode: "",
+      creatWayArray: [
         "文本",
         "上传图片",
         "上传音频",
         "上传视频",
         "下拉",
         "单选",
-        "多选"
-      ),
-      showWayCode: String(""),
-      showWayArray: new Array("文本", "图片", "音频", "视频", "下拉"),
-      fieldTypeCode: String(""),
-      fieldTypeArray: new Array(
-        "bigint",
-        "double",
-        "varchar",
-        "enum",
-        "datetime"
-      ),
-      removeDialog: Boolean(),
-      removeTitle: String(),
-      themeCode: Boolean(),
-      tipsCode: Boolean(),
-      tipsMessage: String(),
-      tipsType: String(),
+        "多选",
+      ],
+      showWayCode: "",
+      showWayArray: ["文本", "图片", "音频", "视频", "下拉"],
+      fieldTypeCode: "",
+      fieldTypeArray: ["bigint", "double", "varchar", "enum", "datetime"],
+      removeDialog: false,
+      removeTitle: "",
+      themeCode: false,
+      tipsCode: false,
+      tipsMessage: "",
+      tipsType: "",
     };
   },
   watch: {
+    /* 监听web选择 */
     webCode(newvalue) {
       if (newvalue) {
         this.get_table_list();
@@ -457,6 +456,7 @@ export default {
         this.tableCode = 0;
       }
     },
+    /* 监听table选择 */
     tableCode(newvalue) {
       if (newvalue) {
         this.get_field_list();
@@ -472,6 +472,24 @@ export default {
     this.webCode = this.webArray[0].id;
   },
   methods: {
+    /* 提示 */
+    show_tips(status, message) {
+      
+      this.tipsMessage = message;
+      this.tipsCode = true;
+      if (status === 200) {
+        this.tipsType = "primary";
+      } else if (status === 403) {
+        this.tipsType = "danger";
+      } else if (status === 500) {
+        this.tipsType = "warn";
+      }
+      setTimeout(() => {
+        this.tipsCode = false;
+        status === 403 ? this.$router.push({ path: "/login" }) : null;
+      }, 2000);
+    },
+    /* 获取网站列表 */
     get_web_list() {
       getWebList().then((res) => {
         if (res.data.status === 200) {
@@ -479,37 +497,25 @@ export default {
           this.webCode =
             res.data.obj.records.length > 0 ? res.data.obj.records[0].id : "";
         } else {
-          this.tipsType = "danger";
-          this.tipsMessage = res.data.message;
-          this.tipsCode = true;
-          setTimeout(() => {
-            this.tipsCode = false;
-            this.$router.push({ path: "/login" });
-          }, 2000);
+          this.show_tips(res.data.status, res.data.message);
         }
       });
     },
-
+    /* 展示网站弹窗 */
     web(type) {
-      if (type === "add") {
-        this.webTitle = "Add Web";
-        this.webDialog = true;
-        this.dialogType = false;
-        this.webForm = Object.create(null);
-      } else {
-        this.webTitle = "Edit Web";
-        this.webDialog = true;
-        this.dialogType = true;
-        this.get_web_info();
-      }
+      type === "edit" ? this.get_web_info() : null;
+      this.webTitle = type === "add" ? "Add Web" : "Edit Web";
+      this.dialogType = type === "add" ? false : true;
+      this.webForm = type === "add" ? {} : this.webForm;
+      this.webDialog = true;
     },
 
     get_web_info() {
       getWebInfo(this.webCode).then((res) => {
         if (res.data.status === 200) {
           const { name, describe, database, website, logo } = res.data.obj;
-          this.webForm = { name, describe, database, website, logo };
           this.webShowUpload = res.data.obj.logo;
+          this.webForm = { name, describe, database, website, logo };
         } else {
           this.tipsType = "danger";
           this.tipsMessage = res.data.message;
@@ -627,7 +633,7 @@ export default {
         this.tableTitle = "Add Table";
         this.tableDialog = true;
         this.dialogType = false;
-        this.tableForm = Object.create(null);
+        this.tableForm = {};
       } else {
         this.tableTitle = "Edit Table";
         this.tableDialog = true;
@@ -733,7 +739,7 @@ export default {
         this.fieldTitle = "Add field";
         this.fieldDialog = true;
         this.dialogType = false;
-        this.fieldForm = Object.create(null);
+        this.fieldForm = {};
       } else {
         this.fieldTitle = "Edit field";
         this.fieldDialog = true;
