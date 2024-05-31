@@ -233,6 +233,7 @@ export default {
   },
   created() {
     this.get_code();
+    console.log(process.env);
   },
   methods: {
     get_code() {

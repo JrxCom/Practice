@@ -1,40 +1,40 @@
 import request from '@/plugins/axios'
 
-export const getTableList = wid => {
+export const getFieldList = tid => {
     return request({
-        url: '/getTableList/?wid=' + wid,
+        url: '/getFieldList/?tid=' + tid,
         method: 'get',
     })
 }
 
-export const addTableInfo = param => {
+export const addFieldInfo = param => {
     return request({
-        url: '/addTableInfo',
+        url: '/addFieldInfo',
         method: 'post',
         headers:'Content-Type: application/x-www-form-urlencoded',
         data:param,
     })
 }
 
-export const getTableInfo = id => {
+export const getFieldInfo = id => {
     return request({
-        url: '/getTableInfo/?id=' + id,
+        url: '/getFieldInfo/?id=' + id,
         method: 'get',
     })
 }
 
-export const editTableInfo = (id,param) => {
+export const editFieldInfo = (id,param) => {
     return request({
-        url: '/editTableInfo/?id=' + id,
+        url: '/editFieldInfo/?id=' + id,
         method: 'put',
         headers:'Content-Type: application/x-www-form-urlencoded',
         data:param,
     })
 }
 
-export const removeTableInfo = (id,wid) => {
+export const removeFieldInfo = id => {
     return request({
-        url: '/removeTableInfo/?id=' + id + '&wid=' + wid,
+        url: '/removeFieldInfo/?id=' + id,
         method: 'delete',
     })
 }

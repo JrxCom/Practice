@@ -39,12 +39,19 @@
           :class="{ table_cell_: tableCode === item.id }"
           v-for="(item, index) in tableArray"
           :key="index"
+          @click="tableCode = item.id"
         >
           <p>{{ item.name }}</p>
           <span>{{ item.table }}</span>
           <div class="table_tool">
-            <img src="@/assets/manage/edit.png" @click="table('edit')" />
-            <img src="@/assets/manage/remove.png" @click="remove('table')" />
+            <img
+              src="@/assets/manage/edit.png"
+              @click="table('edit', item.id)"
+            />
+            <img
+              src="@/assets/manage/remove.png"
+              @click="remove('table', item.id)"
+            />
           </div>
         </div>
       </div>
@@ -65,11 +72,14 @@
           <span>{{ item.size }}</span>
           <span>{{ item.field }}</span>
           <div class="field_tool">
-            <img src="@/assets/manage/edit.png" @click="field('edit')" />
+            <img
+              src="@/assets/manage/edit.png"
+              @click="field('edit', item.id)"
+            />
             <img
               src="@/assets/manage/remove.png"
               alt=""
-              @click="remove('field')"
+              @click="remove('field', item.id)"
             />
           </div>
         </div>
@@ -255,16 +265,8 @@
                 :success="dialogType"
                 label="创建方式"
                 placeholder="Creat Way"
-                v-model="fieldForm['creatway']"
-              >
-                <vs-option label="Vuesax" value="1"> 上传 </vs-option>
-              </vs-select>
-              <vs-select
-                primary
-                :success="dialogType"
-                label="展示方式"
-                placeholder="Show Way"
-                v-model="fieldForm['showay']"
+                v-model="creatWayCode"
+                @change="fieldForm['creatway'] = creatWayCode"
               >
                 <vs-option
                   v-for="(item, index) in creatWayArray"
@@ -278,17 +280,42 @@
               <vs-select
                 primary
                 :success="dialogType"
+                label="展示方式"
+                placeholder="Show Way"
+                v-model="showWayCode"
+                @change="fieldForm['showay'] = showWayCode"
+              >
+                <vs-option
+                  v-for="(item, index) in showWayArray"
+                  :key="index"
+                  :label="item"
+                  :value="item"
+                >
+                  {{ item }}
+                </vs-option>
+              </vs-select>
+              <vs-select
+                primary
+                :success="dialogType"
                 label="字段类型"
                 placeholder="Field Type"
-                v-model="fieldForm['type']"
+                v-model="fieldTypeCode"
+                @change="fieldForm['type'] = fieldTypeCode"
               >
-                <vs-option label="Vuesax" value="1"> Vuesax </vs-option>
+                <vs-option
+                  v-for="(item, index) in fieldTypeArray"
+                  :key="index"
+                  :label="item"
+                  :value="item"
+                >
+                  {{ item }}
+                </vs-option>
               </vs-select>
               <vs-input
                 primary
                 :success="dialogType"
-                label="字段大小"
-                placeholder="Field Size"
+                label="字段大小/值"
+                placeholder="Field Size/Value"
                 v-model="fieldForm['size']"
               >
               </vs-input>
@@ -363,45 +390,38 @@ import {
   editTableInfo,
   removeTableInfo,
 } from "@/api/table";
+import {
+  getFieldList,
+  addFieldInfo,
+  getFieldInfo,
+  editFieldInfo,
+  removeFieldInfo,
+} from "@/api/field";
 import { upload } from "@/api/upload";
 export default {
   name: "manage",
   data() {
     return {
       dialogType: Boolean(),
-      webCode: new String(),
+      webCode: String(),
       webArray: new Array(20),
       webDialog: Boolean(),
-      webTitle: new String(),
+      webTitle: String(),
       webForm: Object.create(null),
-      webShowUpload: new String(),
-      tableCode: new String(),
-      tableArray: new Array(30),
+      webShowUpload: String(),
+      tableCode: String(),
+      tableEditCode: String(),
+      tableArray: new Array(),
       tableDialog: Boolean(),
-      tableTitle: new String(),
+      tableTitle: String(),
       tableForm: Object.create(null),
-      fieldCode: new String(),
-      fieldArray: [
-        {
-          id: 1,
-          name: "名称",
-          describe: "用户名称",
-          type: "int",
-          size: "11",
-          field: "name",
-        },
-        {
-          id: 2,
-          name: "性别",
-          describe: "用户性别",
-          type: "enum",
-          size: "男,女",
-          field: "sex",
-        },
-      ],
+      fieldCode: String(),
+      fieldEditCode: String(),
+      fieldArray: new Array(),
       fieldDialog: Boolean(),
-      fieldTitle: new String(),
+      fieldTitle: String(),
       fieldForm: Object.create(null),
+      creatWayCode: String(""),
       creatWayArray: new Array(
         "文本",
         "上传图片",
@@ -411,31 +431,38 @@ export default {
         "单选",
         "多选"
       ),
+      showWayCode: String(""),
       showWayArray: new Array("文本", "图片", "音频", "视频", "下拉"),
+      fieldTypeCode: String(""),
       fieldTypeArray: new Array(
         "bigint",
-        "int",
-        "float",
         "double",
-        "char",
         "varchar",
         "enum",
-        "year",
-        "date",
-        "datetime",
-        "time"
+        "datetime"
       ),
       removeDialog: Boolean(),
-      removeTitle: new String(),
+      removeTitle: String(),
       themeCode: Boolean(),
       tipsCode: Boolean(),
-      tipsMessage: new String(),
-      tipsType: new String(),
+      tipsMessage: String(),
+      tipsType: String(),
     };
   },
   watch: {
-    webCode() {
-      this.get_table_list();
+    webCode(newvalue) {
+      if (newvalue) {
+        this.get_table_list();
+      } else {
+        this.tableCode = 0;
+      }
+    },
+    tableCode(newvalue) {
+      if (newvalue) {
+        this.get_field_list();
+      } else {
+        this.tableCode = 0;
+      }
     },
   },
   created() {
@@ -443,14 +470,14 @@ export default {
   },
   mounted() {
     this.webCode = this.webArray[0].id;
-    console.log(this.webCode);
   },
   methods: {
     get_web_list() {
       getWebList().then((res) => {
         if (res.data.status === 200) {
           this.webArray = res.data.obj.records;
-          this.webCode = res.data.obj.records.length > 0 ? res.data.obj.records[0].id : "";
+          this.webCode =
+            res.data.obj.records.length > 0 ? res.data.obj.records[0].id : "";
         } else {
           this.tipsType = "danger";
           this.tipsMessage = res.data.message;
@@ -595,7 +622,7 @@ export default {
       });
     },
 
-    table(type) {
+    table(type, id) {
       if (type === "add") {
         this.tableTitle = "Add Table";
         this.tableDialog = true;
@@ -605,12 +632,13 @@ export default {
         this.tableTitle = "Edit Table";
         this.tableDialog = true;
         this.dialogType = true;
-        this.get_table_info();
+        this.get_table_info(id);
       }
     },
 
-    get_table_info() {
-      getTableInfo(this.tableCode).then((res) => {
+    get_table_info(id) {
+      this.tableEditCode = id;
+      getTableInfo(id).then((res) => {
         if (res.data.status === 200) {
           const { name, describe, table } = res.data.obj;
           this.tableForm = { name, describe, table };
@@ -655,12 +683,12 @@ export default {
           }
         });
       } else {
-        editTableInfo(this.tableCode, this.tableForm).then((res) => {
+        editTableInfo(this.tableEditCode, this.tableForm).then((res) => {
           if (res.data.status === 200) {
             this.tipsType = "primary";
             this.tipsMessage = res.data.message;
             this.tipsCode = true;
-            this.get_web_list();
+            this.get_table_list();
             this.tableDialog = false;
             setTimeout(() => {
               this.tipsCode = false;
@@ -684,28 +712,226 @@ export default {
       }
     },
 
-    field(type) {
+    get_field_list() {
+      getFieldList(this.tableCode).then((res) => {
+        if (res.data.status === 200) {
+          this.fieldArray = res.data.obj.records;
+        } else {
+          this.tipsType = "danger";
+          this.tipsMessage = res.data.message;
+          this.tipsCode = true;
+          setTimeout(() => {
+            this.tipsCode = false;
+            this.$router.push({ path: "/login" });
+          }, 2000);
+        }
+      });
+    },
+
+    field(type, id) {
       if (type === "add") {
         this.fieldTitle = "Add field";
         this.fieldDialog = true;
         this.dialogType = false;
+        this.fieldForm = Object.create(null);
       } else {
         this.fieldTitle = "Edit field";
         this.fieldDialog = true;
         this.dialogType = true;
+        this.get_field_info(id);
       }
     },
 
-    remove(type) {
+    get_field_info(id) {
+      this.fieldEditCode = id;
+      getFieldInfo(id).then((res) => {
+        if (res.data.status === 200) {
+          const { name, describe, creatway, showay, type, size, field } =
+            res.data.obj;
+          this.fieldForm = {
+            name,
+            describe,
+            creatway,
+            showay,
+            type,
+            size,
+            field,
+          };
+          this.creatWayCode = creatway;
+          this.showWayCode = showay;
+          this.fieldTypeCode = type;
+        } else {
+          this.tipsType = "danger";
+          this.tipsMessage = res.data.message;
+          this.tipsCode = true;
+          setTimeout(() => {
+            this.tipsCode = false;
+          }, 2000);
+        }
+      });
+    },
+
+    controls_field_info() {
+      this.fieldForm["wid"] = this.webCode;
+      this.fieldForm["tid"] = this.tableCode;
+      if (this.webTitle === "Add Field") {
+        addFieldInfo(this.tableForm).then((res) => {
+          if (res.data.status === 200) {
+            this.tipsType = "primary";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            this.get_field_list();
+            this.fieldDialog = false;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else if (res.data.status === 403) {
+            this.tipsType = "danger";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else {
+            this.tipsType = "warn";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          }
+        });
+      } else {
+        this.fieldForm["wid"] = this.webCode;
+        this.fieldForm["tid"] = this.tableCode;
+        editFieldInfo(this.fieldEditCode, this.fieldForm).then((res) => {
+          if (res.data.status === 200) {
+            this.tipsType = "primary";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            this.get_field_list();
+            this.tableDialog = false;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else if (res.data.status === 403) {
+            this.tipsType = "danger";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else {
+            this.tipsType = "warn";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          }
+        });
+      }
+    },
+
+    remove(type, id) {
       if (type === "web") {
         this.removeTitle = "Remove Web";
         this.removeDialog = true;
       } else if (type === "table") {
         this.removeTitle = "Remove Table";
         this.removeDialog = true;
+        this.tableEditCode = id;
       } else {
         this.removeTitle = "Remove Field";
         this.removeDialog = true;
+        this.tableEditCode = id;
+      }
+    },
+
+    do_remove() {
+      if (this.removeTitle === "Remove Table") {
+        removeTableInfo(this.tableEditCode, this.webCode).then((res) => {
+          if (res.data.status === 200) {
+            this.tipsType = "primary";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            this.get_table_list();
+            this.remvoeDialog = false;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else if (res.data.status === 403) {
+            this.tipsType = "danger";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else {
+            this.tipsType = "warn";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          }
+        });
+      } else if (this.removeTitle === "Remove Field") {
+        removeFieldInfo(this.fieldEditCode, this.tableCode, this.webCode).then(
+          (res) => {
+            if (res.data.status === 200) {
+              this.tipsType = "primary";
+              this.tipsMessage = res.data.message;
+              this.tipsCode = true;
+              this.get_field_list();
+              this.remvoeDialog = false;
+              setTimeout(() => {
+                this.tipsCode = false;
+              }, 2000);
+            } else if (res.data.status === 403) {
+              this.tipsType = "danger";
+              this.tipsMessage = res.data.message;
+              this.tipsCode = true;
+              setTimeout(() => {
+                this.tipsCode = false;
+              }, 2000);
+            } else {
+              this.tipsType = "warn";
+              this.tipsMessage = res.data.message;
+              this.tipsCode = true;
+              setTimeout(() => {
+                this.tipsCode = false;
+              }, 2000);
+            }
+          }
+        );
+      } else {
+        removeWebInfo(this.webCode).then((res) => {
+          if (res.data.status === 200) {
+            this.tipsType = "primary";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            this.get_web_list();
+            this.remvoeDialog = false;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else if (res.data.status === 403) {
+            this.tipsType = "danger";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          } else {
+            this.tipsType = "warn";
+            this.tipsMessage = res.data.message;
+            this.tipsCode = true;
+            setTimeout(() => {
+              this.tipsCode = false;
+            }, 2000);
+          }
+        });
       }
     },
   },
