@@ -2,7 +2,7 @@
 import axios from 'axios'        
 
 /* 2.全局默认配置 */
-// let baseURL = 'http://localhost:5678/'
+// let baseURL = process.env.VUE_APP_BASE_API
 let baseURL = 'api'
 
 // 配置axios的属性

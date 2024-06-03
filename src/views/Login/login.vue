@@ -1,11 +1,12 @@
 <template>
   <div class="login" :style="themeStyle">
+    <!-- logo -->
     <div class="header_view">
       <img v-if="!themeCode" src="@/assets/common/lightLogo.png" />
       <img v-else src="@/assets/common/darkLogo.png" />
       <h3>LeaRneR</h3>
     </div>
-
+    <!-- 整体内容 -->
     <div class="main_view">
       <div class="left_view">
         <p>We will</p>
@@ -14,6 +15,7 @@
         <span>{{ year }}y</span>
         <span>{{ month }}m</span>
         <span>{{ date }}d</span>
+        <!-- 登录开始按钮 -->
         <vs-button
           size="large"
           @click="
@@ -137,6 +139,7 @@
       </div>
     </div>
 
+    <!-- 切换主题 -->
     <div class="footer_view">
       <div class="Theme">
         <vs-switch v-model="themeCode">
@@ -148,6 +151,7 @@
       </div>
     </div>
 
+    <!-- 登录弹窗 -->
     <transition name="dialog">
       <div class="dialog_view" v-show="dialogCode">
         <div class="goLogin">
@@ -186,7 +190,7 @@
                   <img v-else src="@/assets/login/darkCode.png" />
                 </template>
               </vs-input>
-              <div v-html="codeImgSrc" @click="get_code()"></div>
+              <div v-html="authSvgSrc" @click="get_code()"></div>
             </div>
             <vs-checkbox v-model="form['remember']">
               <template #icon>
@@ -205,8 +209,9 @@
       </div>
     </transition>
 
+    <!-- 登录提示 -->
     <div class="alert_view">
-      <vs-alert v-if="tipsCode" solid :color="tipsType">
+      <vs-alert v-if="tipsCode" solid :color="tipsTheme">
         <h4>{{ tipsMessage }}</h4>
       </vs-alert>
     </div>
@@ -214,7 +219,7 @@
 </template>
 
 <script>
-/* 引入主题混合 */
+/* 引入主题混入 */
 import theme from "@/mixin/theme.js";
 /* 引入log api */
 import { getCode, login } from "@/api/log";
@@ -223,27 +228,27 @@ export default {
   mixins: [theme],
   data() {
     return {
-      year: new Date().getFullYear().toString().slice(2),
-      month: (new Date().getMonth() + 1).toString().padStart(2, "0"),
-      date: new Date().getDate().toString().padStart(2, "0"),
-      codeImgSrc: "",
-      dialogCode: false,
+      year: new Date().getFullYear().toString().slice(2) /* 年份 */,
+      month: (new Date().getMonth() + 1).toString().padStart(2, "0") /* 月份 */,
+      date: new Date().getDate().toString().padStart(2, "0") /* 日期 */,
+      authSvgSrc: "" /* 验证码 svg 路径 */,
+      dialogCode: false /* 登录弹窗显示参数 */,
       form: {
         username: localStorage.getItem("username") || "",
         password: localStorage.getItem("password") || "",
         code: "",
         remember: Boolean(localStorage.getItem("remember")),
-      },
-      tipsCode: false,
-      tipsMessage: "",
-      tipsType: "",
+      } /* 用户登录表单 */,
+      tipsCode: false /* 登录提示显示参数 */,
+      tipsMessage: "" /* 登录提示文字 */,
+      tipsTheme: "" /* 登录提示主题 */,
     };
   },
   methods: {
     /* 获取验证码 */
     get_code() {
       getCode().then((res) => {
-        this.codeImgSrc = res.data;
+        this.authSvgSrc = res.data;
       });
     },
     /* 登录 */
@@ -254,7 +259,7 @@ export default {
             localStorage.setItem("username", this.form["username"]);
             localStorage.setItem("password", this.form["password"]);
             localStorage.setItem("remember", this.form["remember"]);
-            this.tipsType = "primary";
+            this.tipsTheme = "primary";
             this.tipsMessage = res.data.message;
             this.tipsCode = true;
             setTimeout(() => {
@@ -268,7 +273,7 @@ export default {
             localStorage.removeItem("remember");
           }
         } else {
-          this.tipsType = "warn";
+          this.tipsTheme = "warn";
           this.tipsMessage = res.data.message;
           this.tipsCode = true;
           setTimeout(() => {

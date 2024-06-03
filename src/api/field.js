@@ -37,9 +37,9 @@ export const editFieldInfo = (id,param) => {
 }
 
 /* 删除字段信息 */
-export const removeFieldInfo = id => {
+export const removeFieldInfo = (id,tid,wid) => {
     return request({
-        url: '/removeFieldInfo/?id=' + id,
+        url: '/removeFieldInfo/?id=' + id + '&tid=' + tid + '&wid=' + wid,
         method: 'delete',
     })
 }

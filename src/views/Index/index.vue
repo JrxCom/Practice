@@ -1,5 +1,6 @@
 <template>
   <div class="index" :style="themeStyle">
+    <!-- 菜单 -->
     <div class="menu">
       <vs-sidebar style="position: static !important" v-model="active" open>
         <template #logo>
@@ -71,9 +72,11 @@
         </template>
       </vs-sidebar>
     </div>
+    <!-- 内容 -->
     <div class="view" :style="themeStyle">
       <router-view></router-view>
     </div>
+    <!-- 退出登录弹窗 -->
     <div class="dialog">
       <transition name="dialog">
         <div class="logout" v-show="dialogCode">
@@ -100,6 +103,7 @@
         </div>
       </transition>
     </div>
+    <!-- 退出登录提示 -->
     <div class="alert">
       <vs-alert v-model="logoutTipsCode" solid>
         <h4>{{ logoutTipsMessage }}</h4>
@@ -109,23 +113,26 @@
 </template>
 
 <script>
+/* 引入主题混入 */
 import theme from "@/mixin/theme.js";
+/* 引入退出api */
 import { logout } from "@/api/log";
 export default {
   name: "index",
   mixins: [theme],
   data() {
     return {
-      active: "home",
-      dialogCode: false,
-      logoutTipsCode: false,
-      logoutTipsMessage: "",
+      active: "home" /* 当前菜单 */,
+      dialogCode: false /* 退出弹窗显示参数 */,
+      logoutTipsCode: false /* 退出提示显示参数 */,
+      logoutTipsMessage: "" /* 退出提示文字 */,
     };
   },
   created() {
     this.active = this.$route.name;
   },
   methods: {
+    /* 退出登录 */
     log_out() {
       logout().then((res) => {
         if (res.data.status === 200) {
