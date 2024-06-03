@@ -114,7 +114,11 @@
                 <div class="formItem" v-else-if="item.creat === '单选'">
                   <p class="label">{{ item.label }}</p>
                   <div class="value">
-                    <vs-radio :success="dialogType" v-for="item in item.value" :key="item">
+                    <vs-radio
+                      :success="dialogType"
+                      v-for="item in item.value"
+                      :key="item"
+                    >
                       {{ item }}
                     </vs-radio>
                   </div>
@@ -123,7 +127,7 @@
                   <p class="label">{{ item.label }}</p>
                   <div class="value">
                     <vs-checkbox
-                    :success="dialogType"
+                      :success="dialogType"
                       v-for="item in item.value"
                       :key="item"
                       v-model="option"
@@ -140,20 +144,20 @@
                 <div class="formItem" v-else-if="item.creat === '图片'">
                   <p class="label">{{ item.label }}</p>
                   <vs-button block :success="dialogType">
-                  <img src="@/assets/common/image.png" /> image
-                </vs-button>
+                    <img src="@/assets/common/image.png" /> image
+                  </vs-button>
                 </div>
                 <div class="formItem" v-else-if="item.creat === '音频'">
                   <p class="label">{{ item.label }}</p>
                   <vs-button block :success="dialogType">
-                  <img src="@/assets/common/audio.png" /> audio
-                </vs-button>
+                    <img src="@/assets/common/audio.png" /> audio
+                  </vs-button>
                 </div>
                 <div class="formItem" v-else-if="item.creat === '视频'">
                   <p class="label">{{ item.label }}</p>
                   <vs-button block :success="dialogType">
-                  <img src="@/assets/common/video.png" /> video
-                </vs-button>
+                    <img src="@/assets/common/video.png" /> video
+                  </vs-button>
                 </div>
               </div>
 
@@ -183,9 +187,7 @@
                 <img src="@/assets/common/removeClose.png" />
               </vs-button>
             </div>
-            <div class="header">
-              Remove Data
-            </div>
+            <div class="header">Remove Data</div>
             <div class="main">
               <p>是否确认删除该数据？</p>
               <span>说明：该操作不可逆，请谨慎删除</span>
@@ -296,10 +298,12 @@ export default {
         { id: 6, label: "user_6", creat: "音频", show: "文本", value: [] },
         { id: 7, label: "user_7", creat: "视频", show: "文本", value: [] },
       ],
-      removeDialog:false,
+      removeDialog: false,
     };
   },
-  
+  created() {
+    console.log(this.$router);
+  },
   methods: {
     data(type) {
       if (type === "add") {

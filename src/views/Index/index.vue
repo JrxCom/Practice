@@ -31,11 +31,16 @@
             </vs-sidebar-item>
           </template>
 
-          <vs-sidebar-item id="web" to="/web">
+          <vs-sidebar-item
+            v-for="(item, index) in menuArray"
+            :key="index"
+            :id="item.database"
+            @click.native="go_web(item.id)"
+          >
             <template #icon>
-              <img src="@/assets/index/Music.png" alt="" />
+              <img :src="item.logo" alt="" />
             </template>
-            Music
+            {{ item.name }}
           </vs-sidebar-item>
         </vs-sidebar-group>
 
@@ -74,7 +79,7 @@
     </div>
     <!-- 内容 -->
     <div class="view" :style="themeStyle">
-      <router-view></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </div>
     <!-- 退出登录弹窗 -->
     <div class="dialog">
@@ -117,6 +122,8 @@
 import theme from "@/mixin/theme.js";
 /* 引入退出api */
 import { logout } from "@/api/log";
+/* 引入获取网站列表api */
+import { getWebList } from "@/api/web";
 export default {
   name: "index",
   mixins: [theme],
@@ -126,12 +133,28 @@ export default {
       dialogCode: false /* 退出弹窗显示参数 */,
       logoutTipsCode: false /* 退出提示显示参数 */,
       logoutTipsMessage: "" /* 退出提示文字 */,
+      menuArray: new Array(20) /* 菜单列表 */,
     };
   },
   created() {
     this.active = this.$route.name;
+    this.get_menu_list();
+    console.log(this.menuArray);
   },
   methods: {
+    get_menu_list() {
+      getWebList().then((res) => {
+        if (res.data.status === 200) {
+          this.menuArray = res.data.obj.records;
+          console.log(this.menuArray);
+        } else {
+          this.show_tips(res.data.status, res.data.message);
+        }
+      });
+    },
+    go_web(id) {
+      this.$router.push({ path: "/web/?id=" + id, query: { id: id } });
+    },
     /* 退出登录 */
     log_out() {
       logout().then((res) => {

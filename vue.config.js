@@ -6,10 +6,9 @@ module.exports = defineConfig({
   assetsDir: "static",
 })
 
-
 module.exports = {
   devServer: {
-    host: process.env.VUE_APP_LOCAL_HOST,  // 本地主机
+    host: 'localhost', // 本地主机
     port: process.env.VUE_APP_LOCAL_PORT,  // 端口号的配置
     open: true,  // 自动打开浏览器
     proxy: {
