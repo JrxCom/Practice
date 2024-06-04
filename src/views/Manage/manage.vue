@@ -1,9 +1,9 @@
 <template>
   <div class="manage">
     <!-- 网站 -->
-    <div class="web_view">
+    <div class="web_view" :style="{'width':webArray.length?'37vw':'20vw'}">
       <vs-select
-        placeholder="请选择"
+        placeholder="请添加网站"
         v-model="webCode"
         state="primary"
         @change="webCode = $event"
@@ -21,21 +21,21 @@
         <img src="@/assets/manage/addButton.png" />
         Add Web
       </vs-button>
-      <vs-button icon color="success" relief @click="web('edit')">
+      <vs-button icon color="success" relief @click="web('edit')" v-show="webArray.length">
         <img src="@/assets/manage/editButton.png" />
         Edit Web
       </vs-button>
-      <vs-button icon color="danger" relief @click="remove('web')">
+      <vs-button icon color="danger" relief @click="remove('web')" v-show="webArray.length">
         <img src="@/assets/manage/removeButton.png" />
         Remove Web
       </vs-button>
     </div>
     <!-- 表 -->
     <div class="table_view">
-      <vs-button icon @click="table('add')">
+      <vs-button icon @click="table('add')" v-show="webCode">
         <img src="@/assets/manage/addButton.png" /> Add Table
       </vs-button>
-      <div class="table_list">
+      <div class="table_list" v-if="tableArray.length">
         <div
           class="table_cell"
           :class="{ table_cell_: tableCode === item.id }"
@@ -57,13 +57,17 @@
           </div>
         </div>
       </div>
+      <div class="no_data" v-else>
+        <img src="@/assets/manage/noData.png" alt="" />
+        <h4>NO DATA</h4>
+      </div>
     </div>
     <!-- 字段 -->
     <div class="field_view">
-      <vs-button icon @click="field('add')">
+      <vs-button icon @click="field('add')" v-show="webCode">
         <img src="@/assets/manage/addButton.png" /> Add Field
       </vs-button>
-      <div class="field_list">
+      <div class="field_list" v-if="fieldArray.length">
         <div
           class="field_cell"
           v-for="(item, index) in fieldArray"
@@ -86,6 +90,10 @@
             />
           </div>
         </div>
+      </div>
+      <div class="no_data" v-else>
+        <img src="@/assets/manage/noData.png" alt="" />
+        <h4>NO DATA</h4>
       </div>
     </div>
     <!-- 弹窗 -->
@@ -378,12 +386,6 @@
         </div>
       </transition>
     </div>
-    <!-- 提示 -->
-    <div class="alert_view">
-      <vs-alert v-if="tipsCode" solid :color="tipsType">
-        <h4>{{ tipsMessage }}</h4>
-      </vs-alert>
-    </div>
   </div>
 </template>
 
@@ -465,9 +467,6 @@ export default {
       ] /* 全部字段常用类型 */,
       removeDialog: false /* 删除弹窗显示参数 */,
       removeTitle: "" /* 删除弹窗标题（web、table、filed） */,
-      tipsCode: false /* 提示显示参数 */,
-      tipsMessage: "" /* 提示文字 */,
-      tipsType: "" /* 提示显示类型 */,
     };
   },
   watch: {
@@ -494,17 +493,33 @@ export default {
   methods: {
     /* 提示 */
     show_tips(status, message) {
-      this.tipsMessage = message;
-      this.tipsCode = true;
       if (status === 200) {
-        this.tipsType = "primary";
+        this.$vs.notification({
+          flat: true,
+          color: "primary",
+          position: "top-center",
+          duration: "1500",
+          title: `${message}`,
+        });
       } else if (status === 403) {
-        this.tipsType = "danger";
+        this.$vs.notification({
+          flat: true,
+          color: "danger",
+          position: "top-center",
+          duration: "2000",
+          buttonClose:false,
+          title: `${message}`,
+        });
       } else if (status === 500) {
-        this.tipsType = "warn";
+        this.$vs.notification({
+          flat: true,
+          color: "warn",
+          position: "top-center",
+          duration: "1500",
+          title: `${message}`,
+        });
       }
       setTimeout(() => {
-        this.tipsCode = false;
         status === 403 ? this.$router.push({ path: "/login" }) : null;
       }, 2000);
     },
@@ -529,7 +544,6 @@ export default {
       this.webDialog = true;
       this.webUploadSrc = type === "add" ? "" : this.webUploadSrc;
     },
-
     /* 获取网站信息 */
     get_web_info() {
       getWebInfo(this.webCode).then((res) => {
@@ -542,7 +556,6 @@ export default {
         }
       });
     },
-
     /* 上传logo图 */
     upload_image(event) {
       const file = event.target.files[0];
@@ -556,7 +569,6 @@ export default {
         this.show_tips(res.data.status, res.data.message);
       });
     },
-
     /* 添加、修改网站 */
     controls_web_info() {
       if (this.webTitle === "Add Web") {
@@ -564,7 +576,9 @@ export default {
           if (res.data.status === 200) {
             this.show_tips(res.data.status, res.data.message);
             this.webDialog = false;
-            location.reload();
+            setTimeout(()=>{
+              location.reload();
+            },1000)
           } else {
             this.show_tips(res.data.status, res.data.message);
           }
@@ -579,7 +593,6 @@ export default {
         });
       }
     },
-
     /* 获取表列表 */
     get_table_list() {
       getTableList(this.webCode).then((res) => {
@@ -592,7 +605,6 @@ export default {
         }
       });
     },
-
     /* 展示表弹窗 */
     table(type, id) {
       type === "edit" ? this.get_table_info(id) : null;
@@ -601,7 +613,6 @@ export default {
       this.tableForm = type === "add" ? {} : this.tableForm;
       this.tableDialog = true;
     },
-
     /* 获取表信息 */
     get_table_info(id) {
       this.tableHandleCode = id;
@@ -614,7 +625,6 @@ export default {
         }
       });
     },
-
     /* 添加、修改表 */
     controls_table_info() {
       this.tableForm["wid"] = this.webCode;
@@ -636,7 +646,6 @@ export default {
         });
       }
     },
-
     /* 获取字段列表 */
     get_field_list() {
       getFieldList(this.tableCode).then((res) => {
@@ -647,7 +656,6 @@ export default {
         }
       });
     },
-
     /* 展示字段弹窗 */
     field(type, id) {
       type === "edit" ? this.get_field_info(id) : null;
@@ -656,7 +664,6 @@ export default {
       this.fieldForm = type === "add" ? {} : this.fieldForm;
       this.fieldDialog = true;
     },
-
     /* 获取字段信息 */
     get_field_info(id) {
       this.fieldHandleCode = id;
@@ -681,7 +688,6 @@ export default {
         }
       });
     },
-
     /* 添加、修改字段 */
     controls_field_info() {
       this.fieldForm["wid"] = this.webCode;
@@ -710,7 +716,6 @@ export default {
         });
       }
     },
-
     /* 展示删除弹窗 */
     remove(type, id) {
       if (type === "web") {
@@ -726,7 +731,6 @@ export default {
         this.fieldHandleCode = id;
       }
     },
-
     /* 删除 */
     do_remove() {
       if (this.removeTitle === "Remove Table") {

@@ -209,12 +209,6 @@
       </div>
     </transition>
 
-    <!-- 登录提示 -->
-    <div class="alert_view">
-      <vs-alert v-if="tipsCode" solid :color="tipsTheme">
-        <h4>{{ tipsMessage }}</h4>
-      </vs-alert>
-    </div>
   </div>
 </template>
 
@@ -239,9 +233,6 @@ export default {
         code: "",
         remember: Boolean(localStorage.getItem("remember")),
       } /* 用户登录表单 */,
-      tipsCode: false /* 登录提示显示参数 */,
-      tipsMessage: "" /* 登录提示文字 */,
-      tipsTheme: "" /* 登录提示主题 */,
     };
   },
   methods: {
@@ -259,11 +250,16 @@ export default {
             localStorage.setItem("username", this.form["username"]);
             localStorage.setItem("password", this.form["password"]);
             localStorage.setItem("remember", this.form["remember"]);
-            this.tipsTheme = "primary";
-            this.tipsMessage = res.data.message;
-            this.tipsCode = true;
+            this.$vs.notification({
+              flat: true,
+              color: "primary",
+              progress: "auto",
+              position: "top-center",
+              duration: "2000",
+              buttonClose:false,
+              title: `${res.data.message}`,
+            });
             setTimeout(() => {
-              this.tipsCode = false;
               this.dialogCode = false;
               this.$router.push({ path: "/" });
             }, 2000);
@@ -273,12 +269,14 @@ export default {
             localStorage.removeItem("remember");
           }
         } else {
-          this.tipsTheme = "warn";
-          this.tipsMessage = res.data.message;
-          this.tipsCode = true;
-          setTimeout(() => {
-            this.tipsCode = false;
-          }, 2000);
+          this.$vs.notification({
+            flat: true,
+            color: "warn",
+            progress: "auto",
+            position: "top-center",
+            duration: "2000",
+            title: `${res.data.message}`,
+          });
         }
       });
     },

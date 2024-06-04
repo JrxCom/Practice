@@ -160,13 +160,6 @@
                   </vs-button>
                 </div>
               </div>
-
-              <!-- <div class="upload">
-                <label>网站logo</label>
-                <vs-button block :success="dialogType">
-                  <img src="@/assets/manage/uploadButton.png" /> upload
-                </vs-button>
-              </div> -->
             </div>
             <div class="footer">
               <vs-button icon :success="dialogType">
@@ -208,12 +201,13 @@
 </template>
 
 <script>
+import {getTableList} from '@/api/table'
 export default {
   name: "web",
   data() {
     return {
-      navCode: "用户管理",
-      navList: [{ name: "用户管理" }, { name: "菜单管理" }],
+      navCode: "",
+      navList: [],
       headList: {
         id: "用户id",
         name: "用户名称",
@@ -302,9 +296,18 @@ export default {
     };
   },
   created() {
-    console.log(this.$router);
+    this.get_nav()
   },
   methods: {
+    get_nav(){
+      getTableList(this.$route.query.id).then((res) => {
+        if (res.data.status === 200) {
+          this.navList = res.data.obj.records;
+          this.navCode =
+            res.data.obj.records.length > 0 ? res.data.obj.records[0].name : "";
+        } 
+      });
+    },
     data(type) {
       if (type === "add") {
         this.dataTitle = "Add Data";

@@ -30,11 +30,10 @@
               WEB
             </vs-sidebar-item>
           </template>
-
           <vs-sidebar-item
             v-for="(item, index) in menuArray"
             :key="index"
-            :id="item.database"
+            :id="item.id"
             @click.native="go_web(item.id)"
           >
             <template #icon>
@@ -71,7 +70,11 @@
             <img v-if="!themeCode" src="@/assets/index/light.png" />
             <img v-else src="@/assets/index/dark.png" />
           </vs-button>
-          <vs-button icon color="danger" @click="dialogCode = true">
+          <vs-button
+            icon
+            color="danger"
+            @click="(dialogCode = true), $bus.$emit('close-tips')"
+          >
             <img src="@/assets/index/logout.png" />
           </vs-button>
         </template>
@@ -86,33 +89,34 @@
       <transition name="dialog">
         <div class="logout" v-show="dialogCode">
           <div class="card_logout">
-            <div class="close" @click="dialogCode = false">
+            <div
+              class="close"
+              @click="(dialogCode = false), $bus.$emit('open-tips')"
+            >
               <vs-button icon border danger>
                 <img src="@/assets/common/removeClose.png" />
               </vs-button>
             </div>
             <div class="header">提示</div>
             <div class="main">
-              <p>是否退出登录?</p>
+              <p>是否退出登录？</p>
               <span>说明：退出成功后页面跳转到登录页</span>
             </div>
             <div class="footer">
               <vs-button icon danger @click="log_out()">
                 <img src="@/assets/common/confirm.png" />
               </vs-button>
-              <vs-button icon color="#808b96" @click="dialogCode = false">
+              <vs-button
+                icon
+                color="#808b96"
+                @click="(dialogCode = false), $bus.$emit('open-tips')"
+              >
                 <img src="@/assets/common/cancel.png" />
               </vs-button>
             </div>
           </div>
         </div>
       </transition>
-    </div>
-    <!-- 退出登录提示 -->
-    <div class="alert">
-      <vs-alert v-model="logoutTipsCode" solid>
-        <h4>{{ logoutTipsMessage }}</h4>
-      </vs-alert>
     </div>
   </div>
 </template>
@@ -133,22 +137,31 @@ export default {
       dialogCode: false /* 退出弹窗显示参数 */,
       logoutTipsCode: false /* 退出提示显示参数 */,
       logoutTipsMessage: "" /* 退出提示文字 */,
-      menuArray: new Array(20) /* 菜单列表 */,
+      menuArray: new Array() /* 菜单列表 */,
     };
   },
   created() {
     this.active = this.$route.name;
     this.get_menu_list();
-    console.log(this.menuArray);
   },
   methods: {
     get_menu_list() {
       getWebList().then((res) => {
         if (res.data.status === 200) {
           this.menuArray = res.data.obj.records;
-          console.log(this.menuArray);
         } else {
-          this.show_tips(res.data.status, res.data.message);
+          this.$vs.notification({
+            flat: true,
+            color: "danger",
+            progress: "auto",
+            position: "top-center",
+            duration: "2000",
+            buttonClose: false,
+            title: `${res.data.message}`,
+          });
+          setTimeout(() => {
+            this.$router.push({ path: "/login" });
+          }, 2000);
         }
       });
     },
@@ -159,13 +172,19 @@ export default {
     log_out() {
       logout().then((res) => {
         if (res.data.status === 200) {
-          this.logoutTipsMessage = res.data.message;
-          this.logoutTipsCode = true;
+          this.dialogCode = false;
+          this.$vs.notification({
+            flat: true,
+            color: "primary",
+            progress: "auto",
+            position: "top-center",
+            duration: "1500",
+            buttonClose: false,
+            title: `${res.data.message}`,
+          });
           setTimeout(() => {
-            this.dialogCode = true;
-            this.logoutTipsCode = false;
             this.$router.push({ path: "/login" });
-          }, 2000);
+          }, 1500);
         }
       });
     },
