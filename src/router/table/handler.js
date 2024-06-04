@@ -5,16 +5,16 @@ const fs = require("fs")
 
 /* 获取表列表 */
 exports.getTableList = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     db.query(`SELECT * FROM learner.table WHERE wid = ${req.query.wid}`, (err, results) => {
         if (results) res.send({ status: 200, obj: { records: results } })
-        if (err) res.send({ status: 500, message: "获取表列表失败!" })
+        if (err) res.send({ status: 500, message: "获取表列表失败！" })
     })
 }
 
 /* 添加表信息 */
 exports.addTableInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const data = {
         id: new Date().getTime(),
         wid: req.body['wid'],
@@ -29,7 +29,7 @@ exports.addTableInfo = (req, res) => {
             if (results.length <= 0) {
                 resolve()
             } else {
-                reject('表名称已存在!');
+                reject('表名称已存在！');
             }
         })
     });
@@ -39,7 +39,7 @@ exports.addTableInfo = (req, res) => {
             if (results.length <= 0) {
                 resolve()
             } else {
-                reject("数据库表已存在!");
+                reject("数据库表已存在！");
             }
         })
     });
@@ -58,12 +58,13 @@ exports.addTableInfo = (req, res) => {
                     creatime datetime NULL COMMENT '创建时间',
                     PRIMARY KEY (id)
                   );`, data, (err, results) => {
+                    console.log(err);
                     if (results) {
                         fs.mkdir(`./../upload/${promiseRes[2]}/${req.body['table']}`, () => {
                             res.send({ status: 200, message: "添加表信息成功。" })
                         })
                     }
-                    if (err) res.send({ status: 500, message: "添加表信息失败!" })
+                    if (err) res.send({ status: 500, message: "添加表信息失败！" })
                 })
             }
         })
@@ -75,16 +76,16 @@ exports.addTableInfo = (req, res) => {
 
 /* 获取表信息 */
 exports.getTableInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     db.query(`SELECT * FROM learner.table WHERE id = ${req.query.id}`, (err, results) => {
         if (results) res.send({ status: 200, obj: results[0] })
-        if (err) res.send({ status: 500, message: "获取表信息失败!" })
+        if (err) res.send({ status: 500, message: "获取表信息失败！" })
     })
 }
 
 /* 修改表信息 */
 exports.editTableInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const data = {
         name: req.body['name'],
         describe: req.body['describe'],
@@ -92,21 +93,21 @@ exports.editTableInfo = (req, res) => {
     }
 
     const inspect_name = new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM learner.table WHERE name = '${req.body.name}' AND wid = '${req.body.wid} AND id != ${req.query.id}'`, (err, results) => {
+        db.query(`SELECT * FROM learner.table WHERE name = '${req.body.name}' AND wid = '${req.body.wid} AND id ！= ${req.query.id}'`, (err, results) => {
             if (results.length <= 0) {
                 resolve()
             } else {
-                reject('表名称已存在!');
+                reject('表名称已存在！');
             }
         })
     });
 
     const inspect_table = new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM learner.table WHERE \`table\` = '${req.body.table}' AND wid = '${req.body.wid} AND id != ${req.query.id}'`, (err, results) => {
+        db.query(`SELECT * FROM learner.table WHERE \`table\` = '${req.body.table}' AND wid = '${req.body.wid} AND id ！= ${req.query.id}'`, (err, results) => {
             if (results.length <= 0) {
                 resolve()
             } else {
-                reject("数据库表已存在!");
+                reject("数据库表已存在！");
             }
         })
     });
@@ -132,7 +133,7 @@ exports.editTableInfo = (req, res) => {
                             res.send({ status: 200, message: "修改表信息成功。" })
                         })
                     }
-                    if (err) res.send({ status: 500, message: "修改表信息失败!" })
+                    if (err) res.send({ status: 500, message: "修改表信息失败！" })
                 })
             }
         })
@@ -143,7 +144,7 @@ exports.editTableInfo = (req, res) => {
 
 /* 删除表信息 */
 exports.removeTableInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
             resolve(results[0]['database'])
@@ -163,7 +164,7 @@ exports.removeTableInfo = (req, res) => {
                             res.send({ status: 200, message: "删除表信息成功。" })
                         })
                     }
-                    if (err) res.send({ status: 500, message: "删除表信息失败!" })
+                    if (err) res.send({ status: 500, message: "删除表信息失败！" })
                 })
             }
         })

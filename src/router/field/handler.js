@@ -3,16 +3,16 @@ const db = require('../../db/db')
 
 /* 获取字段列表 */
 exports.getFieldList = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     db.query(`SELECT * FROM learner.field WHERE tid = ${req.query.tid}`, (err, results) => {
         if (results) res.send({ status: 200, obj: { records: results } })
-        if (err) res.send({ status: 500, message: "获取字段列表失败!" })
+        if (err) res.send({ status: 500, message: "获取字段列表失败！" })
     })
 }
 
 /* 添加字段信息 */
 exports.addFieldInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const data = {
         id: new Date().getTime(),
         tid: req.body['tid'],
@@ -30,7 +30,7 @@ exports.addFieldInfo = (req, res) => {
             if (results.length <= 0) {
                 resolve()
             } else {
-                reject('字段名称已存在!');
+                reject('字段名称已存在！');
             }
         })
     });
@@ -40,7 +40,7 @@ exports.addFieldInfo = (req, res) => {
             if (results.length <= 0) {
                 resolve()
             } else {
-                reject("数据库字段已存在!");
+                reject("数据库字段已存在！");
             }
         })
     });
@@ -67,7 +67,7 @@ exports.addFieldInfo = (req, res) => {
                         })
                     }
                     else {
-                        res.send({ status: 500, message: "添加字段信息失败!" })
+                        res.send({ status: 500, message: "添加字段信息失败！" })
                     }
                 })
             }
@@ -80,16 +80,16 @@ exports.addFieldInfo = (req, res) => {
 
 /* 获取字段信息 */
 exports.getFieldInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     db.query(`SELECT * FROM learner.field WHERE id = ${req.query.id}`, (err, results) => {
         if (results) res.send({ status: 200, obj: results[0] })
-        if (err) res.send({ status: 500, message: "获取字段信息失败!" })
+        if (err) res.send({ status: 500, message: "获取字段信息失败！" })
     })
 }
 
 /* 修改字段信息 */
 exports.editFieldInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const data = {
         name: req.body['name'],
         describe: req.body['describe'],
@@ -101,21 +101,21 @@ exports.editFieldInfo = (req, res) => {
     }
 
     const inspect_name = new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM learner.field WHERE name = '${req.body.name}' AND tid = '${req.body.tid}' AND id != ${req.query.id}`, (err, results) => {
+        db.query(`SELECT * FROM learner.field WHERE name = '${req.body.name}' AND tid = '${req.body.tid}' AND id ！= ${req.query.id}`, (err, results) => {
             if (results.length <= 0) {
                 resolve()
             } else {
-                reject('字段名称已存在!');
+                reject('字段名称已存在！');
             }
         })
     });
 
     const inspect_field = new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM learner.field WHERE \`field\` = '${req.body.field}' AND tid = '${req.body.tid}' AND id != ${req.query.id}`, (err, results) => {
+        db.query(`SELECT * FROM learner.field WHERE \`field\` = '${req.body.field}' AND tid = '${req.body.tid}' AND id ！= ${req.query.id}`, (err, results) => {
             if (results.length <= 0) {
                 resolve()
             } else {
-                reject("数据库字段已存在!");
+                reject("数据库字段已存在！");
             }
         })
     });
@@ -143,7 +143,7 @@ exports.editFieldInfo = (req, res) => {
             if (results) {
                 db.query(`ALTER TABLE ${promiseRes[2]}.${promiseRes[3]} CHANGE COLUMN ${promiseRes[4]} ${req.body['field']} ${req.body['type']}(${req.body['size']}) DEFAULT NULL COMMENT '${req.body['name']}';`, (err, results) => {
                     if (results) res.send({ status: 200, message: "修改字段信息成功。" })
-                    if (err) res.send({ status: 500, message: "修改字段信息失败!" })
+                    if (err) res.send({ status: 500, message: "修改字段信息失败！" })
                 })
             }
         })
@@ -154,7 +154,7 @@ exports.editFieldInfo = (req, res) => {
 
 /* 删除字段信息 */
 exports.removeFieldInfo = (req, res) => {
-    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录!" })
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
             resolve(results[0]['database'])
@@ -177,7 +177,7 @@ exports.removeFieldInfo = (req, res) => {
             if (results) {
                 db.query(`ALTER TABLE ${promiseRes[0]}.${promiseRes[1]} DROP ${promiseRes[2]}`, (err, results) => {
                     if (results) res.send({ status: 200, message: "删除字段信息成功。" })
-                    if (err) res.send({ status: 500, message: "删除字段信息失败!" })
+                    if (err) res.send({ status: 500, message: "删除字段信息失败！" })
                 })
             }
         })
