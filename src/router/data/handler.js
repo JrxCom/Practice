@@ -97,6 +97,7 @@ exports.editDataInfo = (req, res) => {
 
     Promise.all([get_database, get_table]).then((promiseRes) => {
         db.query(`UPDATE ${promiseRes[0]}.${promiseRes[1]} SET ? WHERE id = ${req.query.id}`, data, (err, results) => {
+            console.log(err);
             if (results) res.send({ status: 200, message: "修改数据信息成功。" })
             if (err) res.send({ status: 500, message: "修改数据信息失败！" })
         })
@@ -107,6 +108,7 @@ exports.editDataInfo = (req, res) => {
 
 /* 删除数据信息 */
 exports.removeDataInfo = (req, res) => {
+    console.log(req.body);
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
@@ -121,7 +123,8 @@ exports.removeDataInfo = (req, res) => {
     });
 
     Promise.all([get_database, get_table]).then((promiseRes) => {
-        db.query(`DELETE FROM ${promiseRes[0]}.${promiseRes[1]} WHERE id = ${req.query.id}`, (err, results) => {
+        db.query(`DELETE FROM ${promiseRes[0]}.${promiseRes[1]} WHERE id in (${req.body['ids[]']})`, (err, results) => {
+            console.log(err);
             if (results) res.send({ status: 200, message: "删除数据信息成功。" })
             if (err) res.send({ status: 500, message: "删除数据信息失败！" })
         })
