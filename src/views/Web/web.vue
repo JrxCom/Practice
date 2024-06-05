@@ -4,9 +4,10 @@
       <div class="navList">
         <div
           class="nav"
-          :class="{ nav_: navCode === item.name }"
+          :class="{ nav_: navCode === item.id }"
           v-for="(item, index) in navList"
           :key="index"
+          @click="navCode = item.id"
         >
           {{ item.name }}
         </div>
@@ -44,9 +45,11 @@
                   @change="selected = $vs.checkAll(selected, dataList)"
                 />
               </vs-th>
-              <vs-th v-for="(item, index) in headList" :key="index">
-                {{ item }}
+              <vs-th style="width: 200px"> ID </vs-th>
+              <vs-th v-for="(item, index) in headerList" :key="index">
+                {{ item.name }}
               </vs-th>
+              <vs-th style="width: 200px"> 创建时间 </vs-th>
             </vs-tr>
           </template>
           <template #tbody>
@@ -59,24 +62,11 @@
               <vs-td checkbox>
                 <vs-checkbox :val="tr" v-model="selected" />
               </vs-td>
-              <vs-td>
-                {{ tr.id }}
+              <vs-td>{{ tr["id"] }}</vs-td>
+              <vs-td v-for="item in headerList" :key="item">
+                <p>{{ tr[`${item.field}`] }}</p>
               </vs-td>
-              <vs-td>
-                {{ tr.name }}
-              </vs-td>
-              <vs-td>
-                {{ tr.describe }}
-              </vs-td>
-              <vs-td>
-                {{ tr.type }}
-              </vs-td>
-              <vs-td>
-                {{ tr.size }}
-              </vs-td>
-              <vs-td>
-                {{ tr.creatime }}
-              </vs-td>
+              <vs-td>{{ new Date(tr["creatime"]).toLocaleString()}}</vs-td>
             </vs-tr>
           </template>
           <template #footer>
@@ -104,65 +94,175 @@
             <div class="main">
               <div
                 class="formList"
-                v-for="(item, index) in formList"
+                v-for="(item, index) in headerList"
                 :key="index"
               >
-                <div class="formItem" v-if="item.creat === '本文'">
-                  <vs-input primary :success="dialogType" :label="item.label">
+                <div class="formItem" v-if="item.creatway === '文本'">
+                  <vs-input
+                    primary
+                    :success="dialogType"
+                    :label="item.name"
+                    v-model="dataForm[`${item.field}`]"
+                  >
                   </vs-input>
                 </div>
-                <div class="formItem" v-else-if="item.creat === '单选'">
-                  <p class="label">{{ item.label }}</p>
+                <div class="formItem" v-else-if="item.creatway === '单选'">
+                  <p class="label">{{ item.name }}</p>
                   <div class="value">
                     <vs-radio
                       :success="dialogType"
-                      v-for="item in item.value"
-                      :key="item"
+                      v-for="item_ in item.size.split(',')"
+                      :key="item_"
+                      :val="item_"
+                      v-model="dataForm[`${item.field}`]"
                     >
-                      {{ item }}
+                      {{ item_ }}
                     </vs-radio>
                   </div>
                 </div>
-                <div class="formItem" v-else-if="item.creat === '多选'">
-                  <p class="label">{{ item.label }}</p>
+                <div class="formItem" v-else-if="item.creatway === '多选'">
+                  <p class="label">{{ item.name }}</p>
                   <div class="value">
                     <vs-checkbox
                       :success="dialogType"
-                      v-for="item in item.value"
-                      :key="item"
-                      v-model="option"
+                      v-for="item_ in item.size.split(',')"
+                      :key="item_"
+                      :val="item_"
+                      v-model="dataForm[`${item.field}`]"
+                      @change.native="checkbox_change"
                     >
-                      {{ item }}
+                      {{ item_ }}
                     </vs-checkbox>
                   </div>
                 </div>
-                <div class="formItem" v-else-if="item.creat === '下拉'">
-                  <vs-select :label="item.label" v-model="value">
-                    <vs-option label="Vuesax" value="1"> Vuesax </vs-option>
+                <div class="formItem" v-else-if="item.creatway === '下拉'">
+                  <vs-select
+                    :label="item.name"
+                    v-model="dataForm[`${item.field}`]"
+                  >
+                    <vs-option
+                      v-for="item_ in item.size.split(',')"
+                      :key="item_"
+                      :label="item_"
+                      :value="item_"
+                    >
+                      {{ item_ }}
+                    </vs-option>
                   </vs-select>
                 </div>
-                <div class="formItem" v-else-if="item.creat === '图片'">
-                  <p class="label">{{ item.label }}</p>
-                  <vs-button block :success="dialogType">
+                <div class="formItem" v-else-if="item.creatway === '图片'">
+                  <p class="label">{{ item.name }}</p>
+
+                  <vs-button
+                    block
+                    :success="dialogType"
+                    @click="$refs.imageRef.click()"
+                    v-if="!dataForm[`${item.field}`]"
+                  >
                     <img src="@/assets/common/image.png" /> image
                   </vs-button>
+
+                  <vs-tooltip border top v-else>
+                    <vs-button
+                      block
+                      :success="dialogType"
+                      @click="$refs.imageRef.click()"
+                    >
+                      <img src="@/assets/common/check.png" />
+                    </vs-button>
+                    <template #tooltip>
+                      <img
+                        :src="apiUrl + dataForm[`${item.field}`]"
+                        width="80"
+                        height="80"
+                      />
+                    </template>
+                  </vs-tooltip>
+
+                  <input
+                    v-show="false"
+                    ref="imageRef"
+                    type="file"
+                    accept="image/*"
+                    @change="upload($event, item.field)"
+                  />
                 </div>
-                <div class="formItem" v-else-if="item.creat === '音频'">
-                  <p class="label">{{ item.label }}</p>
-                  <vs-button block :success="dialogType">
+                <div class="formItem" v-else-if="item.creatway === '音频'">
+                  <p class="label">{{ item.name }}</p>
+
+                  <vs-button
+                    block
+                    :success="dialogType"
+                    v-if="!dataForm[`${item.field}`]"
+                  >
                     <img src="@/assets/common/audio.png" /> audio
                   </vs-button>
+
+                  <vs-tooltip border top v-else>
+                    <vs-button
+                      block
+                      :success="dialogType"
+                      @click="$refs.audioRef.click()"
+                    >
+                      <img src="@/assets/common/check.png" />
+                    </vs-button>
+                    <template #tooltip>
+                      <audio :src="apiUrl + dataForm[`${item.field}`]"></audio>
+                    </template>
+                  </vs-tooltip>
+
+                  <input
+                    v-show="false"
+                    ref="audioRef"
+                    type="file"
+                    accept="audio/*"
+                    @change="upload($event, item.field)"
+                  />
                 </div>
-                <div class="formItem" v-else-if="item.creat === '视频'">
-                  <p class="label">{{ item.label }}</p>
-                  <vs-button block :success="dialogType">
+                <div class="formItem" v-else-if="item.creatway === '视频'">
+                  <p class="label">{{ item.name }}</p>
+
+                  <vs-button
+                    block
+                    :success="dialogType"
+                    v-if="!dataForm[`${item.field}`]"
+                  >
                     <img src="@/assets/common/video.png" /> video
                   </vs-button>
+
+                  <vs-tooltip border top v-else>
+                    <vs-button
+                      block
+                      :success="dialogType"
+                      @click="$refs.videoRef.click()"
+                    >
+                      <img src="@/assets/common/check.png" />
+                    </vs-button>
+                    <template #tooltip>
+                      <img
+                        :src="apiUrl + dataForm[`${item.field}`]"
+                        width="80"
+                        height="80"
+                      />
+                    </template>
+                  </vs-tooltip>
+
+                  <input
+                    v-show="false"
+                    ref="videoRef"
+                    type="file"
+                    accept="video/*"
+                    @change="upload($event, item.field)"
+                  />
                 </div>
               </div>
             </div>
             <div class="footer">
-              <vs-button icon :success="dialogType">
+              <vs-button
+                icon
+                :success="dialogType"
+                @click="controls_data_info()"
+              >
                 <img src="@/assets/common/confirm.png" />
               </vs-button>
               <vs-button icon color="#808b96" @click="dataDialog = false">
@@ -186,7 +286,7 @@
               <span>说明：该操作不可逆，请谨慎删除</span>
             </div>
             <div class="footer">
-              <vs-button icon danger>
+              <vs-button icon danger @click="remove_data_info()">
                 <img src="@/assets/common/confirm.png" />
               </vs-button>
               <vs-button icon color="#808b96" @click="removeDialog = false">
@@ -201,63 +301,23 @@
 </template>
 
 <script>
-import {getTableList} from '@/api/table'
+import { getTableList } from "@/api/table";
+import { getFieldList } from "@/api/field";
+import {
+  getDataList,
+  getDataInfo,
+  addDataInfo,
+  editDataInfo,
+  removeDataInfo,
+} from "@/api/data";
 export default {
   name: "web",
   data() {
     return {
-      navCode: "",
-      navList: [],
-      headList: {
-        id: "用户id",
-        name: "用户名称",
-        describe: "用户描述",
-        type: "用户类型",
-        size: "用户大小",
-        creatime: "创建时间",
-      },
-      dataList: [
-        {
-          id: 111111111,
-          name: "字段名称_1",
-          describe: "字段描述_1",
-          type: "字段类型_1",
-          size: "字段大小_1",
-          creatime: "创建时间_1",
-        },
-        {
-          id: 111111111,
-          name: "字段名称_2",
-          describe: "字段描述_2",
-          type: "字段类型_2",
-          size: "字段大小_2",
-          creatime: "创建时间_2",
-        },
-        {
-          id: 111111111,
-          name: "字段名称_3",
-          describe: "字段描述_3",
-          type: "字段类型_3",
-          size: "字段大小_3",
-          creatime: "创建时间_3",
-        },
-        {
-          id: 111111111,
-          name: "字段名称_4",
-          describe: "字段描述_4",
-          type: "字段类型_4",
-          size: "字段大小_4",
-          creatime: "创建时间_4",
-        },
-        {
-          id: 111111111,
-          name: "字段名称_5",
-          describe: "字段描述_5",
-          type: "字段类型_5",
-          size: "字段大小_5",
-          creatime: "创建时间_5",
-        },
-      ],
+      navCode: "" /* 当前栏目（表） */,
+      navList: [] /* 栏目列表 */,
+      headerList: [],
+      dataList: new Array(1),
       page: 1,
       max: 5,
       allCheck: false,
@@ -265,59 +325,178 @@ export default {
       dataDialog: false,
       dataTitle: "",
       dialogType: false,
-      formList: [
-        { id: 1, label: "user_1", creat: "本文", show: "文本", value: [] },
-        {
-          id: 2,
-          label: "user_2",
-          creat: "单选",
-          show: "文本",
-          value: ["男", "女"],
-        },
-        {
-          id: 3,
-          label: "user_3",
-          creat: "多选",
-          show: "文本",
-          value: ["A", "B", "C"],
-        },
-        {
-          id: 4,
-          label: "user_4",
-          creat: "下拉",
-          show: "文本",
-          value: ["!", "?", "%"],
-        },
-        { id: 5, label: "user_5", creat: "图片", show: "文本", value: [] },
-        { id: 6, label: "user_6", creat: "音频", show: "文本", value: [] },
-        { id: 7, label: "user_7", creat: "视频", show: "文本", value: [] },
-      ],
+      dataForm: {},
       removeDialog: false,
+      apiUrl: process.env.VUE_APP_BASE_API,
+      a: [],
     };
   },
+  watch: {
+    navCode(newvalue) {
+      this.get_header(newvalue);
+    },
+  },
   created() {
-    this.get_nav()
+    this.get_nav();
   },
   methods: {
-    get_nav(){
+    /* 提示 */
+    show_tips(status, message) {
+      if (status === 200) {
+        this.$vs.notification({
+          flat: true,
+          color: "primary",
+          position: "top-center",
+          duration: "1500",
+          title: `${message}`,
+        });
+      } else if (status === 403) {
+        this.$vs.notification({
+          flat: true,
+          color: "danger",
+          position: "top-center",
+          duration: "2000",
+          buttonClose: false,
+          title: `${message}`,
+        });
+      } else if (status === 500) {
+        this.$vs.notification({
+          flat: true,
+          color: "warn",
+          position: "top-center",
+          duration: "1500",
+          title: `${message}`,
+        });
+      }
+      setTimeout(() => {
+        status === 403 ? this.$router.push({ path: "/login" }) : null;
+      }, 2000);
+    },
+    /* 获取栏目（表） */
+    get_nav() {
       getTableList(this.$route.query.id).then((res) => {
         if (res.data.status === 200) {
           this.navList = res.data.obj.records;
           this.navCode =
-            res.data.obj.records.length > 0 ? res.data.obj.records[0].name : "";
-        } 
+            res.data.obj.records.length > 0 ? res.data.obj.records[0].id : "";
+          this.get_header(this.navCode);
+        } else {
+          this.show_tips(res.data.status, res.data.message);
+        }
       });
     },
+    /* 获取表头（字段） */
+    get_header(id) {
+      getFieldList(id).then((res) => {
+        if (res.data.status === 200) {
+          this.headerList = res.data.obj.records;
+          this.headerList.forEach((item) => {
+            if (item.creatway === "多选") {
+              this.dataForm[item.field] = [];
+            }
+          });
+          this.get_data_list(this.$route.query.id, this.navCode);
+        } else {
+          this.show_tips(res.data.status, res.data.message);
+        }
+      });
+    },
+    /* 获取数据 */
+    get_data_list(wid, tid) {
+      getDataList(wid, tid).then((res) => {
+        this.dataList = res.data.obj.records;
+      });
+    },
+    checkbox_change(val) {
+      console.log(val);
+    },
+    /* 上传图片 */
+    upload(event, field) {
+      const file = event.target.files[0];
+      const formData = new FormData();
+      formData.append("resource", file);
+      upload(formData, this.$route.query.id, this.navCode).then((res) => {
+        if (res.data.status === 200) {
+          this.dataForm[field] = res.data.path;
+        }
+        this.show_tips(res.data.status, res.data.message);
+      });
+    },
+
     data(type) {
-      if (type === "add") {
-        this.dataTitle = "Add Data";
-        this.dataDialog = true;
-        this.dialogType = false;
+      type === "edit" ? this.get_data_info() : null;
+      this.dataTitle = type === "add" ? "Add Data" : "Edit Data";
+      this.dialogTheme = type === "add" ? false : true;
+      this.dataForm = type === "add" ? {} : this.selected[0];
+      this.dataDialog = true;
+    },
+
+    get_data_info() {
+      getDataInfo(this.$route.query.id, this.navCode, this.selected[0].id).then(
+        (res) => {
+          if (res.data.status === 200) {
+            this.dataForm = res.data.obj;
+            this.headerList.forEach((item) => {
+              if (item.creatway === "多选") {
+                this.dataForm[item.field] =
+                  this.dataForm[item.field].split(",");
+              }
+            });
+          } else {
+            this.show_tips(res.data.status, res.data.message);
+          }
+        }
+      );
+    },
+
+    /* 添加、修改数据 */
+    controls_data_info() {
+      if (this.dataTitle === "Add Data") {
+        addDataInfo(this.$route.query.id, this.navCode, this.dataForm).then(
+          (res) => {
+            if (res.data.status === 200) {
+              this.get_data_list(this.$route.query.id, this.navCode);
+              this.dataDialog = false;
+            }
+            this.show_tips(res.data.status, res.data.message);
+          }
+        );
       } else {
-        this.dataTitle = "Edit Data";
-        this.dataDialog = true;
-        this.dialogType = true;
+        delete this.dataForm["id"];
+        delete this.dataForm["creatime"];
+        this.headerList.forEach((item) => {
+          if (item.creatway === "多选") {
+            this.dataForm[item.field] = this.dataForm[item.field].toString();
+          }
+        });
+        editDataInfo(
+          this.$route.query.id,
+          this.navCode,
+          this.selected[0].id,
+          this.dataForm
+        ).then((res) => {
+          if (res.data.status === 200) {
+            this.get_data_list(this.$route.query.id, this.navCode);
+            this.dataDialog = false;
+          }
+          this.show_tips(res.data.status, res.data.message);
+        });
       }
+    },
+
+    /* 删除 */
+    remove_data_info() {
+      let ids = []
+      this.selected.forEach(item=>{
+        ids.push(item.id)
+      })
+      removeDataInfo(this.$route.query.id, this.navCode,{ids}).then((res) => {
+          if (res.data.status === 200) {
+            this.get_data_list(this.$route.query.id, this.navCode);
+              this.removeDialog = false;
+          }
+          this.show_tips(res.data.status, res.data.message);
+        });
     },
   },
 };

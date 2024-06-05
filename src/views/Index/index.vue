@@ -33,11 +33,11 @@
           <vs-sidebar-item
             v-for="(item, index) in menuArray"
             :key="index"
-            :id="item.id"
+            :id="item.name"
             @click.native="go_web(item.id)"
           >
             <template #icon>
-              <img :src="item.logo" alt="" />
+              <img :src="apiUrl + item.logo" alt="" />
             </template>
             {{ item.name }}
           </vs-sidebar-item>
@@ -138,6 +138,7 @@ export default {
       logoutTipsCode: false /* 退出提示显示参数 */,
       logoutTipsMessage: "" /* 退出提示文字 */,
       menuArray: new Array() /* 菜单列表 */,
+      apiUrl: process.env.VUE_APP_BASE_API/* api路径 */,
     };
   },
   created() {
@@ -166,7 +167,7 @@ export default {
       });
     },
     go_web(id) {
-      this.$router.push({ path: "/web/?id=" + id, query: { id: id } });
+      this.$router.push({ path: "/web", query: { id: id } });
     },
     /* 退出登录 */
     log_out() {

@@ -172,6 +172,7 @@
                   v-show="false"
                   ref="fileRef"
                   type="file"
+                  accept="image/*"
                   @change="upload_image"
                 />
               </div>
@@ -455,7 +456,6 @@ export default {
         "图片",
         "音频",
         "视频",
-        "下拉",
       ] /* 全部字段显示方式 */,
       fieldTypeCode: "" /* 当前选中字段类型 */,
       fieldTypeArray: [
@@ -463,6 +463,7 @@ export default {
         "double",
         "varchar",
         "enum",
+        "set",
         "datetime",
       ] /* 全部字段常用类型 */,
       removeDialog: false /* 删除弹窗显示参数 */,
@@ -663,6 +664,9 @@ export default {
       this.dialogTheme = type === "add" ? false : true;
       this.fieldForm = type === "add" ? {} : this.fieldForm;
       this.fieldDialog = true;
+      this.creatWayCode = type === "add" ? "" : this.fieldForm['creatway']
+      this.showWayCode = type === "add" ? "" : this.fieldForm['showay']
+      this.fieldTypeCode = type === "add" ? "" : this.fieldForm['type']
     },
     /* 获取字段信息 */
     get_field_info(id) {
