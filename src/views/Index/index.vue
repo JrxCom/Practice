@@ -16,7 +16,7 @@
           Home
         </vs-sidebar-item>
 
-        <vs-sidebar-group>
+        <vs-sidebar-group open>
           <template #header>
             <vs-sidebar-item arrow>
               <template #icon>
@@ -33,7 +33,7 @@
           <vs-sidebar-item
             v-for="(item, index) in menuArray"
             :key="index"
-            :id="item.name"
+            :id="item.id"
             @click.native="go_web(item.id)"
           >
             <template #icon>
@@ -57,7 +57,7 @@
 
         <template #footer>
           <vs-tooltip>
-            <vs-button icon color="#808b96">
+            <vs-button icon color="#364758">
               <img src="@/assets/index/code.png" />
             </vs-button>
             <template #tooltip>
@@ -69,6 +69,10 @@
           <vs-button icon @click="themeCode = !themeCode">
             <img v-if="!themeCode" src="@/assets/index/light.png" />
             <img v-else src="@/assets/index/dark.png" />
+          </vs-button>
+          <vs-button icon color="#42B983" @click="screenCode = !screenCode">
+            <img v-if="!screenCode" src="@/assets/index/fullScreen.png" />
+            <img v-else src="@/assets/index/exitFullScreen.png" />
           </vs-button>
           <vs-button
             icon
@@ -137,13 +141,37 @@ export default {
       dialogCode: false /* 退出弹窗显示参数 */,
       logoutTipsCode: false /* 退出提示显示参数 */,
       logoutTipsMessage: "" /* 退出提示文字 */,
-      menuArray: new Array() /* 菜单列表 */,
-      apiUrl: process.env.VUE_APP_BASE_API/* api路径 */,
+      menuArray: new Array(20) /* 菜单列表 */,
+      screenCode: false /* 全屏参数 */,
+      apiUrl: process.env.VUE_APP_BASE_API /* api路径 */,
     };
   },
+  watch: {
+    screenCode(newvalue) {
+      this.full_screen();
+    },
+  },
+  beforeCreate() {
+    this.$bus.$on("update-menu", () => {
+      this.get_menu_list();
+    });
+  },
   created() {
-    this.active = this.$route.name;
+    if (this.$route.query.id) {
+      this.active = this.$route.query.id;
+    } else {
+      this.active = this.$route.name;
+    }
     this.get_menu_list();
+    window.onresize = () => {
+      this.screenCode = Boolean(
+        document.fullscreenElement ||
+          document.msFullscreenElement ||
+          document.webkitFullscreenElement ||
+          document.mozFullscreenElement
+      );
+      console.log(this.screenCode);
+    };
   },
   methods: {
     get_menu_list() {
@@ -188,6 +216,30 @@ export default {
           }, 1500);
         }
       });
+    },
+    full_screen() {
+      if (this.screenCode) {
+        let element = document.documentElement;
+        if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        } else if (element.mozRequestFullscreen) {
+          element.mozRequestFullscreen();
+        } else if (element.requestFullscreen) {
+          element.requestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        }
+      }
     },
   },
 };

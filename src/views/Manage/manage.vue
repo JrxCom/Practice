@@ -484,7 +484,8 @@ export default {
       if (newvalue) {
         this.get_field_list();
       } else {
-        this.tableCode = 0;
+        this.fieldArray = []
+        this.fieldCode = 0;
       }
     },
   },
@@ -577,9 +578,10 @@ export default {
           if (res.data.status === 200) {
             this.show_tips(res.data.status, res.data.message);
             this.webDialog = false;
+            this.get_web_list();
             setTimeout(()=>{
               location.reload();
-            },1000)
+            },500)
           } else {
             this.show_tips(res.data.status, res.data.message);
           }
@@ -589,6 +591,7 @@ export default {
           if (res.data.status === 200) {
             this.get_web_list();
             this.webDialog = false;
+            this.$bus.$emit('update-menu')
           }
           this.show_tips(res.data.status, res.data.message);
         });
@@ -762,6 +765,9 @@ export default {
           if (res.data.status === 200) {
             this.get_web_list();
             this.removeDialog = false;
+            setTimeout(()=>{
+              location.reload();
+            },500)
           }
           this.show_tips(res.data.status, res.data.message);
         });

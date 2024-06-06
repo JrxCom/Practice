@@ -1,11 +1,12 @@
 export default {
     data() {
         return {
-            themeCode: void 0,
-            themeStyle: {}
+            themeCode: void 0/* 主题切换参数 */,
+            themeStyle: {}/* 主题样式 */,
         }
     },
     watch: {
+        /* 监控主题切换 */
         themeCode(newvalue) {
             if (Boolean(newvalue) === false || JSON.parse(newvalue) === false) {
                 document.querySelector("body").setAttribute("vs-theme", "light");
@@ -29,6 +30,7 @@ export default {
         }
     },
     created() {
+        /* 主题根据浏览器保存显示 */
         if (Boolean(localStorage.getItem("theme")) === false || JSON.parse(localStorage.getItem("theme")) === false) {
             this.themeCode = false
         } else {

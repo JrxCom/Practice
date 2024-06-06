@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+/* 路由参数 */
 const routes = [
   {
     path: '/login',
@@ -32,21 +33,21 @@ const routes = [
     ],
   }
 ]
+/* 进入同一个路由清除报错 */
 const VueRouterPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(to) {
   return VueRouterPush.call(this, to).catch(err => err)
 }
 
-
-
+/* 路由配置 */
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
 
+/* 检查用户是否登录，跳转对应页面 */
 router.beforeEach((to, from, next) => {
-  // 检查用户是否登录
   if (document.cookie.indexOf('cookieCode') === -1 && to.path != '/login') {
     next('/login');
   } else if (document.cookie.indexOf('cookieCode') != -1 && to.path === '/login') {

@@ -166,6 +166,7 @@
               primary
               placeholder="User name"
               v-model="form['username']"
+              @keyup.enter.native="log_in()"
             >
               <template #icon>
                 <img v-if="!themeCode" src="@/assets/login/lightUser.png" />
@@ -177,6 +178,7 @@
               type="password"
               placeholder="Password"
               v-model="form['password']"
+              @keyup.enter.native="log_in()"
             >
               <template #icon>
                 <img v-if="!themeCode" src="@/assets/login/lightLock.png" />
@@ -184,7 +186,7 @@
               </template>
             </vs-input>
             <div class="code">
-              <vs-input primary placeholder="Auth code" v-model="form['code']">
+              <vs-input primary placeholder="Auth code" v-model="form['code']" @keyup.enter.native="log_in()">
                 <template #icon>
                   <img v-if="!themeCode" src="@/assets/login/lightCode.png" />
                   <img v-else src="@/assets/login/darkCode.png" />
@@ -201,7 +203,7 @@
             </vs-checkbox>
           </div>
           <div class="footer">
-            <vs-button icon @click="log_in()">
+            <vs-button icon @click="log_in()" >
               <img src="@/assets/login/loginButton.png" />
             </vs-button>
           </div>

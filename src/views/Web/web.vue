@@ -29,7 +29,12 @@
 
       <div class="table">
         <div>
-          <vs-input v-model="value1" placeholder="search" state="primary">
+          <vs-input
+            placeholder="search"
+            state="primary"
+            v-model="search_id"
+            @keyup.enter.native="search_data"
+          >
             <template #icon>
               <img src="@/assets/common/search.png" alt="" />
             </template>
@@ -45,11 +50,11 @@
                   @change="selected = $vs.checkAll(selected, dataList)"
                 />
               </vs-th>
-              <vs-th style="width: 200px"> ID </vs-th>
+              <vs-th> ID </vs-th>
               <vs-th v-for="(item, index) in headerList" :key="index">
                 {{ item.name }}
               </vs-th>
-              <vs-th style="width: 200px"> 创建时间 </vs-th>
+              <vs-th> 创建时间 </vs-th>
             </vs-tr>
           </template>
           <template #tbody>
@@ -63,16 +68,16 @@
                 <vs-checkbox :val="tr" v-model="selected" />
               </vs-td>
               <vs-td>{{ tr["id"] }}</vs-td>
-              <vs-td v-for="item in headerList" :key="item">
+              <vs-td v-for="(item, index) in headerList" :key="index">
                 <p>{{ tr[`${item.field}`] }}</p>
               </vs-td>
-              <vs-td>{{ new Date(tr["creatime"]).toLocaleString()}}</vs-td>
+              <vs-td>{{ new Date(tr["creatime"]).toLocaleString() }}</vs-td>
             </vs-tr>
           </template>
           <template #footer>
             <vs-pagination
               v-model="page"
-              :length="$vs.getLength($vs.getSearch(dataList), max)"
+              :length="Math.ceil(dataCount / max)"
             />
           </template>
         </vs-table>
@@ -80,7 +85,7 @@
     </div>
     <div class="dialog_view">
       <transition name="dialog">
-        <div class="add_edit" v-show="dataDialog">
+        <div class="add_edit" v-if="dataDialog">
           <div class="card">
             <div class="close" @click="dataDialog = false">
               <vs-button icon border :success="dialogType">
@@ -112,7 +117,7 @@
                     <vs-radio
                       :success="dialogType"
                       v-for="item_ in item.size.split(',')"
-                      :key="item_"
+                      :key="item_.id"
                       :val="item_"
                       v-model="dataForm[`${item.field}`]"
                     >
@@ -129,7 +134,6 @@
                       :key="item_"
                       :val="item_"
                       v-model="dataForm[`${item.field}`]"
-                      @change.native="checkbox_change"
                     >
                       {{ item_ }}
                     </vs-checkbox>
@@ -305,6 +309,7 @@ import { getTableList } from "@/api/table";
 import { getFieldList } from "@/api/field";
 import {
   getDataList,
+  getDataSearch,
   getDataInfo,
   addDataInfo,
   editDataInfo,
@@ -318,6 +323,8 @@ export default {
       navList: [] /* 栏目列表 */,
       headerList: [],
       dataList: new Array(1),
+      search_id: "",
+      dataCount: 0,
       page: 1,
       max: 5,
       allCheck: false,
@@ -328,12 +335,16 @@ export default {
       dataForm: {},
       removeDialog: false,
       apiUrl: process.env.VUE_APP_BASE_API,
-      a: [],
     };
   },
   watch: {
     navCode(newvalue) {
+      this.page = 1;
       this.get_header(newvalue);
+    },
+    page(newvalue) {
+      this.page = newvalue;
+      this.get_data_list(this.$route.query.id, this.navCode);
     },
   },
   created() {
@@ -372,6 +383,19 @@ export default {
         status === 403 ? this.$router.push({ path: "/login" }) : null;
       }, 2000);
     },
+    /* 根据id搜索数据 */
+    search_data() {
+      if (this.search_id != "") {
+        getDataSearch(this.$route.query.id, this.navCode, this.search_id).then(
+          (res) => {
+            this.dataList = res.data.obj.records;
+            this.dataCount = 1;
+          }
+        );
+      } else {
+        this.get_data_list(this.$route.query.id, this.navCode);
+      }
+    },
     /* 获取栏目（表） */
     get_nav() {
       getTableList(this.$route.query.id).then((res) => {
@@ -379,7 +403,6 @@ export default {
           this.navList = res.data.obj.records;
           this.navCode =
             res.data.obj.records.length > 0 ? res.data.obj.records[0].id : "";
-          this.get_header(this.navCode);
         } else {
           this.show_tips(res.data.status, res.data.message);
         }
@@ -393,6 +416,8 @@ export default {
           this.headerList.forEach((item) => {
             if (item.creatway === "多选") {
               this.dataForm[item.field] = [];
+            } else if (item.creatway === "单选") {
+              this.dataForm[item.field] = "";
             }
           });
           this.get_data_list(this.$route.query.id, this.navCode);
@@ -401,14 +426,12 @@ export default {
         }
       });
     },
-    /* 获取数据 */
+    /* 获取数据列表 */
     get_data_list(wid, tid) {
-      getDataList(wid, tid).then((res) => {
+      getDataList(wid, tid, { page: this.page, max: this.max }).then((res) => {
         this.dataList = res.data.obj.records;
+        this.dataCount = res.data.obj.count;
       });
-    },
-    checkbox_change(val) {
-      console.log(val);
     },
     /* 上传图片 */
     upload(event, field) {
@@ -422,7 +445,7 @@ export default {
         this.show_tips(res.data.status, res.data.message);
       });
     },
-
+    /* 展示数据弹窗 */
     data(type) {
       type === "edit" ? this.get_data_info() : null;
       this.dataTitle = type === "add" ? "Add Data" : "Edit Data";
@@ -430,7 +453,7 @@ export default {
       this.dataForm = type === "add" ? {} : this.selected[0];
       this.dataDialog = true;
     },
-
+    /* 获取数据信息 */
     get_data_info() {
       getDataInfo(this.$route.query.id, this.navCode, this.selected[0].id).then(
         (res) => {
@@ -448,7 +471,6 @@ export default {
         }
       );
     },
-
     /* 添加、修改数据 */
     controls_data_info() {
       if (this.dataTitle === "Add Data") {
@@ -477,26 +499,29 @@ export default {
         ).then((res) => {
           if (res.data.status === 200) {
             this.get_data_list(this.$route.query.id, this.navCode);
+            this.selected = [];
             this.dataDialog = false;
           }
           this.show_tips(res.data.status, res.data.message);
         });
       }
     },
-
     /* 删除 */
     remove_data_info() {
-      let ids = []
-      this.selected.forEach(item=>{
-        ids.push(item.id)
-      })
-      removeDataInfo(this.$route.query.id, this.navCode,{ids}).then((res) => {
+      let ids = [];
+      this.selected.forEach((item) => {
+        ids.push(item.id);
+      });
+      removeDataInfo(this.$route.query.id, this.navCode, { ids }).then(
+        (res) => {
           if (res.data.status === 200) {
             this.get_data_list(this.$route.query.id, this.navCode);
-              this.removeDialog = false;
+            this.removeDialog = false;
+            this.selected = [];
           }
           this.show_tips(res.data.status, res.data.message);
-        });
+        }
+      );
     },
   },
 };

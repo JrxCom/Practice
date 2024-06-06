@@ -33,7 +33,11 @@ export default {
       this.close_tips();
     });
     this.$bus.$on("open-tips", () => {
-      this.open_tips();
+      if(this.webArray.length === 0){
+        this.open_tips();
+      }else{
+        return
+      }
     });
   },
   created() {
@@ -65,8 +69,8 @@ export default {
         square: true,
         duration: "none",
         flat: true,
-        border: "success",
-        color: "success",
+        border: "primary",
+        color: "primary",
         position: "top-center",
         title: "当前无网站信息，可网站管理中添加信息。",
         text: `

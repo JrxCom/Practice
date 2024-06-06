@@ -3,7 +3,7 @@ import axios from 'axios'
 
 /* 2.全局默认配置 */
 // let baseURL = process.env.VUE_APP_BASE_API
-let baseURL = 'api'
+const baseURL = 'api'
 
 // 配置axios的属性
 const request = axios.create({
@@ -16,10 +16,6 @@ const request = axios.create({
 /* 3.设置拦截器 */
 request.interceptors.request.use(config => {
     //发送请求前进行拦截
-    //  可在此处配置请求头信息
-    config.headers["appkey"] = "";
-    config.headers["token"] = "";
-    // config.headers["Authorization"] = 'Bearer ' + document.cookie.slice(13);
     return config;
 }, error => {
     return Promise.reject(error)
