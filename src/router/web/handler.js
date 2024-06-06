@@ -7,7 +7,7 @@ const fs = require("fs")
 /* 获取网站列表 */
 exports.getWebList = (req, res) => {
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
-    db.query(`SELECT * FROM learner.web`, (err, results) => {
+    db.query(`SELECT * FROM learner.web ORDER BY creatime ASC`, (err, results) => {
         if (results) res.send({ status: 200, obj: { records: results } })
         if (err) res.send({ status: 500, message: "获取网站列表失败！" })
     })
@@ -85,7 +85,7 @@ exports.editWebInfo = (req, res) => {
     }
 
     const inspect_name = new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM learner.web WHERE name = '${req.body.name}' AND id ！= ${req.query.id}`, (err, results) => {
+        db.query(`SELECT * FROM learner.web WHERE name = '${req.body.name}' AND id != ${req.query.id}`, (err, results) => {
             if (results.length <= 0) {
                 resolve()
             } else {
@@ -95,7 +95,7 @@ exports.editWebInfo = (req, res) => {
     });
 
     const inspect_database = new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM learner.web WHERE \`database\` = '${req.body.database} AND id ！= ${req.query.id}'`, (err, results) => {
+        db.query(`SELECT * FROM learner.web WHERE \`database\` = '${req.body.database} AND id != ${req.query.id}'`, (err, results) => {
             if (results.length <= 0) {
                 resolve()
             } else {

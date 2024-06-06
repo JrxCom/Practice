@@ -6,7 +6,7 @@ const fs = require("fs")
 /* 获取表列表 */
 exports.getTableList = (req, res) => {
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
-    db.query(`SELECT * FROM learner.table WHERE wid = ${req.query.wid}`, (err, results) => {
+    db.query(`SELECT * FROM learner.table WHERE wid = ${req.query.wid} ORDER BY creatime ASC`, (err, results) => {
         if (results) res.send({ status: 200, obj: { records: results } })
         if (err) res.send({ status: 500, message: "获取表列表失败！" })
     })

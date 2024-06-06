@@ -4,7 +4,7 @@ const db = require('../../db/db')
 /* 获取字段列表 */
 exports.getFieldList = (req, res) => {
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
-    db.query(`SELECT * FROM learner.field WHERE tid = ${req.query.tid}`, (err, results) => {
+    db.query(`SELECT * FROM learner.field WHERE tid = ${req.query.tid} ORDER BY creatime ASC`, (err, results) => {
         if (results) res.send({ status: 200, obj: { records: results } })
         if (err) res.send({ status: 500, message: "获取字段列表失败！" })
     })

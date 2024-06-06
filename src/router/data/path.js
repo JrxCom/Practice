@@ -1,6 +1,11 @@
 /* 获取数据列表 */
 exports.getDataList = {
     path:'/getDataList',
+    method:'post'
+}
+/* 根据id搜索数据 */
+exports.getDataSearch = {
+    path:'/getDataSearch',
     method:'get'
 }
 
