@@ -7,10 +7,10 @@ import 'vuesax/dist/vuesax.css'
 import '../src/font/font.css'
 
 Vue.config.productionTip = false
-// 屏蔽错误信息
+/* // 屏蔽错误信息
 Vue.config.errorHandler = () => { }
 // 屏蔽警告信息
-Vue.config.warnHandler = () => { }
+Vue.config.warnHandler = () => { } */
 
 Vue.use(Vuesax)
 new Vue({

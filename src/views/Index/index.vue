@@ -76,6 +76,13 @@
           </vs-button>
           <vs-button
             icon
+            color="warn"
+            @click.native="go_github()"
+          >
+            <img src="@/assets/index/github.png" />
+          </vs-button>
+          <vs-button
+            icon
             color="danger"
             @click="(dialogCode = true), $bus.$emit('close-tips')"
           >
@@ -163,6 +170,8 @@ export default {
       this.active = this.$route.name;
     }
     this.get_menu_list();
+  },
+  mounted() {
     window.onresize = () => {
       this.screenCode = Boolean(
         document.fullscreenElement ||
@@ -170,7 +179,7 @@ export default {
           document.webkitFullscreenElement ||
           document.mozFullscreenElement
       );
-      console.log(this.screenCode);
+      console.log("this", this.screenCode);
     };
   },
   methods: {
@@ -219,7 +228,7 @@ export default {
     },
     full_screen() {
       if (this.screenCode) {
-        let element = document.documentElement;
+        const element = document.documentElement;
         if (element.webkitRequestFullscreen) {
           element.webkitRequestFullscreen();
         } else if (element.msRequestFullscreen) {
@@ -230,17 +239,14 @@ export default {
           element.requestFullscreen();
         }
       } else {
-        if (document.exitFullscreen) {
+        if (document.fullscreenElement !== null) {
           document.exitFullscreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
         }
       }
     },
+    go_github(){
+      window.open('https://github.com/JrxCom/Learner/tree/Learner_WEB', '_blank') 
+    }
   },
 };
 </script>
