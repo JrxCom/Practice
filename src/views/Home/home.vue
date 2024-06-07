@@ -29,9 +29,11 @@ export default {
     };
   },
   beforeCreate() {
+    /* 关闭提示方法 */
     this.$bus.$on("close-tips", () => {
       this.close_tips();
     });
+    /* 打开提示方法 */
     this.$bus.$on("open-tips", () => {
       if(this.webArray.length === 0){
         this.open_tips();
@@ -41,7 +43,12 @@ export default {
     });
   },
   created() {
-    getWebList().then((res) => {
+    this.get_web_list()
+  },
+  methods: {
+    /* 获取网站列表 */
+    get_web_list(){
+      getWebList().then((res) => {
       if (res.data.status === 200) {
         this.webArray = res.data.obj.records;
         if (this.webArray.length === 0) {
@@ -62,8 +69,8 @@ export default {
         }, 2000);
       }
     });
-  },
-  methods: {
+    },
+    /* 打开提示 */
     open_tips() {
       this.tips = this.$vs.notification({
         square: true,

@@ -1,5 +1,6 @@
 <template>
   <div class="web">
+    <!-- 栏目展示 -->
     <div class="header_view">
       <div class="navList">
         <div
@@ -13,6 +14,7 @@
         </div>
       </div>
     </div>
+    <!-- 数据展示 -->
     <div class="main_view">
       <div class="tools">
         <vs-button icon color="primary" relief @click="data('add')">
@@ -83,6 +85,7 @@
         </vs-table>
       </div>
     </div>
+    <!-- 数据添加、修改、删除弹窗 -->
     <div class="dialog_view">
       <transition name="dialog">
         <div class="add_edit" v-if="dataDialog">
@@ -305,8 +308,11 @@
 </template>
 
 <script>
+/* 引入栏目（表）列表api */
 import { getTableList } from "@/api/table";
+/* 引入表头（字段）信息api */
 import { getFieldList } from "@/api/field";
+/* 引入data qpi */
 import {
   getDataList,
   getDataSearch,
@@ -321,27 +327,29 @@ export default {
     return {
       navCode: "" /* 当前栏目（表） */,
       navList: [] /* 栏目列表 */,
-      headerList: [],
-      dataList: new Array(1),
-      search_id: "",
-      dataCount: 0,
-      page: 1,
-      max: 5,
-      allCheck: false,
-      selected: [],
-      dataDialog: false,
-      dataTitle: "",
-      dialogType: false,
-      dataForm: {},
-      removeDialog: false,
-      apiUrl: process.env.VUE_APP_BASE_API,
+      headerList: [] /* 表头列表 */,
+      dataList: new Array(1) /* 数据列表表 */,
+      search_id: "" /* 搜索输入id */,
+      dataCount: 0 /* 数据总数 */,
+      page: 1 /* 数据展示当前页 */,
+      max: 5 /* 数据展示每页最大数据量 */,
+      allCheck: false /* 全选 */,
+      selected: [] /* 选择的数据 */,
+      dataDialog: false /* 数据添加、修改弹窗显示参数 */,
+      dataTitle: "" /* 弹窗标题 */,
+      dialogType: false /* 弹窗主题 */,
+      dataForm: {} /* 数据表单 */,
+      removeDialog: false /* 删除弹窗显示参数 */,
+      apiUrl: process.env.VUE_APP_BASE_API /* api地址与端口号 */,
     };
   },
   watch: {
+    /* 监控栏目切换 */
     navCode(newvalue) {
       this.page = 1;
       this.get_header(newvalue);
     },
+    /* 监控页数切换 */
     page(newvalue) {
       this.page = newvalue;
       this.get_data_list(this.$route.query.id, this.navCode);

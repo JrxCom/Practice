@@ -3,11 +3,13 @@
     <!-- 菜单 -->
     <div class="menu">
       <vs-sidebar style="position: static !important" v-model="active" open>
+        <!-- logo图 -->
         <template #logo>
           <img v-if="!themeCode" src="@/assets/common/lightLogo.png" />
           <img v-else src="@/assets/common/darkLogo.png" />
           <h3>LeaRneR</h3>
         </template>
+        <!-- home页 -->
         <vs-sidebar-item id="home" to="/home">
           <template #icon>
             <img v-if="!themeCode" src="@/assets/index/lightHome.png" alt="" />
@@ -15,7 +17,7 @@
           </template>
           Home
         </vs-sidebar-item>
-
+        <!-- web页 -->
         <vs-sidebar-group open>
           <template #header>
             <vs-sidebar-item arrow>
@@ -42,7 +44,7 @@
             {{ item.name }}
           </vs-sidebar-item>
         </vs-sidebar-group>
-
+        <!-- manage页 -->
         <vs-sidebar-item id="manage" to="/manage">
           <template #icon>
             <img
@@ -54,16 +56,16 @@
           </template>
           Manage
         </vs-sidebar-item>
-
+        <!-- 底部按钮 -->
         <template #footer>
           <vs-tooltip>
             <vs-button icon color="#364758">
               <img src="@/assets/index/code.png" />
             </vs-button>
             <template #tooltip>
-              <p>前端:Vue.js</p>
-              <p>预处理器:less</p>
-              <p>后端:node.js</p>
+              <p>前端:{{ $store.state.stack.front_end }}</p>
+              <p>预处理器:{{ $store.state.stack.back_end }}</p>
+              <p>后端:{{ $store.state.stack.preprocessor }}</p>
             </template>
           </vs-tooltip>
           <vs-button icon @click="themeCode = !themeCode">
@@ -154,16 +156,19 @@ export default {
     };
   },
   watch: {
-    screenCode(newvalue) {
+    /* 监控全屏 */
+    screenCode() {
       this.full_screen();
     },
   },
   beforeCreate() {
+    /* 更新菜单数据 */
     this.$bus.$on("update-menu", () => {
       this.get_menu_list();
     });
   },
   created() {
+    /* 页面存在id视为web下网站数据页面，则为home或者manage页面 */
     if (this.$route.query.id) {
       this.active = this.$route.query.id;
     } else {
@@ -172,6 +177,7 @@ export default {
     this.get_menu_list();
   },
   mounted() {
+    /* 页面大小发生变化触发：监控全屏 */
     window.onresize = () => {
       this.screenCode = Boolean(
         document.fullscreenElement ||
@@ -179,10 +185,10 @@ export default {
           document.webkitFullscreenElement ||
           document.mozFullscreenElement
       );
-      console.log("this", this.screenCode);
     };
   },
   methods: {
+    /* 获取菜单列表 */
     get_menu_list() {
       getWebList().then((res) => {
         if (res.data.status === 200) {
@@ -203,6 +209,7 @@ export default {
         }
       });
     },
+    /* 进入web下创建的网站页面 */
     go_web(id) {
       this.$router.push({ path: "/web", query: { id: id } });
     },
@@ -226,6 +233,7 @@ export default {
         }
       });
     },
+    /* 全屏切换 */
     full_screen() {
       if (this.screenCode) {
         const element = document.documentElement;
@@ -244,8 +252,9 @@ export default {
         }
       }
     },
+    /* 跳转github网站 */
     go_github(){
-      window.open('https://github.com/JrxCom/Learner/tree/Learner_WEB', '_blank') 
+      window.open(this.$store.state.github, '_blank') 
     }
   },
 };
