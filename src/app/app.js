@@ -13,7 +13,7 @@ dotenv.config()
 /* 配置解析表单数据 */
 app.use(express.urlencoded({ extended: false }))
 /* 配置静态访问路径 */
-app.use(express.static(process.env.STATIC_URL))
+app.use(express.static(__dirname + process.env.STATIC_URL))
 /* 配置cookie模块 */
 app.use(cookieParser())
 

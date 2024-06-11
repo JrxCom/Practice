@@ -8,12 +8,14 @@ exports.getDataList = (req, res) => {
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const get_database = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.web WHERE id = ${req.query.wid}`, (err, results) => {
+            
             resolve(results[0]['database'])
         })
     });
 
     const get_table = new Promise((resolve) => {
         db.query(`SELECT * FROM learner.table WHERE id = ${req.query.tid}`, (err, results) => {
+            
             resolve(results[0]['table'])
         })
     });
@@ -21,6 +23,7 @@ exports.getDataList = (req, res) => {
 
     Promise.all([get_database, get_table]).then((promiseRes) => {
         db.query(`SELECT COUNT(*) FROM ${promiseRes[0]}.${promiseRes[1]}`, (err, results) => {
+            console.log(err);
             const count = results[0]['COUNT(*)']
             db.query(`SELECT * FROM ${promiseRes[0]}.${promiseRes[1]} ORDER BY creatime ASC LIMIT ${page},${max}`, (err, results) => {
                 if (results) res.send({ status: 200, obj: { records: results, count } })
