@@ -18,22 +18,22 @@
         </vs-option>
       </vs-select>
       <vs-button icon color="primary" relief @click="web('add')">
-        <img src="@/assets/manage/addButton.png" />
+        <img :src="staticUrl+ require('@/assets/manage/addButton.png')" />
         Add Web
       </vs-button>
       <vs-button icon color="success" relief @click="web('edit')" v-show="webArray.length">
-        <img src="@/assets/manage/editButton.png" />
+        <img :src="staticUrl+ require('@/assets/manage/editButton.png')" />
         Edit Web
       </vs-button>
       <vs-button icon color="danger" relief @click="remove('web')" v-show="webArray.length">
-        <img src="@/assets/manage/removeButton.png" />
+        <img :src="staticUrl+ require('@/assets/manage/removeButton.png')" />
         Remove Web
       </vs-button>
     </div>
     <!-- 表 -->
     <div class="table_view">
       <vs-button icon @click="table('add')" v-show="webCode">
-        <img src="@/assets/manage/addButton.png" /> Add Table
+        <img :src="staticUrl+ require('@/assets/manage/addButton.png')" /> Add Table
       </vs-button>
       <div class="table_list" v-if="tableArray.length">
         <div
@@ -47,25 +47,25 @@
           <span>{{ item.table }}</span>
           <div class="table_tool">
             <img
-              src="@/assets/manage/edit.png"
+              :src="staticUrl+ require('@/assets/manage/edit.png')"
               @click="table('edit', item.id)"
             />
             <img
-              src="@/assets/manage/remove.png"
+              :src="staticUrl+ require('@/assets/manage/remove.png')"
               @click="remove('table', item.id)"
             />
           </div>
         </div>
       </div>
       <div class="no_data" v-else>
-        <img src="@/assets/manage/noData.png" alt="" />
+        <img :src="staticUrl+ require('@/assets/manage/noData.png')" alt="" />
         <h4>NO DATA</h4>
       </div>
     </div>
     <!-- 字段 -->
     <div class="field_view">
       <vs-button icon @click="field('add')" v-show="webCode">
-        <img src="@/assets/manage/addButton.png" /> Add Field
+        <img :src="staticUrl+ require('@/assets/manage/addButton.png')" /> Add Field
       </vs-button>
       <div class="field_list" v-if="fieldArray.length">
         <div
@@ -80,11 +80,11 @@
           <span>{{ item.field }}</span>
           <div class="field_tool">
             <img
-              src="@/assets/manage/edit.png"
+              :src="staticUrl+ require('@/assets/manage/edit.png')"
               @click="field('edit', item.id)"
             />
             <img
-              src="@/assets/manage/remove.png"
+              :src="staticUrl+ require('@/assets/manage/remove.png')"
               alt=""
               @click="remove('field', item.id)"
             />
@@ -92,7 +92,7 @@
         </div>
       </div>
       <div class="no_data" v-else>
-        <img src="@/assets/manage/noData.png" alt="" />
+        <img :src="staticUrl+ require('@/assets/manage/noData.png')" alt="" />
         <h4>NO DATA</h4>
       </div>
     </div>
@@ -104,8 +104,8 @@
           <div class="card_web">
             <div class="close" @click="webDialog = false">
               <vs-button icon border :success="dialogTheme">
-                <img v-if="dialogTheme" src="@/assets/common/editClose.png" />
-                <img v-else src="@/assets/common/addClose.png" />
+                <img v-if="dialogTheme" :src="staticUrl+ require('@/assets/common/editClose.png')" />
+                <img v-else :src="staticUrl+ require('@/assets/common/addClose.png')" />
               </vs-button>
             </div>
             <div class="header">
@@ -152,7 +152,7 @@
                   @click="$refs.fileRef.click()"
                   v-if="!webUploadSrc"
                 >
-                  <img src="@/assets/common/image.png" /> image
+                  <img :src="staticUrl+ require('@/assets/common/image.png')" /> image
                 </vs-button>
 
                 <vs-tooltip border top v-else>
@@ -161,7 +161,7 @@
                     :success="dialogTheme"
                     @click="$refs.fileRef.click()"
                   >
-                    <img src="@/assets/common/check.png" />
+                    <img :src="staticUrl+ require('@/assets/common/check.png')" />
                   </vs-button>
                   <template #tooltip>
                     <img :src="webUploadSrc" width="80" height="80" />
@@ -183,10 +183,10 @@
                 :success="dialogTheme"
                 @click="controls_web_info()"
               >
-                <img src="@/assets/common/confirm.png" />
+                <img :src="staticUrl+ require('@/assets/common/confirm.png')" />
               </vs-button>
               <vs-button icon color="#808b96" @click="webDialog = false">
-                <img src="@/assets/common/cancel.png" />
+                <img :src="staticUrl+ require('@/assets/common/cancel.png')" />
               </vs-button>
             </div>
           </div>
@@ -198,8 +198,8 @@
           <div class="card_table">
             <div class="close" @click="tableDialog = false">
               <vs-button icon border :success="dialogTheme">
-                <img v-if="dialogTheme" src="@/assets/common/editClose.png" />
-                <img v-else src="@/assets/common/addClose.png" />
+                <img v-if="dialogTheme" :src="staticUrl+ require('@/assets/common/editClose.png')" />
+                <img v-else :src="staticUrl+ require('@/assets/common/addClose.png')" />
               </vs-button>
             </div>
             <div class="header">
@@ -237,10 +237,10 @@
                 :success="dialogTheme"
                 @click="controls_table_info()"
               >
-                <img src="@/assets/common/confirm.png" />
+                <img :src="staticUrl+ require('@/assets/common/confirm.png')" />
               </vs-button>
               <vs-button icon color="#808b96" @click="tableDialog = false">
-                <img src="@/assets/common/cancel.png" />
+                <img :src="staticUrl+ require('@/assets/common/cancel.png')" />
               </vs-button>
             </div>
           </div>
@@ -252,8 +252,8 @@
           <div class="card_field">
             <div class="close" @click="fieldDialog = false">
               <vs-button icon border :success="dialogTheme">
-                <img v-if="dialogTheme" src="@/assets/common/editClose.png" />
-                <img v-else src="@/assets/common/addClose.png" />
+                <img v-if="dialogTheme" :src="staticUrl+ require('@/assets/common/editClose.png')" />
+                <img v-else :src="staticUrl+ require('@/assets/common/addClose.png')" />
               </vs-button>
             </div>
             <div class="header">
@@ -350,10 +350,10 @@
                 :success="dialogTheme"
                 @click="controls_field_info()"
               >
-                <img src="@/assets/common/confirm.png" />
+                <img :src="staticUrl+ require('@/assets/common/confirm.png')" />
               </vs-button>
               <vs-button icon color="#808b96" @click="fieldDialog = false">
-                <img src="@/assets/common/cancel.png" />
+                <img :src="staticUrl+ require('@/assets/common/cancel.png')" />
               </vs-button>
             </div>
           </div>
@@ -365,7 +365,7 @@
           <div class="card_remove">
             <div class="close" @click="removeDialog = false">
               <vs-button icon border danger>
-                <img src="@/assets/common/removeClose.png" />
+                <img :src="staticUrl+ require('@/assets/common/removeClose.png')" />
               </vs-button>
             </div>
             <div class="header">
@@ -377,10 +377,10 @@
             </div>
             <div class="footer">
               <vs-button icon danger @click="do_remove()">
-                <img src="@/assets/common/confirm.png" />
+                <img :src="staticUrl+ require('@/assets/common/confirm.png')" />
               </vs-button>
               <vs-button icon color="#808b96" @click="removeDialog = false">
-                <img src="@/assets/common/cancel.png" />
+                <img :src="staticUrl+ require('@/assets/common/cancel.png')" />
               </vs-button>
             </div>
           </div>
@@ -421,6 +421,7 @@ export default {
   name: "manage",
   data() {
     return {
+      staticUrl:process.env.VUE_APP_STATIC_URL,
       dialogTheme: false /* 弹窗主题（添加、修改） */,
       webCode: "" /* 当前选中网站id */,
       webArray: new Array(20) /* 网站列表（上限20个） */,

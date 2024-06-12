@@ -2,8 +2,8 @@
   <div class="login" :style="themeStyle">
     <!-- logo -->
     <div class="header_view">
-      <img v-if="!themeCode" src="@/assets/common/lightLogo.png" />
-      <img v-else src="@/assets/common/darkLogo.png" />
+      <img v-if="!themeCode" :src="staticUrl+ require('@/assets/common/lightLogo.png')" />
+      <img v-else :src="staticUrl + require('@/assets/common/darkLogo.png')" />
       <h3>LeaRneR</h3>
     </div>
     <!-- 整体内容 -->
@@ -23,7 +23,7 @@
             get_code();
           "
         >
-          <img src="@/assets/login/loginButton.png" /> Log In
+          <img :src="staticUrl+ require('@/assets/login/loginButton.png')" /> Log In
         </vs-button>
       </div>
       <div class="right_view">
@@ -37,7 +37,7 @@
         </div>
 
         <div class="React">
-          <img src="@/assets/login/React.png" alt="" />
+          <img :src="staticUrl+ require('@/assets/login/React.png')" alt="" />
           <p><span>React</span>用于构建 Web 和原生交互界面的库</p>
         </div>
 
@@ -49,23 +49,23 @@
         </div>
 
         <div class="Angular">
-          <img src="@/assets/login/Angular.png" alt="" />
+          <img :src="staticUrl+ require('@/assets/login/Angular.png')" alt="" />
           <p><span>Angular</span>构建未来的 Web 开发框架</p>
         </div>
 
         <div class="Vue">
-          <img src="@/assets/login/Vue.png" alt="" />
+          <img :src="staticUrl+ require('@/assets/login/Vue.png')" alt="" />
           <p><span>Vue</span>是一套用于构建用户界面的渐进式框架</p>
         </div>
 
         <div class="HomeLogo">
-          <img v-show="!themeCode" src="@/assets/login/light.png" alt="" />
-          <img v-show="themeCode" src="@/assets/login/dark.png" alt="" />
+          <img v-show="!themeCode" :src="staticUrl+ require('@/assets/login/light.png')" alt="" />
+          <img v-show="themeCode" :src="staticUrl+ require('@/assets/login/dark.png')" alt="" />
         </div>
 
         <div class="HTML">
-          <img src="@/assets/login/HTML.png" alt="" />
-          <img src="@/assets/login/CSS.png" alt="" />
+          <img :src="staticUrl+ require('@/assets/login/HTML.png')" alt="" />
+          <img :src="staticUrl+ require('@/assets/login/CSS.png')" alt="" />
         </div>
 
         <div class="UI">
@@ -107,18 +107,18 @@
         </div>
 
         <div class="IOS">
-          <img v-if="!themeCode" src="@/assets/login/lightIOS.png" alt="" />
-          <img v-else src="@/assets/login/darkIOS.png" alt="" />
+          <img v-if="!themeCode" :src="staticUrl+ require('@/assets/login/lightIOS.png')" alt="" />
+          <img v-else :src="staticUrl+ require('@/assets/login/darkIOS.png')" alt="" />
         </div>
 
         <div class="Android">
-          <img v-if="!themeCode" src="@/assets/login/lightAndroid.png" alt="" />
-          <img v-else src="@/assets/login/darkAndroid.png" alt="" />
+          <img v-if="!themeCode" :src="staticUrl+ require('@/assets/login/lightAndroid.png')" alt="" />
+          <img v-else :src="staticUrl+ require('@/assets/login/darkAndroid.png')" alt="" />
         </div>
 
         <div class="Windows">
-          <img v-if="!themeCode" src="@/assets/login/lightWindows.png" alt="" />
-          <img v-else src="@/assets/login/darkWindows.png" alt="" />
+          <img v-if="!themeCode" :src="staticUrl+ require('@/assets/login/lightWindows.png')" alt="" />
+          <img v-else :src="staticUrl+ require('@/assets/login/darkWindows.png')" alt="" />
         </div>
 
         <div class="dot">
@@ -134,7 +134,7 @@
         </div>
 
         <div class="pulse">
-          <img src="@/assets/login/pulse.png" alt="" />
+          <img :src="staticUrl+ require('@/assets/login/pulse.png')" alt="" />
         </div>
       </div>
     </div>
@@ -144,8 +144,8 @@
       <div class="Theme">
         <vs-switch v-model="themeCode">
           <template #circle>
-            <img v-if="!themeCode" src="@/assets/login/darkSwitch.png" />
-            <img v-else src="@/assets/login/lightSwitch.png" />
+            <img v-if="!themeCode" :src="staticUrl+ require('@/assets/login/darkSwitch.png')" />
+            <img v-else :src="staticUrl+ require('@/assets/login/lightSwitch.png')" />
           </template>
         </vs-switch>
       </div>
@@ -157,7 +157,7 @@
         <div class="goLogin">
           <div class="close" @click="dialogCode = false">
             <vs-button icon border>
-              <img src="@/assets/common/addClose.png" />
+              <img :src="staticUrl+ require('@/assets/common/addClose.png')" />
             </vs-button>
           </div>
           <div class="header">Log In</div>
@@ -169,8 +169,8 @@
               @keyup.enter.native="log_in()"
             >
               <template #icon>
-                <img v-if="!themeCode" src="@/assets/login/lightUser.png" />
-                <img v-else src="@/assets/login/darkUser.png" />
+                <img v-if="!themeCode" :src="staticUrl+ require('@/assets/login/lightUser.png')" />
+                <img v-else :src="staticUrl+ require('@/assets/login/darkUser.png')" />
               </template>
             </vs-input>
             <vs-input
@@ -181,30 +181,30 @@
               @keyup.enter.native="log_in()"
             >
               <template #icon>
-                <img v-if="!themeCode" src="@/assets/login/lightLock.png" />
-                <img v-else src="@/assets/login/darkLock.png" />
+                <img v-if="!themeCode" :src="staticUrl+ require('@/assets/login/lightLock.png')" />
+                <img v-else :src="staticUrl+ require('@/assets/login/darkLock.png')" />
               </template>
             </vs-input>
             <div class="code">
               <vs-input primary placeholder="Auth code" v-model="form['code']" @keyup.enter.native="log_in()">
                 <template #icon>
-                  <img v-if="!themeCode" src="@/assets/login/lightCode.png" />
-                  <img v-else src="@/assets/login/darkCode.png" />
+                  <img v-if="!themeCode" :src="staticUrl+ require('@/assets/login/lightCode.png')" />
+                  <img v-else :src="staticUrl+ require('@/assets/login/darkCode.png')" />
                 </template>
               </vs-input>
               <div v-html="authSvgSrc" @click="get_code()"></div>
             </div>
             <vs-checkbox v-model="form['remember']">
               <template #icon>
-                <img v-if="!themeCode" src="@/assets/common/lightCheck.png" />
-                <img v-else src="@/assets/common/darkCheck.png" />
+                <img v-if="!themeCode" :src="staticUrl+ require('@/assets/common/lightCheck.png')" />
+                <img v-else :src="staticUrl+ require('@/assets/common/darkCheck.png')" />
               </template>
               Remember me
             </vs-checkbox>
           </div>
           <div class="footer">
             <vs-button icon @click="log_in()" >
-              <img src="@/assets/login/loginButton.png" />
+              <img :src="staticUrl+ require('@/assets/login/loginButton.png')" />
             </vs-button>
           </div>
         </div>
@@ -224,6 +224,7 @@ export default {
   mixins: [theme],
   data() {
     return {
+      staticUrl:process.env.VUE_APP_STATIC_URL,
       year: new Date().getFullYear().toString().slice(2) /* 年份 */,
       month: (new Date().getMonth() + 1).toString().padStart(2, "0") /* 月份 */,
       date: new Date().getDate().toString().padStart(2, "0") /* 日期 */,
