@@ -8,7 +8,8 @@ const router = require('./router/router')
 app.use(cors())
 /* 配置路由 */
 app.use(router)
+
 /* 启动服务器 */
-app.listen(process.env.PORT_NUMBER, () => { 
+app.listen(5678, () => {
     console.log('启动成功');
 })

@@ -24,6 +24,7 @@ exports.login = (req, res) => {
         
     const is_user = new Promise((resolve, reject) => {
         db.query(`SELECT * FROM learner.user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`, (err, results) => {
+            console.log(results);
             if (results.length > 0) {
                 resolve()
             } else {
@@ -39,7 +40,7 @@ exports.login = (req, res) => {
         }
     });
     Promise.all([is_user, is_code]).then(() => {
-        res.cookie("code", undefined, { maxAge: 0 * 1000 })
+        res.cookie("code", undefined, { maxAge: 1 * 1000 })
         res.cookie("cookieCode", new Date().toUTCString(), { maxAge: 1800 * 1000 })
         res.send({ status: 200, message: '登录成功。' })
     }).catch(err => {
@@ -50,6 +51,6 @@ exports.login = (req, res) => {
 /* 退出 */
 exports.logout = (req, res) => {
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
-    res.cookie("cookieCode", undefined, { maxAge: 0 * 1000 })
+    res.cookie("cookieCode", undefined, { maxAge: 1 * 1000 })
     res.send({ status: 200, message: '退出成功。' })
 }
