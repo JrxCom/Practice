@@ -18,13 +18,13 @@
     <div class="main_view">
       <div class="tools">
         <vs-button icon color="primary" relief @click="data('add')">
-          <img :src="staticUrl+ require('@/assets/web/add.png')" /> Add Data
+          <img src="@/assets/web/add.png" /> Add Data
         </vs-button>
         <vs-button icon color="success" relief @click="data('edit')">
-          <img :src="staticUrl+ require('@/assets/web/edit.png')" alt="" /> Edit Data
+          <img src="@/assets/web/edit.png" alt="" /> Edit Data
         </vs-button>
         <vs-button icon color="danger" relief @click="removeDialog = true">
-          <img :src="staticUrl+ require('@/assets/web/remove.png')" alt="" />
+          <img src="@/assets/web/remove.png" alt="" />
           Remove Data
         </vs-button>
       </div>
@@ -38,7 +38,7 @@
             @keyup.enter.native="search_data"
           >
             <template #icon>
-              <img :src="staticUrl+ require('@/assets/common/search.png')" alt="" />
+              <img src="@/assets/common/search.png" alt="" />
             </template>
           </vs-input>
         </div>
@@ -92,8 +92,8 @@
           <div class="card">
             <div class="close" @click="dataDialog = false">
               <vs-button icon border :success="dialogType">
-                <img v-if="dialogType" :src="staticUrl+ require('@/assets/common/editClose.png')" />
-                <img v-else :src="staticUrl+ require('@/assets/common/addClose.png')" />
+                <img v-if="dialogType" src="@/assets/common/editClose.png" />
+                <img v-else src="@/assets/common/addClose.png" />
               </vs-button>
             </div>
             <div class="header">
@@ -166,7 +166,7 @@
                     @click="$refs.imageRef.click()"
                     v-if="!dataForm[`${item.field}`]"
                   >
-                    <img :src="staticUrl+ require('@/assets/common/image.png')" /> image
+                    <img src="@/assets/common/image.png" /> image
                   </vs-button>
 
                   <vs-tooltip border top v-else>
@@ -175,7 +175,7 @@
                       :success="dialogType"
                       @click="$refs.imageRef.click()"
                     >
-                      <img :src="staticUrl+ require('@/assets/common/check.png')" />
+                      <img src="@/assets/common/check.png" />
                     </vs-button>
                     <template #tooltip>
                       <img
@@ -202,7 +202,7 @@
                     :success="dialogType"
                     v-if="!dataForm[`${item.field}`]"
                   >
-                    <img :src="staticUrl+ require('@/assets/common/audio.png')" /> audio
+                    <img src="@/assets/common/audio.png" /> audio
                   </vs-button>
 
                   <vs-tooltip border top v-else>
@@ -211,7 +211,7 @@
                       :success="dialogType"
                       @click="$refs.audioRef.click()"
                     >
-                      <img :src="staticUrl+ require('@/assets/common/check.png')" />
+                      <img src="@/assets/common/check.png" />
                     </vs-button>
                     <template #tooltip>
                       <audio :src="apiUrl + dataForm[`${item.field}`]"></audio>
@@ -234,7 +234,7 @@
                     :success="dialogType"
                     v-if="!dataForm[`${item.field}`]"
                   >
-                    <img :src="staticUrl+ require('@/assets/common/video.png')" /> video
+                    <img src="@/assets/common/video.png" /> video
                   </vs-button>
 
                   <vs-tooltip border top v-else>
@@ -243,7 +243,7 @@
                       :success="dialogType"
                       @click="$refs.videoRef.click()"
                     >
-                      <img :src="staticUrl+ require('@/assets/common/check.png')" />
+                      <img src="@/assets/common/check.png" />
                     </vs-button>
                     <template #tooltip>
                       <img
@@ -270,10 +270,10 @@
                 :success="dialogType"
                 @click="controls_data_info()"
               >
-                <img :src="staticUrl+ require('@/assets/common/confirm.png')" />
+                <img src="@/assets/common/confirm.png" />
               </vs-button>
               <vs-button icon color="#808b96" @click="dataDialog = false">
-                <img :src="staticUrl+ require('@/assets/common/cancel.png')" />
+                <img src="@/assets/common/cancel.png" />
               </vs-button>
             </div>
           </div>
@@ -284,7 +284,7 @@
           <div class="card_remove">
             <div class="close" @click="removeDialog = false">
               <vs-button icon border danger>
-                <img :src="staticUrl+ require('@/assets/common/removeClose.png')" />
+                <img src="@/assets/common/removeClose.png" />
               </vs-button>
             </div>
             <div class="header">Remove Data</div>
@@ -294,10 +294,10 @@
             </div>
             <div class="footer">
               <vs-button icon danger @click="remove_data_info()">
-                <img :src="staticUrl+ require('@/assets/common/confirm.png')" />
+                <img src="@/assets/common/confirm.png" />
               </vs-button>
               <vs-button icon color="#808b96" @click="removeDialog = false">
-                <img :src="staticUrl+ require('@/assets/common/cancel.png')" />
+                <img src="@/assets/common/cancel.png" />
               </vs-button>
             </div>
           </div>
@@ -325,7 +325,6 @@ export default {
   name: "web",
   data() {
     return {
-      staticUrl:process.env.VUE_APP_STATIC_URL,
       navCode: "" /* 当前栏目（表） */,
       navList: [] /* 栏目列表 */,
       headerList: [] /* 表头列表 */,

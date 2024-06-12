@@ -5,15 +5,15 @@
       <vs-sidebar style="position: static !important" v-model="active" open>
         <!-- logo图 -->
         <template #logo>
-          <img v-if="!themeCode" :src="staticUrl+ require('@/assets/common/lightLogo.png')" />
-          <img v-else :src="staticUrl+ require('@/assets/common/darkLogo.png')" />
+          <img v-if="!themeCode" src="@/assets/common/lightLogo.png" />
+          <img v-else src="@/assets/common/darkLogo.png" />
           <h3>LeaRneR</h3>
         </template>
         <!-- home页 -->
         <vs-sidebar-item id="home" to="/home">
           <template #icon>
-            <img v-if="!themeCode" :src="staticUrl+ require('@/assets/index/lightHome.png')" alt="" />
-            <img v-else :src="staticUrl+ require('@/assets/index/darkHome.png')" alt="" />
+            <img v-if="!themeCode" src="@/assets/index/lightHome.png" alt="" />
+            <img v-else src="@/assets/index/darkHome.png" alt="" />
           </template>
           Home
         </vs-sidebar-item>
@@ -24,10 +24,10 @@
               <template #icon>
                 <img
                   v-if="!themeCode"
-                  :src="staticUrl+ require('@/assets/index/lightWeb.png')"
+                  src="@/assets/index/lightWeb.png"
                   alt=""
                 />
-                <img v-else :src="staticUrl+ require('@/assets/index/darkWeb.png')" alt="" />
+                <img v-else src="@/assets/index/darkWeb.png" alt="" />
               </template>
               WEB
             </vs-sidebar-item>
@@ -39,7 +39,7 @@
             @click.native="go_web(item.id)"
           >
             <template #icon>
-              <img ::src="apiUrl + item.logo" alt="" />
+              <img :src="apiUrl + item.logo" alt="" />
             </template>
             {{ item.name }}
           </vs-sidebar-item>
@@ -49,10 +49,10 @@
           <template #icon>
             <img
               v-if="!themeCode"
-              :src="staticUrl+ require('@/assets/index/lightManage.png')"
+              src="@/assets/index/lightManage.png"
               alt=""
             />
-            <img v-else :src="staticUrl+ require('@/assets/index/darkManage.png')" alt="" />
+            <img v-else src="@/assets/index/darkManage.png" alt="" />
           </template>
           Manage
         </vs-sidebar-item>
@@ -60,7 +60,7 @@
         <template #footer>
           <vs-tooltip>
             <vs-button icon color="#364758">
-              <img :src="staticUrl+ require('@/assets/index/code.png')" />
+              <img src="@/assets/index/code.png" />
             </vs-button>
             <template #tooltip>
               <p>前端:{{ $store.state.stack.front_end }}</p>
@@ -69,26 +69,26 @@
             </template>
           </vs-tooltip>
           <vs-button icon @click="themeCode = !themeCode">
-            <img v-if="!themeCode" :src="staticUrl+ require('@/assets/index/light.png')" />
-            <img v-else :src="staticUrl+ require('@/assets/index/dark.png')" />
+            <img v-if="!themeCode" src="@/assets/index/light.png" />
+            <img v-else src="@/assets/index/dark.png" />
           </vs-button>
           <vs-button icon color="#42B983" @click="screenCode = !screenCode">
-            <img v-if="!screenCode" :src="staticUrl+ require('@/assets/index/fullScreen.png')" />
-            <img v-else :src="staticUrl+ require('@/assets/index/exitFullScreen.png')" />
+            <img v-if="!screenCode" src="@/assets/index/fullScreen.png" />
+            <img v-else src="@/assets/index/exitFullScreen.png" />
           </vs-button>
           <vs-button
             icon
             color="warn"
             @click.native="go_github()"
           >
-            <img :src="staticUrl+ require('@/assets/index/github.png')" />
+            <img src="@/assets/index/github.png" />
           </vs-button>
           <vs-button
             icon
             color="danger"
             @click="(dialogCode = true), $bus.$emit('close-tips')"
           >
-            <img :src="staticUrl+ require('@/assets/index/logout.png')" />
+            <img src="@/assets/index/logout.png" />
           </vs-button>
         </template>
       </vs-sidebar>
@@ -107,7 +107,7 @@
               @click="(dialogCode = false), $bus.$emit('open-tips')"
             >
               <vs-button icon border danger>
-                <img :src="staticUrl+ require('@/assets/common/removeClose.png')" />
+                <img src="@/assets/common/removeClose.png" />
               </vs-button>
             </div>
             <div class="header">提示</div>
@@ -117,14 +117,14 @@
             </div>
             <div class="footer">
               <vs-button icon danger @click="log_out()">
-                <img :src="staticUrl+ require('@/assets/common/confirm.png')" />
+                <img src="@/assets/common/confirm.png" />
               </vs-button>
               <vs-button
                 icon
                 color="#808b96"
                 @click="(dialogCode = false), $bus.$emit('open-tips')"
               >
-                <img :src="staticUrl+ require('@/assets/common/cancel.png')" />
+                <img src="@/assets/common/cancel.png" />
               </vs-button>
             </div>
           </div>
@@ -146,7 +146,6 @@ export default {
   mixins: [theme],
   data() {
     return {
-      staticUrl:process.env.VUE_APP_STATIC_URL,
       active: "home" /* 当前菜单 */,
       dialogCode: false /* 退出弹窗显示参数 */,
       logoutTipsCode: false /* 退出提示显示参数 */,
