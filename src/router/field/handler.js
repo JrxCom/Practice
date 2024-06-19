@@ -10,6 +10,33 @@ exports.getFieldList = (req, res) => {
     })
 }
 
+/* 获取关联表信息 */
+exports.getSelectTable = (req, res) => {
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
+    db.query(`SELECT id,name,\`table\` as value FROM learner.table WHERE wid = ${req.query.wid} ORDER BY creatime ASC`, (err, results) => {
+        if (results) {
+            results.forEach((item, index) => {
+                if (item.id == req.query.tid) {
+                    results.splice(index, 1)
+                }
+            })
+            res.send({ status: 200, obj: { records: results } })
+        }
+        if (err) res.send({ status: 500, message: "获取关联表信息失败！" })
+    })
+}
+
+/* 获取关联字段信息 */
+exports.getSelectField = (req, res) => {
+    if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
+    db.query(`SELECT id,name,\`field\` as value FROM learner.field WHERE tid = ${req.query.tid} ORDER BY creatime ASC`, (err, results) => {
+        if (results) res.send({ status: 200, obj: { records: results } })
+        if (err) res.send({ status: 500, message: "获取关联表信息失败！" })
+    })
+}
+
+
+
 /* 添加字段信息 */
 exports.addFieldInfo = (req, res) => {
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
@@ -26,12 +53,12 @@ exports.addFieldInfo = (req, res) => {
         creatime: new Date()
     }
     let size = ''
-    if(req.body['type'] === ('enum' || 'set')){
-        size =  "'" + req.body['size'].split(',').join("','") + "'"
+    if (req.body['type'] === ('enum' || 'set')) {
+        size = "'" + req.body['size'].split(',').join("','") + "'"
         console.log(data['size']);
-    }else if(req.body['type'] === ('bigint' || 'datetime')){
+    } else if (req.body['type'] === ('bigint' || 'datetime')) {
         size = 0
-    }else{
+    } else {
         size = req.body['size']
     }
     const inspect_name = new Promise((resolve, reject) => {
@@ -70,7 +97,7 @@ exports.addFieldInfo = (req, res) => {
         db.query(`INSERT INTO learner.field SET ?`, data, (err, results) => {
             if (results) {
                 db.query(`ALTER TABLE ${promiseRes[2]}.${promiseRes[3]} ADD COLUMN \`${req.body['field']}\` ${req.body['type']}(${size}) COMMENT '${req.body['name']}' AFTER \`creatime\``, (err, results) => {
-                    
+
                     if (results) {
                         db.query(`ALTER TABLE ${promiseRes[2]}.${promiseRes[3]} MODIFY COLUMN creatime datetime(0) DEFAULT NULL COMMENT '创建时间' AFTER ${req.body['field']}`, () => {
                             res.send({ status: 200, message: "添加字段信息成功。" })

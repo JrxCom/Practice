@@ -4,6 +4,18 @@ exports.getFieldList = {
     method:'get'
 }
 
+/* 获取关联表信息 */
+exports.getSelectTable = {
+    path:'/getSelectTable',
+    method:'get'
+}
+
+/* 获取关联字段信息 */
+exports.getSelectField = {
+    path:'/getSelectField',
+    method:'get'
+}
+
 /* 添加字段信息 */
 exports.addFieldInfo = {
     path:'/addFieldInfo',

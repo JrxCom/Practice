@@ -13,7 +13,7 @@ app.use(express.static(__dirname + '../upload'))
 /* 配置cookie模块 */
 app.use(cookieParser())
 /* 打包验证码所需要的字体 */
-require('../font/Comismsh.ttf')
+// require('../font/Comismsh.ttf')
 
 module.exports = {
     app,
