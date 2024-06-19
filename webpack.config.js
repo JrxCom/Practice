@@ -6,7 +6,7 @@ module.exports = {
         app: path.resolve(__dirname, "./src/main.js"),
     },
     output: {
-        path: path.resolve(__dirname, './dist'),  //出口路径
+        path: path.resolve(__dirname, './learner'),  //出口路径
         filename: "src/index.js",
     },
     module: {

@@ -2,9 +2,10 @@
 const mysql = require('mysql')
 /* 连接数据库 */
 const db = mysql.createPool({
-    host:'127.0.0.1',
+    host:'111.231.15.219',
+    port:'3306',
     user:'root',
-    password:'123456',
+    password:'jiangruxu.mysql123',
     database:'learner'
 })
 

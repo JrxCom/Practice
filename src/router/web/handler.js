@@ -19,7 +19,7 @@ exports.addWebInfo = (req, res) => {
     const data = {
         id: new Date().getTime(),
         name: req.body['name'],
-        describe: req.body['describe'],
+        describe: req.body['describe'] || '',
         database: req.body['database'],
         website: req.body['website'],
         logo: req.body['logo'],
@@ -78,7 +78,7 @@ exports.editWebInfo = (req, res) => {
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const data = {
         name: req.body['name'],
-        describe: req.body['describe'],
+        describe: req.body['describe'] || '',
         database: req.body['database'],
         website: req.body['website'],
         logo: req.body['logo']

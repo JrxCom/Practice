@@ -19,7 +19,7 @@ exports.addTableInfo = (req, res) => {
         id: new Date().getTime(),
         wid: req.body['wid'],
         name: req.body['name'],
-        describe: req.body['describe'],
+        describe: req.body['describe'] || '',
         table: req.body['table'],
         creatime: new Date()
     }
@@ -88,7 +88,7 @@ exports.editTableInfo = (req, res) => {
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const data = {
         name: req.body['name'],
-        describe: req.body['describe'],
+        describe: req.body['describe'] || '',
         table: req.body['table'],
     }
 

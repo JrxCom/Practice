@@ -17,7 +17,7 @@ exports.addFieldInfo = (req, res) => {
         id: new Date().getTime(),
         tid: req.body['tid'],
         name: req.body['name'],
-        describe: req.body['describe'],
+        describe: req.body['describe'] || '',
         creatway: req.body['creatway'],
         showay: req.body['showay'],
         type: req.body['type'],
@@ -102,7 +102,7 @@ exports.editFieldInfo = (req, res) => {
     if (req.cookies.cookieCode === undefined) return res.send({ status: 403, message: "登录失效，请重新登录！" })
     const data = {
         name: req.body['name'],
-        describe: req.body['describe'],
+        describe: req.body['describe'] || '',
         creatway: req.body['creatway'],
         showay: req.body['showay'],
         type: req.body['type'],
