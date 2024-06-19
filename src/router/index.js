@@ -33,6 +33,7 @@ const routes = [
     ],
   }
 ]
+
 /* 进入同一个路由清除报错 */
 const VueRouterPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(to) {

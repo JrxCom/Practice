@@ -1,7 +1,7 @@
 <template>
   <div class="manage">
     <!-- 网站 -->
-    <div class="web_view" :style="{'width':webArray.length?'37vw':'20vw'}">
+    <div class="web_view" :style="{'width':webArray.length?'39vw':'22vw'}">
       <vs-select
         placeholder="请添加网站"
         v-model="webCode"
@@ -115,7 +115,7 @@
               <vs-input
                 primary
                 :success="dialogTheme"
-                label="网站名称"
+                label="网站名称*"
                 placeholder="Web Name"
                 v-model="webForm['name']"
               >
@@ -131,7 +131,7 @@
               <vs-input
                 primary
                 :success="dialogTheme"
-                label="数据库"
+                label="数据库*"
                 placeholder="Database"
                 v-model="webForm['database']"
               >
@@ -145,7 +145,7 @@
               >
               </vs-input>
               <div class="upload">
-                <label>网站logo</label>
+                <label>网站logo*</label>
                 <vs-button
                   block
                   :success="dialogTheme"
@@ -209,7 +209,7 @@
               <vs-input
                 primary
                 :success="dialogTheme"
-                label="表格名称"
+                label="表格名称*"
                 placeholder="Table Name"
                 v-model="tableForm['name']"
               >
@@ -225,7 +225,7 @@
               <vs-input
                 primary
                 :success="dialogTheme"
-                label="数据库"
+                label="数据库*"
                 placeholder="Table"
                 v-model="tableForm['table']"
               >
@@ -263,7 +263,7 @@
               <vs-input
                 primary
                 :success="dialogTheme"
-                label="字段名称"
+                label="字段名称*"
                 placeholder="Field Name"
                 v-model="fieldForm['name']"
               >
@@ -279,7 +279,7 @@
               <vs-select
                 primary
                 :success="dialogTheme"
-                label="创建方式"
+                label="创建方式*"
                 placeholder="Creat Way"
                 v-model="creatWayCode"
                 @change="fieldForm['creatway'] = creatWayCode"
@@ -296,7 +296,7 @@
               <vs-select
                 primary
                 :success="dialogTheme"
-                label="展示方式"
+                label="展示方式*"
                 placeholder="Show Way"
                 v-model="showWayCode"
                 @change="fieldForm['showay'] = showWayCode"
@@ -313,7 +313,7 @@
               <vs-select
                 primary
                 :success="dialogTheme"
-                label="字段类型"
+                label="字段类型*"
                 placeholder="Field Type"
                 v-model="fieldTypeCode"
                 @change="fieldForm['type'] = fieldTypeCode"
@@ -330,7 +330,7 @@
               <vs-input
                 primary
                 :success="dialogTheme"
-                label="字段大小/值"
+                label="字段大小/值*"
                 placeholder="Field Size/Value"
                 v-model="fieldForm['size']"
               >
@@ -338,7 +338,7 @@
               <vs-input
                 primary
                 :success="dialogTheme"
-                label="数据库"
+                label="数据库*"
                 placeholder="Field"
                 v-model="fieldForm['field']"
               >
