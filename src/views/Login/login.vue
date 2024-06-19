@@ -279,6 +279,7 @@ export default {
             duration: "2000",
             title: `${res.data.message}`,
           });
+          this.get_code()
         }
       });
     },
