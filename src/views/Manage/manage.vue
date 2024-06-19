@@ -1,7 +1,7 @@
 <template>
   <div class="manage">
     <!-- 网站 -->
-    <div class="web_view" :style="{'width':webArray.length?'39vw':'22vw'}">
+    <div class="web_view" :style="{ width: webArray.length ? '39vw' : '22vw' }">
       <vs-select
         placeholder="请添加网站"
         v-model="webCode"
@@ -21,11 +21,23 @@
         <img src="@/assets/manage/addButton.png" />
         Add Web
       </vs-button>
-      <vs-button icon color="success" relief @click="web('edit')" v-show="webArray.length">
+      <vs-button
+        icon
+        color="success"
+        relief
+        @click="web('edit')"
+        v-show="webArray.length"
+      >
         <img src="@/assets/manage/editButton.png" />
         Edit Web
       </vs-button>
-      <vs-button icon color="danger" relief @click="remove('web')" v-show="webArray.length">
+      <vs-button
+        icon
+        color="danger"
+        relief
+        @click="remove('web')"
+        v-show="webArray.length"
+      >
         <img src="@/assets/manage/removeButton.png" />
         Remove Web
       </vs-button>
@@ -276,6 +288,15 @@
                 v-model="fieldForm['describe']"
               >
               </vs-input>
+
+              <div class="radio">
+                <label class="label">是否关联其他表</label>
+                <div>
+                  <vs-radio v-model="isRelevance" val="1"> 否 </vs-radio>
+                  <vs-radio v-model="isRelevance" val="2"> 是 </vs-radio>
+                </div>
+              </div>
+
               <vs-select
                 primary
                 :success="dialogTheme"
@@ -293,6 +314,7 @@
                   {{ item }}
                 </vs-option>
               </vs-select>
+
               <vs-select
                 primary
                 :success="dialogTheme"
@@ -310,7 +332,9 @@
                   {{ item }}
                 </vs-option>
               </vs-select>
+
               <vs-select
+                v-if="isRelevance == 1"
                 primary
                 :success="dialogTheme"
                 label="字段类型*"
@@ -327,7 +351,28 @@
                   {{ item }}
                 </vs-option>
               </vs-select>
+
+              <vs-select
+                v-else
+                primary
+                :success="dialogTheme"
+                label="关联表*"
+                placeholder="Choose Table"
+                v-model="fieldTypeCode"
+                @change="fieldForm['type'] = fieldTypeCode"
+              >
+                <vs-option
+                  v-for="(item, index) in relevanceTableArray"
+                  :key="index"
+                  :label="item.value + '(' + item.value + ')'"
+                  :value="item.id"
+                >
+                  {{ item.name }}({{ item.value }})
+                </vs-option>
+              </vs-select>
+
               <vs-input
+                v-if="isRelevance == 1"
                 primary
                 :success="dialogTheme"
                 label="字段大小/值*"
@@ -335,6 +380,26 @@
                 v-model="fieldForm['size']"
               >
               </vs-input>
+
+              <vs-select
+                v-else
+                primary
+                :success="dialogTheme"
+                label="关联字段*"
+                placeholder="Choose Field"
+                v-model="fieldSizeCode"
+                @change="fieldForm['size'] = fieldSizeCode"
+              >
+                <vs-option
+                  v-for="(item, index) in relevanceFieldArray"
+                  :key="index"
+                  :label="item.name + '(' + item.value + ')'"
+                  :value="item.id"
+                >
+                  {{ item.name }}({{ item.value }})
+                </vs-option>
+              </vs-select>
+
               <vs-input
                 primary
                 :success="dialogTheme"
@@ -410,6 +475,8 @@ import {
 /* 引入field api */
 import {
   getFieldList,
+  getSelectTable,
+  getSelectField,
   addFieldInfo,
   getFieldInfo,
   editFieldInfo,
@@ -439,6 +506,7 @@ export default {
       fieldArray: [] /* 字段列表 */,
       fieldDialog: false /* 字段添加、修改弹窗显示参数 */,
       fieldTitle: "" /* 字段添加、修改标题（add field、edit field） */,
+      isRelevance: 1 /* 是否关联其他表参数 */,
       fieldForm: {} /* 字段添加、修改提交表单 */,
       creatWayCode: "" /* 当前选中字段创建方式 */,
       creatWayArray: [
@@ -451,12 +519,7 @@ export default {
         "多选",
       ] /* 全部字段创建方式 */,
       showWayCode: "" /* 当前选中字段显示方式 */,
-      showWayArray: [
-        "文本",
-        "图片",
-        "音频",
-        "视频",
-      ] /* 全部字段显示方式 */,
+      showWayArray: ["文本", "图片", "音频", "视频"] /* 全部字段显示方式 */,
       fieldTypeCode: "" /* 当前选中字段类型 */,
       fieldTypeArray: [
         "bigint",
@@ -466,6 +529,9 @@ export default {
         "set",
         "datetime",
       ] /* 全部字段常用类型 */,
+      relevanceTableArray: new Array(100) /* 关联表列表 */,
+      relevanceFieldArray: new Array(100) /* 关联字段列表 */,
+      fieldSizeCode: "" /* 当前选中关联字段 */,
       removeDialog: false /* 删除弹窗显示参数 */,
       removeTitle: "" /* 删除弹窗标题（web、table、filed） */,
     };
@@ -484,8 +550,16 @@ export default {
       if (newvalue) {
         this.get_field_list();
       } else {
-        this.fieldArray = []
+        this.fieldArray = [];
         this.fieldCode = 0;
+      }
+    },
+    isRelevance(newvalue) {
+      newvalue == 2 ? this.get_select_table() : null;
+      newvalue == 2 ? this.get_select_field() : null;
+      this.dataTitle = type === "add" ? "Add Data" : "Edit Data";
+      if (newvalue == 2) {
+        this.fieldForm["creatway"] = this.creatWayCode = "下拉";
       }
     },
   },
@@ -509,7 +583,7 @@ export default {
           color: "danger",
           position: "top-center",
           duration: "2000",
-          buttonClose:false,
+          buttonClose: false,
           title: `${message}`,
         });
       } else if (status === 500) {
@@ -579,9 +653,9 @@ export default {
             this.show_tips(res.data.status, res.data.message);
             this.webDialog = false;
             this.get_web_list();
-            setTimeout(()=>{
+            setTimeout(() => {
               location.reload();
-            },500)
+            }, 500);
           } else {
             this.show_tips(res.data.status, res.data.message);
           }
@@ -591,7 +665,7 @@ export default {
           if (res.data.status === 200) {
             this.get_web_list();
             this.webDialog = false;
-            this.$bus.$emit('update-menu')
+            this.$bus.$emit("update-menu");
           }
           this.show_tips(res.data.status, res.data.message);
         });
@@ -660,6 +734,26 @@ export default {
         }
       });
     },
+    /* 获取关联表信息 */
+    get_select_table() {
+      getSelectTable(this.webCode, this.tableCode).then((res) => {
+        if (res.data.status === 200) {
+          this.relevanceTableArray = res.data.obj.records;
+        } else {
+          this.show_tips(res.data.status, res.data.message);
+        }
+      });
+    },
+    /* 获取关联字段信息 */
+    get_select_field() {
+      getSelectField(this.tableCode).then((res) => {
+        if (res.data.status === 200) {
+          this.relevanceFieldArray = res.data.obj.records;
+        } else {
+          this.show_tips(res.data.status, res.data.message);
+        }
+      });
+    },
     /* 展示字段弹窗 */
     field(type, id) {
       type === "edit" ? this.get_field_info(id) : null;
@@ -667,9 +761,9 @@ export default {
       this.dialogTheme = type === "add" ? false : true;
       this.fieldForm = type === "add" ? {} : this.fieldForm;
       this.fieldDialog = true;
-      this.creatWayCode = type === "add" ? "" : this.fieldForm['creatway']
-      this.showWayCode = type === "add" ? "" : this.fieldForm['showay']
-      this.fieldTypeCode = type === "add" ? "" : this.fieldForm['type']
+      this.creatWayCode = type === "add" ? "" : this.fieldForm["creatway"];
+      this.showWayCode = type === "add" ? "" : this.fieldForm["showay"];
+      this.fieldTypeCode = type === "add" ? "" : this.fieldForm["type"];
     },
     /* 获取字段信息 */
     get_field_info(id) {
@@ -765,9 +859,9 @@ export default {
           if (res.data.status === 200) {
             this.get_web_list();
             this.removeDialog = false;
-            setTimeout(()=>{
+            setTimeout(() => {
               location.reload();
-            },500)
+            }, 500);
           }
           this.show_tips(res.data.status, res.data.message);
         });

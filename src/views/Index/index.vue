@@ -18,7 +18,7 @@
           Home
         </vs-sidebar-item>
         <!-- web页 -->
-        <vs-sidebar-group open>
+        <vs-sidebar-group open v-if="menuArray.length">
           <template #header>
             <vs-sidebar-item arrow>
               <template #icon>
@@ -150,7 +150,7 @@ export default {
       dialogCode: false /* 退出弹窗显示参数 */,
       logoutTipsCode: false /* 退出提示显示参数 */,
       logoutTipsMessage: "" /* 退出提示文字 */,
-      menuArray: new Array(0) /* 菜单列表 */,
+      menuArray: new Array(20) /* 菜单列表 */,
       screenCode: false /* 全屏参数 */,
       apiUrl: process.env.VUE_APP_BASE_API /* api路径 */,
     };
