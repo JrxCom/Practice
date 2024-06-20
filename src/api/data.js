@@ -36,6 +36,16 @@ export const getDataInfo = (wid, tid, id) => {
     })
 }
 
+/* 获取关联数据信息 */
+export const getSelectData = (wid,tid,fid) => {
+    return request({
+        url: '/getSelectData/?wid=' + wid + '&tid=' + tid + '&fid=' + fid,
+        method: 'get',
+    })
+}
+
+
+
 /* 修改数据信息 */
 export const editDataInfo = (wid, tid, id, param) => {
     return request({

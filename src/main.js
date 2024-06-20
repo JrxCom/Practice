@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Vuesax from 'vuesax'
-import 'vuesax/dist/vuesax.css'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import '../src/font/font.css'
 
 Vue.config.productionTip = false
@@ -12,7 +12,7 @@ Vue.config.errorHandler = () => { }
 // 屏蔽警告信息
 Vue.config.warnHandler = () => { }
 
-Vue.use(Vuesax)
+Vue.use(ElementUI)
 new Vue({
   router,//路由
   store,//VueX

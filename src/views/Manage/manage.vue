@@ -306,6 +306,7 @@
                 @change="fieldForm['creatway'] = creatWayCode"
               >
                 <vs-option
+                  v-show="isRelevance === '1'"
                   v-for="(item, index) in creatWayArray"
                   :key="index"
                   :label="item"
@@ -334,7 +335,7 @@
               </vs-select>
 
               <vs-select
-                v-if="isRelevance == 1"
+                v-if="isRelevance === '1'"
                 primary
                 :success="dialogTheme"
                 label="字段类型*"
@@ -372,7 +373,7 @@
               </vs-select>
 
               <vs-input
-                v-if="isRelevance == 1"
+                v-if="isRelevance === '1'"
                 primary
                 :success="dialogTheme"
                 label="字段大小/值*"
@@ -382,7 +383,7 @@
               </vs-input>
 
               <vs-select
-                v-else
+                v-if="isRelevance === '2' && is"
                 primary
                 :success="dialogTheme"
                 label="关联字段*"
@@ -506,7 +507,8 @@ export default {
       fieldArray: [] /* 字段列表 */,
       fieldDialog: false /* 字段添加、修改弹窗显示参数 */,
       fieldTitle: "" /* 字段添加、修改标题（add field、edit field） */,
-      isRelevance: 1 /* 是否关联其他表参数 */,
+      isRelevance: "1" /* 是否关联其他表参数 */,
+      is: true,
       fieldForm: {} /* 字段添加、修改提交表单 */,
       creatWayCode: "" /* 当前选中字段创建方式 */,
       creatWayArray: [
@@ -555,12 +557,14 @@ export default {
       }
     },
     isRelevance(newvalue) {
-      newvalue == 2 ? this.get_select_table() : null;
-      newvalue == 2 ? this.get_select_field() : null;
-      this.dataTitle = type === "add" ? "Add Data" : "Edit Data";
-      if (newvalue == 2) {
+      if (newvalue == "2") {
         this.fieldForm["creatway"] = this.creatWayCode = "下拉";
       }
+      newvalue === "2" ? this.get_select_table() : null;
+      this.relevanceFieldArray = [];
+    },
+    fieldTypeCode(newvalue) {
+      this.get_select_field(newvalue);
     },
   },
   created() {
@@ -745,10 +749,14 @@ export default {
       });
     },
     /* 获取关联字段信息 */
-    get_select_field() {
-      getSelectField(this.tableCode).then((res) => {
+    get_select_field(id) {
+      getSelectField(id).then((res) => {
         if (res.data.status === 200) {
+          this.is = false;
           this.relevanceFieldArray = res.data.obj.records;
+          setTimeout(() => {
+            this.is = true;
+          }, 200);
         } else {
           this.show_tips(res.data.status, res.data.message);
         }
@@ -793,6 +801,8 @@ export default {
     controls_field_info() {
       this.fieldForm["wid"] = this.webCode;
       this.fieldForm["tid"] = this.tableCode;
+      this.fieldForm["relevance"] = this.isRelevance;
+      this.fieldForm['type'] = this.fieldTypeCode
       this.fieldForm["size"] =
         this.fieldForm["type"] === ("bigint" || "datetime")
           ? 0

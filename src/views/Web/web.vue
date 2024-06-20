@@ -317,6 +317,7 @@ import {
   getDataList,
   getDataSearch,
   getDataInfo,
+  getSelectData,
   addDataInfo,
   editDataInfo,
   removeDataInfo,
@@ -456,6 +457,7 @@ export default {
     /* 展示数据弹窗 */
     data(type) {
       type === "edit" ? this.get_data_info() : null;
+      type === "add" ? this.get_select_data() : null;
       this.dataTitle = type === "add" ? "Add Data" : "Edit Data";
       this.dialogTheme = type === "add" ? false : true;
       this.dataForm = type === "add" ? {} : this.selected[0];
@@ -471,6 +473,12 @@ export default {
               if (item.creatway === "多选") {
                 this.dataForm[item.field] =
                   this.dataForm[item.field].split(",");
+              } else if (item.creatway === "下拉" && item.relevance === "2") {
+                getSelectData(this.$route.query.id, item.type, item.size).then(
+                  (res) => {
+                    this.$set(item,'size',res.data.obj.records.join())
+                  }
+                );
               }
             });
           } else {
@@ -478,6 +486,18 @@ export default {
           }
         }
       );
+    },
+    /* 获取关联数据信息 */
+    get_select_data() {
+      this.headerList.forEach((item) => {
+        if (item.creatway === "下拉" && item.relevance === "2") {
+          getSelectData(this.$route.query.id, item.type, item.size).then(
+            (res) => {
+              this.$set(item,'size',res.data.obj.records.join())
+            }
+          );
+        }
+      });
     },
     /* 添加、修改数据 */
     controls_data_info() {
