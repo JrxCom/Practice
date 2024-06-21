@@ -1,136 +1,112 @@
 <template>
-  <div class="index" :style="themeStyle">
-    <!-- 菜单 -->
-    <div class="menu">
-      <vs-sidebar style="position: static !important" v-model="active" open>
-        <!-- logo图 -->
-        <template #logo>
-          <img v-if="!themeCode" src="@/assets/common/lightLogo.png" />
-          <img v-else src="@/assets/common/darkLogo.png" />
-          <h3>LeaRneR</h3>
+  <div class="index">
+    <el-menu :default-active="active" class="menu_view">
+      <div class="header_view">
+        <img width="30" height="30" src="@/assets/common/logo.png" />
+        <h3>LeaRneR</h3>
+      </div>
+      <el-menu-item index="home" @click="go_menu('/home')">
+        <i class="el-icon-s-home"></i>
+        <span slot="title">Home</span>
+      </el-menu-item>
+      <el-submenu index="2">
+        <template slot="title">
+          <i class="el-icon-monitor"></i>
+          <span>Web</span>
         </template>
-        <!-- home页 -->
-        <vs-sidebar-item id="home" to="/home">
-          <template #icon>
-            <img v-if="!themeCode" src="@/assets/index/lightHome.png" alt="" />
-            <img v-else src="@/assets/index/darkHome.png" alt="" />
-          </template>
-          Home
-        </vs-sidebar-item>
-        <!-- web页 -->
-        <vs-sidebar-group open v-if="menuArray.length">
-          <template #header>
-            <vs-sidebar-item arrow>
-              <template #icon>
-                <img
-                  v-if="!themeCode"
-                  src="@/assets/index/lightWeb.png"
-                  alt=""
-                />
-                <img v-else src="@/assets/index/darkWeb.png" alt="" />
-              </template>
-              WEB
-            </vs-sidebar-item>
-          </template>
-          <vs-sidebar-item
-            v-for="(item, index) in menuArray"
-            :key="index"
-            :id="item.id"
-            @click.native="go_web(item.id)"
-          >
-            <template #icon>
-              <img :src="apiUrl + item.logo" alt="" />
-            </template>
-            {{ item.name }}
-          </vs-sidebar-item>
-        </vs-sidebar-group>
-        <!-- manage页 -->
-        <vs-sidebar-item id="manage" to="/manage">
-          <template #icon>
-            <img
-              v-if="!themeCode"
-              src="@/assets/index/lightManage.png"
-              alt=""
-            />
-            <img v-else src="@/assets/index/darkManage.png" alt="" />
-          </template>
-          Manage
-        </vs-sidebar-item>
-        <!-- 底部按钮 -->
-        <template #footer>
-          <vs-tooltip>
-            <vs-button icon color="#364758">
-              <img src="@/assets/index/code.png" />
-            </vs-button>
-            <template #tooltip>
-              <p>前端:{{ $store.state.stack.front_end }}</p>
-              <p>预处理器:{{ $store.state.stack.back_end }}</p>
-              <p>后端:{{ $store.state.stack.preprocessor }}</p>
-            </template>
-          </vs-tooltip>
-          <vs-button icon @click="themeCode = !themeCode">
-            <img v-if="!themeCode" src="@/assets/index/light.png" />
-            <img v-else src="@/assets/index/dark.png" />
-          </vs-button>
-          <vs-button icon color="#42B983" @click="screenCode = !screenCode">
-            <img v-if="!screenCode" src="@/assets/index/fullScreen.png" />
-            <img v-else src="@/assets/index/exitFullScreen.png" />
-          </vs-button>
-          <vs-button
-            icon
-            color="warn"
-            @click.native="go_github()"
-          >
-            <img src="@/assets/index/github.png" />
-          </vs-button>
-          <vs-button
-            icon
-            color="danger"
-            @click="(dialogCode = true), $bus.$emit('close-tips')"
-          >
-            <img src="@/assets/index/logout.png" />
-          </vs-button>
-        </template>
-      </vs-sidebar>
-    </div>
-    <!-- 内容 -->
+        <el-menu-item
+          v-for="(item, index) in menuArray"
+          :key="index"
+          :index="item.id.toString()"
+          @click="go_menu('/web', item.id)"
+        >
+          <img width="20" height="20" src="@/assets/common/logo.png" alt="" />
+          {{ item.name }}
+        </el-menu-item>
+      </el-submenu>
+      <el-menu-item index="manage" @click="go_menu('/manage')">
+        <i class="el-icon-set-up"></i>
+        <span slot="title">Manage</span>
+      </el-menu-item>
+      <div class="footer_view">
+        <el-tooltip
+          effect="dark"
+          content="<前端:vue.js><预处理器:less><后端:node.js>"
+          placement="top-start"
+        >
+          <div class="code">
+            <img width="18" height="18" src="@/assets/index/code.png" alt="" />
+          </div>
+        </el-tooltip>
+
+        <div class="github" @click="go_github()">
+          <img width="18" height="18" src="@/assets/index/github.png" alt="" />
+        </div>
+
+        <div class="screen" @click="screenCode = !screenCode">
+          <img
+            v-if="!screenCode"
+            width="18"
+            height="18"
+            src="@/assets/index/fullScreen.png"
+          />
+          <img
+            v-else
+            width="18"
+            height="18"
+            src="@/assets/index/exitFullScreen.png"
+          />
+        </div>
+
+        <div
+          class="logout"
+          @click="(dialogCode = true), $bus.$emit('close-tips')"
+        >
+          <img width="18" height="18" src="@/assets/index/logout.png" alt="" />
+        </div>
+      </div>
+    </el-menu>
     <div class="view" :style="themeStyle">
       <router-view :key="$route.fullPath"></router-view>
     </div>
-    <!-- 退出登录弹窗 -->
-    <div class="dialog">
-      <transition name="dialog">
-        <div class="logout" v-show="dialogCode">
-          <div class="card_logout">
-            <div
-              class="close"
-              @click="(dialogCode = false), $bus.$emit('open-tips')"
-            >
-              <vs-button icon border danger>
-                <img src="@/assets/common/removeClose.png" />
-              </vs-button>
+
+    <el-collapse-transition>
+      <div class="logout_view" v-show="dialogCode">
+        <div class="card_view">
+          <div class="close_view" @click="dialogCode = false">
+            <el-link type="danger" :underline="false"
+              ><i class="el-icon-close"></i
+            ></el-link>
+          </div>
+          <div class="header">提示</div>
+          <div class="main">
+            <p>是否退出登录？</p>
+            <span>说明：退出成功后页面跳转到登录页</span>
+          </div>
+          <div class="footer">
+            <div class="logout_button" @click="log_out()">
+              <img
+                width="14"
+                height="14"
+                src="@/assets/common/confirm.png"
+                alt=""
+              />
             </div>
-            <div class="header">提示</div>
-            <div class="main">
-              <p>是否退出登录？</p>
-              <span>说明：退出成功后页面跳转到登录页</span>
+
+
+            <div class="cancel_button" @click="dialogCode = false">
+              <img
+                width="14"
+                height="14"
+                src="@/assets/common/cancel.png"
+                alt=""
+              />
             </div>
-            <div class="footer">
-              <vs-button icon danger @click="log_out()">
-                <img src="@/assets/common/confirm.png" />
-              </vs-button>
-              <vs-button
-                icon
-                color="#808b96"
-                @click="(dialogCode = false), $bus.$emit('open-tips')"
-              >
-                <img src="@/assets/common/cancel.png" />
-              </vs-button>
-            </div>
+
           </div>
         </div>
-      </transition>
-    </div>
+      </div>
+    </el-collapse-transition>
   </div>
 </template>
 
@@ -171,6 +147,7 @@ export default {
     /* 页面存在id视为web下网站数据页面，则为home或者manage页面 */
     if (this.$route.query.id) {
       this.active = this.$route.query.id;
+      console.log(this.active);
     } else {
       this.active = this.$route.name;
     }
@@ -194,15 +171,10 @@ export default {
         if (res.data.status === 200) {
           this.menuArray = res.data.obj.records;
         } else {
-          this.$vs.notification({
-            flat: true,
-            color: "danger",
-            progress: "auto",
-            position: "top-center",
-            duration: "2000",
-            buttonClose: false,
-            title: `${res.data.message}`,
-          });
+          this.$message({
+              message: res.data.message,
+              type: "danger",
+            });
           setTimeout(() => {
             this.$router.push({ path: "/login" });
           }, 2000);
@@ -210,23 +182,22 @@ export default {
       });
     },
     /* 进入web下创建的网站页面 */
-    go_web(id) {
-      this.$router.push({ path: "/web", query: { id: id } });
+    go_menu(path, id) {
+      if (id) {
+        this.$router.push({ path: "/web", query: { id: id } });
+      } else {
+        this.$router.push({ path });
+      }
     },
     /* 退出登录 */
     log_out() {
       logout().then((res) => {
         if (res.data.status === 200) {
           this.dialogCode = false;
-          this.$vs.notification({
-            flat: true,
-            color: "primary",
-            progress: "auto",
-            position: "top-center",
-            duration: "1500",
-            buttonClose: false,
-            title: `${res.data.message}`,
-          });
+          this.$message({
+              message: res.data.message,
+              type: "success",
+            });
           setTimeout(() => {
             this.$router.push({ path: "/login" });
           }, 1500);
@@ -253,9 +224,9 @@ export default {
       }
     },
     /* 跳转github网站 */
-    go_github(){
-      window.open(this.$store.state.github, '_blank') 
-    }
+    go_github() {
+      window.open(this.$store.state.github, "_blank");
+    },
   },
 };
 </script>

@@ -1,9 +1,8 @@
 <template>
-  <div class="login" :style="themeStyle">
+  <div class="login_view" :style="themeStyle">
     <!-- logo -->
     <div class="header_view">
-      <img v-if="!themeCode" src="@/assets/common/lightLogo.png" />
-      <img v-else src="@/assets/common/darkLogo.png" />
+      <img src="@/assets/common/logo.png" />
       <h3>LeaRneR</h3>
     </div>
     <!-- 整体内容 -->
@@ -12,28 +11,29 @@
         <p>We will</p>
         <p>Continue</p>
         <p>To working hard.</p>
-        <span>{{ year }}y</span>
-        <span>{{ month }}m</span>
-        <span>{{ date }}d</span>
+        <span class="date_view">{{ year }}y</span>
+        <span class="date_view">{{ month }}m</span>
+        <span class="date_view">{{ date }}d</span>
         <!-- 登录开始按钮 -->
-        <vs-button
-          size="large"
-          @click="
-            dialogCode = true;
-            get_code();
-          "
-        >
-          <img src="@/assets/login/loginButton.png" /> Log In
-        </vs-button>
+        <div
+            class="login_btn"
+            @click="
+              dialogCode = true;
+              get_code();
+            "
+          >
+          <img width="20" height="20" src="@/assets/login/login.png" alt="">
+          Log in
+        </div>
       </div>
       <div class="right_view">
         <div class="Java">
-          <vs-checkbox> Java </vs-checkbox>
-          <vs-checkbox> Node.js </vs-checkbox>
-          <vs-checkbox> Python </vs-checkbox>
-          <vs-checkbox> Go </vs-checkbox>
-          <vs-checkbox> PHP </vs-checkbox>
-          <vs-checkbox> Ruby </vs-checkbox>
+          <el-checkbox> Java </el-checkbox>
+          <el-checkbox> Node.js </el-checkbox>
+          <el-checkbox> Python </el-checkbox>
+          <el-checkbox> Go </el-checkbox>
+          <el-checkbox> PHP </el-checkbox>
+          <el-checkbox> Ruby </el-checkbox>
         </div>
 
         <div class="React">
@@ -42,10 +42,12 @@
         </div>
 
         <div class="JavaScript">
-          <vs-switch color="#1A5CFF">
-            <template #off> JavaScript </template>
-            <template #on> TypeScript </template>
-          </vs-switch>
+          <el-switch
+            active-text="JavaScript"
+            inactive-text="TypeScript"
+            v-model="switchValue"
+          >
+          </el-switch>
         </div>
 
         <div class="Angular">
@@ -69,41 +71,48 @@
         </div>
 
         <div class="UI">
-          <vs-table>
-            <template #thead>
-              <vs-tr>
-                <vs-th> UI </vs-th>
-              </vs-tr>
-            </template>
-            <template #tbody>
-              <vs-tr>
-                <vs-td> Element </vs-td>
-              </vs-tr>
-              <vs-tr>
-                <vs-td> Ant Design </vs-td>
-              </vs-tr>
-              <vs-tr>
-                <vs-td> Vant 4 </vs-td>
-              </vs-tr>
-              <vs-tr>
-                <vs-td> Vuesax </vs-td>
-              </vs-tr>
-            </template>
-          </vs-table>
+          <el-table :data="tableValue" size="mini">
+            <el-table-column type="selection"> </el-table-column>
+            <el-table-column prop="UI" label="UI"> </el-table-column>
+          </el-table>
         </div>
 
         <div class="Less">
-          <vs-radio>Less</vs-radio>
-          <vs-radio>Sass</vs-radio>
-          <vs-radio>Stylus</vs-radio>
-          <vs-radio>PostCSS</vs-radio>
+          <el-radio v-model="radioValue" label="Less">Less</el-radio>
+          <el-radio v-model="radioValue" label="Sass">Sass</el-radio>
+          <el-radio v-model="radioValue" label="Stylus">Stylus</el-radio>
+          <el-radio v-model="radioValue" label="PostCSS">PostCSS</el-radio>
         </div>
 
         <div class="Compiler">
-          <vs-input loading disabled placeholder="HBuilderX" />
-          <vs-input loading disabled placeholder="Vs code" />
-          <vs-input loading disabled placeholder="Intellij IDEA" />
-          <vs-input loading disabled placeholder="Navicat Premium" />
+          <el-input
+            placeholder="HBuilderX"
+            suffix-icon="el-icon-star-off"
+            :disabled="true"
+            size="small"
+          >
+          </el-input>
+          <el-input
+            placeholder="Vs Code"
+            suffix-icon="el-icon-star-off"
+            :disabled="true"
+            size="small"
+          >
+          </el-input>
+          <el-input
+            placeholder="Intellij IDEA"
+            suffix-icon="el-icon-star-off"
+            :disabled="true"
+            size="small"
+          >
+          </el-input>
+          <el-input
+            placeholder="Navicat Premium"
+            suffix-icon="el-icon-star-off"
+            :disabled="true"
+            size="small"
+          >
+          </el-input>
         </div>
 
         <div class="IOS">
@@ -138,95 +147,79 @@
         </div>
       </div>
     </div>
-
-    <!-- 切换主题 -->
-    <div class="footer_view">
-      <div class="Theme">
-        <vs-switch v-model="themeCode">
-          <template #circle>
-            <img v-if="!themeCode" src="@/assets/login/darkSwitch.png" />
-            <img v-else src="@/assets/login/lightSwitch.png" />
-          </template>
-        </vs-switch>
-      </div>
-    </div>
-
     <!-- 登录弹窗 -->
-    <transition name="dialog">
+    <el-collapse-transition>
       <div class="dialog_view" v-show="dialogCode">
-        <div class="goLogin">
-          <div class="close" @click="dialogCode = false">
-            <vs-button icon border>
-              <img src="@/assets/common/addClose.png" />
-            </vs-button>
+        <div class="card_view">
+          <div class="close_view" @click="dialogCode = false">
+            <el-link type="primary" :underline="false"
+              ><i class="el-icon-close"></i
+            ></el-link>
           </div>
-          <div class="header">Log In</div>
-          <div class="main">
-            <vs-input
-              primary
+          <div class="title_view">Log In</div>
+          <div class="main_view">
+            <el-input
               placeholder="User name"
               v-model="form['username']"
+              prefix-icon="el-icon-user"
+              size="small"
               @keyup.enter.native="log_in()"
             >
-              <template #icon>
-                <img v-if="!themeCode" src="@/assets/login/lightUser.png" />
-                <img v-else src="@/assets/login/darkUser.png" />
-              </template>
-            </vs-input>
-            <vs-input
-              primary
-              type="password"
-              placeholder="Password"
+            </el-input>
+
+            <el-input
+              placeholder="password"
               v-model="form['password']"
+              prefix-icon="el-icon-lock"
+              show-password
+              size="small"
               @keyup.enter.native="log_in()"
             >
-              <template #icon>
-                <img v-if="!themeCode" src="@/assets/login/lightLock.png" />
-                <img v-else src="@/assets/login/darkLock.png" />
-              </template>
-            </vs-input>
+            </el-input>
+
             <div class="code">
-              <vs-input primary placeholder="Auth code" v-model="form['code']" @keyup.enter.native="log_in()">
-                <template #icon>
-                  <img v-if="!themeCode" src="@/assets/login/lightCode.png" />
-                  <img v-else src="@/assets/login/darkCode.png" />
-                </template>
-              </vs-input>
+              <el-input
+                placeholder="Code"
+                v-model="form['code']"
+                prefix-icon="el-icon-c-scale-to-original"
+                size="small"
+                @keyup.enter.native="log_in()"
+              >
+              </el-input>
               <div v-html="authSvgSrc" @click="get_code()"></div>
             </div>
-            <vs-checkbox v-model="form['remember']">
-              <template #icon>
-                <img v-if="!themeCode" src="@/assets/common/lightCheck.png" />
-                <img v-else src="@/assets/common/darkCheck.png" />
-              </template>
-              Remember me
-            </vs-checkbox>
+            <el-checkbox v-model="form['remember']"> Remember me </el-checkbox>
           </div>
-          <div class="footer">
-            <vs-button icon @click="log_in()" >
-              <img src="@/assets/login/loginButton.png" />
-            </vs-button>
+          <div class="footer_view">
+            <div class="login_button" @click="log_in()">
+              <img width="14" height="14" src="@/assets/login/login.png" alt="">
+            </div>
+          
           </div>
         </div>
       </div>
-    </transition>
-
+    </el-collapse-transition>
   </div>
 </template>
 
 <script>
-/* 引入主题混入 */
-import theme from "@/mixin/theme.js";
 /* 引入log api */
 import { getCode, login } from "@/api/log";
 export default {
   name: "login",
-  mixins: [theme],
   data() {
     return {
       year: new Date().getFullYear().toString().slice(2) /* 年份 */,
       month: (new Date().getMonth() + 1).toString().padStart(2, "0") /* 月份 */,
       date: new Date().getDate().toString().padStart(2, "0") /* 日期 */,
+      radioValue: "" /* 单选展示参数 */,
+      switchValue: true /* 开关展示参数 */,
+      tableValue: [
+        { UI: "Element UI" },
+        { UI: "Ant Design" },
+        { UI: "Vant 4" },
+        { UI: "Vuesax" },
+      ] /* 表格展示参数 */,
       authSvgSrc: "" /* 验证码 svg 路径 */,
       dialogCode: false /* 登录弹窗显示参数 */,
       form: {
@@ -252,14 +245,9 @@ export default {
             localStorage.setItem("username", this.form["username"]);
             localStorage.setItem("password", this.form["password"]);
             localStorage.setItem("remember", this.form["remember"]);
-            this.$vs.notification({
-              flat: true,
-              color: "primary",
-              progress: "auto",
-              position: "top-center",
-              duration: "2000",
-              buttonClose:false,
-              title: `${res.data.message}`,
+            this.$message({
+              message: res.data.message,
+              type: "success",
             });
             setTimeout(() => {
               this.dialogCode = false;
@@ -271,15 +259,11 @@ export default {
             localStorage.removeItem("remember");
           }
         } else {
-          this.$vs.notification({
-            flat: true,
-            color: "warn",
-            progress: "auto",
-            position: "top-center",
-            duration: "2000",
-            title: `${res.data.message}`,
+          this.$message({
+            message: res.data.message,
+            type: "warning",
           });
-          this.get_code()
+          this.get_code();
         }
       });
     },
