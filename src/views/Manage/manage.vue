@@ -2,51 +2,56 @@
   <div class="manage">
     <!-- 网站 -->
     <div class="web_view" :style="{ width: webArray.length ? '39vw' : '22vw' }">
-      <vs-select
-        placeholder="请添加网站"
+      <el-select
         v-model="webCode"
-        state="primary"
+        filterable
+        placeholder="请添加网站"
         @change="webCode = $event"
+        size="small"
       >
-        <vs-option
+        <el-option
           v-for="(item, index) in webArray"
           :key="index"
           :label="item.name"
           :value="item.id"
         >
-          {{ item.name }}
-        </vs-option>
-      </vs-select>
-      <vs-button icon color="primary" relief @click="web('add')">
-        <img src="@/assets/manage/addButton.png" />
-        Add Web
-      </vs-button>
-      <vs-button
-        icon
-        color="success"
-        relief
+        </el-option>
+      </el-select>
+
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        @click="web('add')"
+        size="small"
+        >Add Web</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
         @click="web('edit')"
+        size="small"
         v-show="webArray.length"
+        >Edit Web</el-button
       >
-        <img src="@/assets/manage/editButton.png" />
-        Edit Web
-      </vs-button>
-      <vs-button
-        icon
-        color="danger"
-        relief
+      <el-button
+        type="danger"
+        icon="el-icon-minus"
         @click="remove('web')"
+        size="small"
         v-show="webArray.length"
+        >Remove Web</el-button
       >
-        <img src="@/assets/manage/removeButton.png" />
-        Remove Web
-      </vs-button>
     </div>
     <!-- 表 -->
     <div class="table_view">
-      <vs-button icon @click="table('add')" v-show="webCode">
-        <img src="@/assets/manage/addButton.png" /> Add Table
-      </vs-button>
+      <el-button
+        type="primary"
+        icon="el-icon-circle-plus-outline"
+        size="small"
+        @click="table('add')"
+        v-show="webCode"
+        >Add Table</el-button
+      >
       <div class="table_list" v-if="tableArray.length">
         <div
           class="table_cell"
@@ -76,9 +81,14 @@
     </div>
     <!-- 字段 -->
     <div class="field_view">
-      <vs-button icon @click="field('add')" v-show="webCode">
-        <img src="@/assets/manage/addButton.png" /> Add Field
-      </vs-button>
+      <el-button
+        type="primary"
+        icon="el-icon-circle-plus-outline"
+        size="small"
+        @click="field('add')"
+        v-show="webCode"
+        >Add Field</el-button
+      >
       <div class="field_list" v-if="fieldArray.length">
         <div
           class="field_cell"
@@ -109,77 +119,86 @@
       </div>
     </div>
     <!-- 弹窗 -->
-    <div class="dialog_view">
-      <!-- 网站添加、修改弹窗 -->
-      <transition name="dialog">
+    <el-collapse-transition>
+      <div class="dialog_view">
+        <!-- 网站添加、修改弹窗 -->
         <div class="add_edit_web" v-show="webDialog">
           <div class="card_web">
             <div class="close" @click="webDialog = false">
-              <vs-button icon border :success="dialogTheme">
-                <img v-if="dialogTheme" src="@/assets/common/editClose.png" />
-                <img v-else src="@/assets/common/addClose.png" />
-              </vs-button>
+              <el-link :type="buttonType" :underline="false"
+                ><i class="el-icon-close"></i
+              ></el-link>
             </div>
             <div class="header">
               {{ webTitle }}
             </div>
             <div class="main">
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="网站名称*"
+              <div class="item">
+                <label><span>*</span>网站名称：</label>
+                <el-input
                 placeholder="Web Name"
                 v-model="webForm['name']"
+                prefix-icon="el-icon-monitor"
+                size="small"
               >
-              </vs-input>
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="网站简介"
+              </el-input>
+              </div>
+              
+              <div class="item">
+                <label>网站简介：</label>
+                <el-input
+                type="textarea"
+                :rows="2"
                 placeholder="Web Describe"
                 v-model="webForm['describe']"
               >
-              </vs-input>
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="数据库*"
+              </el-input>
+              </div>
+              
+              <div class="item">
+                <label><span>*</span>数据库：</label>
+                <el-input
                 placeholder="Database"
                 v-model="webForm['database']"
+                prefix-icon="el-icon-connection"
+                size="small"
               >
-              </vs-input>
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="网站地址"
-                placeholder="Web Website"
+              </el-input>
+              </div>
+
+              <div class="item">
+                <label><span>*</span>网站地址：</label>
+                <el-input
+                placeholder="Website"
                 v-model="webForm['website']"
+                prefix-icon="el-icon-s-flag"
+                size="small"
               >
-              </vs-input>
+              </el-input>
+              </div>
               <div class="upload">
-                <label>网站logo*</label>
-                <vs-button
-                  block
-                  :success="dialogTheme"
+                <label><span>*</span>网站logo：</label>
+                <el-button
+                  :type="buttonType"
+                  icon="el-icon-upload"
+                  size="small"
                   @click="$refs.fileRef.click()"
                   v-if="!webUploadSrc"
+                  v-show="webCode"
+                  style="width: 100%"
+                  ></el-button
                 >
-                  <img src="@/assets/common/image.png" /> image
-                </vs-button>
-
-                <vs-tooltip border top v-else>
-                  <vs-button
-                    block
-                    :success="dialogTheme"
+                <el-popover placement="top" trigger="hover" border v-else>
+                  <img :src="webUploadSrc" width="150" height="150" />
+                  <el-button
+                    slot="reference"
+                    :type="buttonType"
+                    icon="el-icon-success"
+                    size="small"
                     @click="$refs.fileRef.click()"
-                  >
-                    <img src="@/assets/common/check.png" />
-                  </vs-button>
-                  <template #tooltip>
-                    <img :src="webUploadSrc" width="80" height="80" />
-                  </template>
-                </vs-tooltip>
-
+                    style="width: 100%"
+                  ></el-button>
+                </el-popover>
                 <input
                   v-show="false"
                   ref="fileRef"
@@ -190,76 +209,96 @@
               </div>
             </div>
             <div class="footer">
-              <vs-button
-                icon
-                :success="dialogTheme"
+              <div
+                class="button"
                 @click="controls_web_info()"
+                :style="{
+                  'background-color':
+                    buttonType === 'primary' ? '#195BFF' : '#46C93A',
+                }"
               >
-                <img src="@/assets/common/confirm.png" />
-              </vs-button>
-              <vs-button icon color="#808b96" @click="webDialog = false">
-                <img src="@/assets/common/cancel.png" />
-              </vs-button>
+                <img
+                  width="14"
+                  height="14"
+                  src="@/assets/common/confirm.png"
+                  alt=""
+                />
+              </div>
+              <div class="cancel_button" @click="webDialog = false">
+                <img
+                  width="14"
+                  height="14"
+                  src="@/assets/common/cancel.png"
+                  alt=""
+                />
+              </div>
             </div>
           </div>
         </div>
-      </transition>
-      <!-- 表添加、修改弹窗 -->
-      <transition name="dialog">
+        <!-- 表添加、修改弹窗 -->
         <div class="add_edit_table" v-show="tableDialog">
           <div class="card_table">
             <div class="close" @click="tableDialog = false">
-              <vs-button icon border :success="dialogTheme">
-                <img v-if="dialogTheme" src="@/assets/common/editClose.png" />
-                <img v-else src="@/assets/common/addClose.png" />
-              </vs-button>
+              <el-link :type="buttonType" :underline="false"
+                ><i class="el-icon-close"></i
+              ></el-link>
             </div>
             <div class="header">
               {{ tableTitle }}
             </div>
             <div class="main">
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="表格名称*"
-                placeholder="Table Name"
+              <el-input
+                placeholder="表格名称*"
                 v-model="tableForm['name']"
+                prefix-icon="el-icon-files"
+                size="small"
               >
-              </vs-input>
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="表格描述"
-                placeholder="Table Describe"
+              </el-input>
+
+              <el-input
+                placeholder="表格描述"
                 v-model="tableForm['describe']"
+                prefix-icon="el-icon-tickets"
+                size="small"
               >
-              </vs-input>
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="数据库*"
-                placeholder="Table"
+              </el-input>
+
+              <el-input
+                placeholder="数据库*"
                 v-model="tableForm['table']"
+                prefix-icon="el-icon-s-flag"
+                size="small"
               >
-              </vs-input>
+              </el-input>
             </div>
             <div class="footer">
-              <vs-button
-                icon
-                :success="dialogTheme"
+              <div
+                class="button"
                 @click="controls_table_info()"
+                :style="{
+                  'background-color':
+                    buttonType === 'primary' ? '#195BFF' : '#46C93A',
+                }"
               >
-                <img src="@/assets/common/confirm.png" />
-              </vs-button>
-              <vs-button icon color="#808b96" @click="tableDialog = false">
-                <img src="@/assets/common/cancel.png" />
-              </vs-button>
+                <img
+                  width="14"
+                  height="14"
+                  src="@/assets/common/confirm.png"
+                  alt=""
+                />
+              </div>
+              <div class="cancel_button" @click="webDialog = false">
+                <img
+                  width="14"
+                  height="14"
+                  src="@/assets/common/cancel.png"
+                  alt=""
+                />
+              </div>
             </div>
           </div>
         </div>
-      </transition>
-      <!-- 字段添加、修改弹窗 -->
-      <transition name="dialog">
+        <!-- 字段添加、修改弹窗 -->
         <div class="add_edit_field" v-show="fieldDialog">
           <div class="card_field">
             <div class="close" @click="fieldDialog = false">
@@ -272,143 +311,106 @@
               {{ fieldTitle }}
             </div>
             <div class="main">
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="字段名称*"
-                placeholder="Field Name"
+              <el-input
+                placeholder="字段名称*"
                 v-model="fieldForm['name']"
+                prefix-icon="el-icon-collection"
+                size="small"
               >
-              </vs-input>
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="字段描述"
-                placeholder="Field Describe"
+              </el-input>
+              <el-input
+                placeholder="字段描述"
                 v-model="fieldForm['describe']"
+                prefix-icon="el-icon-tickets"
+                size="small"
               >
-              </vs-input>
+              </el-input>
 
-              <div class="radio">
-                <label class="label">是否关联其他表</label>
-                <div>
-                  <vs-radio v-model="isRelevance" val="1"> 否 </vs-radio>
-                  <vs-radio v-model="isRelevance" val="2"> 是 </vs-radio>
-                </div>
-              </div>
+              <el-select v-model="isRelevance" placeholder="是否关联其他表*">
+                <el-option label="否" value="1"></el-option>
+                <el-option label="是" value="2"> </el-option>
+              </el-select>
 
-              <vs-select
-                primary
-                :success="dialogTheme"
-                label="创建方式*"
-                placeholder="Creat Way"
+              <el-select
                 v-model="creatWayCode"
+                placeholder="创建方式*"
                 @change="fieldForm['creatway'] = creatWayCode"
               >
-                <vs-option
-                  v-show="isRelevance === '1'"
-                  v-for="(item, index) in creatWayArray"
-                  :key="index"
+                <el-option
+                  v-for="item in creatWayArray"
+                  :key="item"
                   :label="item"
                   :value="item"
                 >
-                  {{ item }}
-                </vs-option>
-              </vs-select>
+                </el-option>
+              </el-select>
 
-              <vs-select
-                primary
-                :success="dialogTheme"
-                label="展示方式*"
-                placeholder="Show Way"
+              <el-select
                 v-model="showWayCode"
+                placeholder="展示方式*"
                 @change="fieldForm['showay'] = showWayCode"
               >
-                <vs-option
-                  v-for="(item, index) in showWayArray"
-                  :key="index"
+                <el-option
+                  v-for="item in showWayArray"
+                  :key="item"
                   :label="item"
                   :value="item"
                 >
-                  {{ item }}
-                </vs-option>
-              </vs-select>
+                </el-option>
+              </el-select>
 
-              <vs-select
+              <el-select
+                v-model="fieldTypeCode"
+                placeholder="字段类型*"
                 v-if="isRelevance === '1'"
-                primary
-                :success="dialogTheme"
-                label="字段类型*"
-                placeholder="Field Type"
-                v-model="fieldTypeCode"
-                @change="fieldForm['type'] = fieldTypeCode"
               >
-                <vs-option
-                  v-for="(item, index) in fieldTypeArray"
-                  :key="index"
+                <el-option
+                  v-for="item in fieldTypeArray"
+                  :key="item"
                   :label="item"
                   :value="item"
+                  @change="fieldForm['type'] = fieldTypeCode"
                 >
-                  {{ item }}
-                </vs-option>
-              </vs-select>
+                </el-option>
+              </el-select>
 
-              <vs-select
-                v-else
-                primary
-                :success="dialogTheme"
-                label="关联表*"
-                placeholder="Choose Table"
-                v-model="fieldTypeCode"
-                @change="fieldForm['type'] = fieldTypeCode"
-              >
-                <vs-option
-                  v-for="(item, index) in relevanceTableArray"
-                  :key="index"
+              <el-select v-model="fieldTypeCode" placeholder="关联表*" v-else>
+                <el-option
+                  v-for="item in relevanceTableArray"
+                  :key="item"
                   :label="item.value + '(' + item.value + ')'"
                   :value="item.id"
+                  @change="fieldForm['type'] = fieldTypeCode"
                 >
-                  {{ item.name }}({{ item.value }})
-                </vs-option>
-              </vs-select>
-
-              <vs-input
+                </el-option>
+              </el-select>
+              <el-input
                 v-if="isRelevance === '1'"
-                primary
-                :success="dialogTheme"
-                label="字段大小/值*"
-                placeholder="Field Size/Value"
+                placeholder="字段大小/值*"
                 v-model="fieldForm['size']"
+                prefix-icon="el-icon-edit-outline"
+                size="small"
               >
-              </vs-input>
+              </el-input>
 
-              <vs-select
-                v-if="isRelevance === '2' && is"
-                primary
-                :success="dialogTheme"
-                label="关联字段*"
-                placeholder="Choose Field"
-                v-model="fieldSizeCode"
-                @change="fieldForm['size'] = fieldSizeCode"
-              >
-                <vs-option
-                  v-for="(item, index) in relevanceFieldArray"
-                  :key="index"
-                  :label="item.name + '(' + item.value + ')'"
+              <el-select v-model="fieldSizeCode" placeholder="关联字段*" v-else>
+                <el-option
+                  v-for="item in relevanceFieldArray"
+                  :key="item"
+                  :label="item.value + '(' + item.value + ')'"
                   :value="item.id"
+                  @change="fieldForm['size'] = fieldSizeCode"
                 >
-                  {{ item.name }}({{ item.value }})
-                </vs-option>
-              </vs-select>
+                </el-option>
+              </el-select>
 
-              <vs-input
-                primary
-                :success="dialogTheme"
-                label="数据库*"
-                placeholder="Field"
+              <el-input
+                placeholder="数据库*"
                 v-model="fieldForm['field']"
+                prefix-icon="el-icon-s-flag"
+                size="small"
               >
-              </vs-input>
+              </el-input>
             </div>
             <div class="footer">
               <vs-button
@@ -424,9 +426,7 @@
             </div>
           </div>
         </div>
-      </transition>
-      <!-- 网站、表、字段删除弹窗 -->
-      <transition name="dialog">
+        <!-- 网站、表、字段删除弹窗 -->
         <div class="remove" v-show="removeDialog">
           <div class="card_remove">
             <div class="close" @click="removeDialog = false">
@@ -451,8 +451,8 @@
             </div>
           </div>
         </div>
-      </transition>
-    </div>
+      </div>
+    </el-collapse-transition>
   </div>
 </template>
 
@@ -490,8 +490,9 @@ export default {
   data() {
     return {
       dialogTheme: false /* 弹窗主题（添加、修改） */,
+      buttonType: "primary",
       webCode: "" /* 当前选中网站id */,
-      webArray: new Array(20) /* 网站列表（上限20个） */,
+      webArray: [] /* 网站列表 */,
       webDialog: false /* 网站添加、修改弹窗显示参数 */,
       webTitle: "" /* 网站添加、修改标题（add web、edit web） */,
       webForm: {} /* 网站添加、修改提交表单 */,
@@ -508,7 +509,6 @@ export default {
       fieldDialog: false /* 字段添加、修改弹窗显示参数 */,
       fieldTitle: "" /* 字段添加、修改标题（add field、edit field） */,
       isRelevance: "1" /* 是否关联其他表参数 */,
-      is: true,
       fieldForm: {} /* 字段添加、修改提交表单 */,
       creatWayCode: "" /* 当前选中字段创建方式 */,
       creatWayArray: [
@@ -531,8 +531,8 @@ export default {
         "set",
         "datetime",
       ] /* 全部字段常用类型 */,
-      relevanceTableArray: new Array(100) /* 关联表列表 */,
-      relevanceFieldArray: new Array(100) /* 关联字段列表 */,
+      relevanceTableArray: [] /* 关联表列表 */,
+      relevanceFieldArray: [] /* 关联字段列表 */,
       fieldSizeCode: "" /* 当前选中关联字段 */,
       removeDialog: false /* 删除弹窗显示参数 */,
       removeTitle: "" /* 删除弹窗标题（web、table、filed） */,
@@ -574,29 +574,19 @@ export default {
     /* 提示 */
     show_tips(status, message) {
       if (status === 200) {
-        this.$vs.notification({
-          flat: true,
-          color: "primary",
-          position: "top-center",
-          duration: "1500",
-          title: `${message}`,
+        this.$message({
+          message: res.data.message,
+          type: "success",
         });
       } else if (status === 403) {
-        this.$vs.notification({
-          flat: true,
-          color: "danger",
-          position: "top-center",
-          duration: "2000",
-          buttonClose: false,
-          title: `${message}`,
+        this.$message({
+          message: res.data.message,
+          type: "error",
         });
       } else if (status === 500) {
-        this.$vs.notification({
-          flat: true,
-          color: "warn",
-          position: "top-center",
-          duration: "1500",
-          title: `${message}`,
+        this.$message({
+          message: res.data.message,
+          type: "warning",
         });
       }
       setTimeout(() => {
@@ -619,7 +609,7 @@ export default {
     web(type) {
       type === "edit" ? this.get_web_info() : null;
       this.webTitle = type === "add" ? "Add Web" : "Edit Web";
-      this.dialogTheme = type === "add" ? false : true;
+      this.buttonType = type === "add" ? "primary" : "success";
       this.webForm = type === "add" ? {} : this.webForm;
       this.webDialog = true;
       this.webUploadSrc = type === "add" ? "" : this.webUploadSrc;
@@ -646,7 +636,6 @@ export default {
           this.webForm["logo"] = res.data.path;
           this.webUploadSrc = process.env.VUE_APP_BASE_API + res.data.path;
         }
-        this.show_tips(res.data.status, res.data.message);
       });
     },
     /* 添加、修改网站 */
@@ -691,7 +680,7 @@ export default {
     table(type, id) {
       type === "edit" ? this.get_table_info(id) : null;
       this.tableTitle = type === "add" ? "Add Table" : "Edit Table";
-      this.dialogTheme = type === "add" ? false : true;
+      this.buttonType = type === "add" ? "primary" : "success";
       this.tableForm = type === "add" ? {} : this.tableForm;
       this.tableDialog = true;
     },
@@ -752,11 +741,7 @@ export default {
     get_select_field(id) {
       getSelectField(id).then((res) => {
         if (res.data.status === 200) {
-          this.is = false;
           this.relevanceFieldArray = res.data.obj.records;
-          setTimeout(() => {
-            this.is = true;
-          }, 200);
         } else {
           this.show_tips(res.data.status, res.data.message);
         }
@@ -802,7 +787,7 @@ export default {
       this.fieldForm["wid"] = this.webCode;
       this.fieldForm["tid"] = this.tableCode;
       this.fieldForm["relevance"] = this.isRelevance;
-      this.fieldForm['type'] = this.fieldTypeCode
+      this.fieldForm["type"] = this.fieldTypeCode;
       this.fieldForm["size"] =
         this.fieldForm["type"] === ("bigint" || "datetime")
           ? 0
