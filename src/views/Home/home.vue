@@ -8,9 +8,9 @@
       <p>
         {{ item.describe }}
       </p>
-      <vs-button border block> {{ item.website }} </vs-button>
       <span>{{ item.database }}</span>
       <label>{{ new Date(item.creatime).toLocaleString() }}</label>
+      <div class="link"> {{ item.website }} </div>
     </div>
   </div>
 </template>

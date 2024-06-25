@@ -14,33 +14,49 @@
       flex-direction: column;
       align-items: self-start;
       gap: 6px;
+      .link{
+        width: 240px;
+        background-color: #ECF5FF;
+        color: #195BFF;
+        padding: 4px 0;
+        text-align: center;
+        border-radius: 20px;
+        border: 1px solid #195BFF;
+        font-size: 12px;
+        font-family: 'eFontL';
+        &:hover{
+          background-color: #195BFF;
+          color: #FFFFFF;
+          cursor: pointer;
+        }
+      }
       .header {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 30px;
+        gap: 20px;
         img {
           width: 20px;
           height: 20px;
           padding: 10px;
-          background-color: var(--theme-background-color);
+          background-color: #F4F7F8;
           border-radius: 10px;
         }
         p {
           font-family: "cFont";
-          font-size: 16px;
-          color: var(--theme-font-color);
+          font-size: 18px;
+          color: #2C3E50;
         }
       }
       p {
         font-size: 12px;
         font-family: "eFontL";
-        color: var(--theme-font-color);
+        color: #2C3E50;
       }
       span {
-        font-size: 14px;
+        font-size: 16px;
         font-family: "eFontM";
-        color: var(--theme-font-color);
+        color: #2C3E50;
       }
       label {
         font-size: 12px;
