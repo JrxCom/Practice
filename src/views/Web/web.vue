@@ -3,15 +3,22 @@
     <!-- 栏目展示 -->
     <div class="header_view">
       <div class="navList">
-        <div
-          class="nav"
-          :class="{ nav_: navCode === item.id }"
-          v-for="(item, index) in navList"
-          :key="index"
-          @click="navCode = item.id"
+        <el-menu
+          :default-active="navCode"
+          class="el-menu-demo"
+          mode="horizontal"
+          background-color="#F4F7F8"
+          text-color="#2C3E50"
+          active-text-color="#195BFF"
         >
-          {{ item.name }}
-        </div>
+          <el-menu-item
+            v-for="(item, index) in navList"
+            :index="item.id"
+            :key="index"
+            @click="navCode = item.id"
+            >{{ item.name }}</el-menu-item
+          >
+        </el-menu>
       </div>
     </div>
     <!-- 数据展示 -->
@@ -476,7 +483,7 @@ export default {
               } else if (item.creatway === "下拉" && item.relevance === "2") {
                 getSelectData(this.$route.query.id, item.type, item.size).then(
                   (res) => {
-                    this.$set(item,'size',res.data.obj.records.join())
+                    this.$set(item, "size", res.data.obj.records.join());
                   }
                 );
               }
@@ -493,7 +500,7 @@ export default {
         if (item.creatway === "下拉" && item.relevance === "2") {
           getSelectData(this.$route.query.id, item.type, item.size).then(
             (res) => {
-              this.$set(item,'size',res.data.obj.records.join())
+              this.$set(item, "size", res.data.obj.records.join());
             }
           );
         }

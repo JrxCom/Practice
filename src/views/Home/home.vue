@@ -28,20 +28,6 @@ export default {
       apiUrl: process.env.VUE_APP_BASE_API /* api路径 */,
     };
   },
-  beforeCreate() {
-    /* 关闭提示方法 */
-    this.$bus.$on("close-tips", () => {
-      this.close_tips();
-    });
-    /* 打开提示方法 */
-    this.$bus.$on("open-tips", () => {
-      if(this.webArray.length === 0){
-        this.open_tips();
-      }else{
-        return
-      }
-    });
-  },
   created() {
     this.get_web_list()
   },
@@ -96,8 +82,6 @@ export default {
   },
   destroyed() {
     this.close_tips();
-    this.$bus.$off("open-tips");
-    this.$bus.$off("close-tips");
   },
 };
 </script>

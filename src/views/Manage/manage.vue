@@ -701,7 +701,7 @@ export default {
     },
     /* 监听选中类型 */
     fieldTypeCode(newvalue) {
-      this.get_select_field(newvalue);
+      // this.get_select_field(newvalue);
     },
   },
   created() {
@@ -712,17 +712,17 @@ export default {
     show_tips(status, message) {
       if (status === 200) {
         this.$message({
-          message: res.data.message,
+          message,
           type: "success",
         });
       } else if (status === 403) {
         this.$message({
-          message: res.data.message,
+          message,
           type: "error",
         });
       } else if (status === 500) {
         this.$message({
-          message: res.data.message,
+          message,
           type: "warning",
         });
       }
