@@ -51,9 +51,8 @@ exports.addFieldInfo = (req, res) => {
         field: req.body['field'],
         creatime: new Date()
     }
-    console.log(data);
     const is_relevance = new Promise((resolve, reject) => {
-        if (req.body['relevance'] === 1) {
+        if (req.body['relevance'] === '1') {
             let size = ''
             if (req.body['type'] === ('enum' || 'set')) {
                 size = "'" + req.body['size'].split(',').join("','") + "'"
@@ -65,6 +64,7 @@ exports.addFieldInfo = (req, res) => {
             resolve({ type: req.body['type'], size })
         } else {
             db.query(`SELECT * FROM learner.field WHERE id = ${req.body['size']}`, (err, results) => {
+                console.log(results);
                 resolve({ type: results[0].type, size: results[0].size })
             })
         }
@@ -103,11 +103,10 @@ exports.addFieldInfo = (req, res) => {
     });
 
     Promise.all([is_relevance, inspect_name, inspect_field, get_database, get_table]).then((promiseRes) => {
+        console.log(promiseRes);
         db.query(`INSERT INTO learner.field SET ?`, data, (err, results) => {
-            console.log(err);
             if (results) {
                 db.query(`ALTER TABLE ${promiseRes[3]}.${promiseRes[4]} ADD COLUMN \`${req.body['field']}\` ${promiseRes[0].type}(${+promiseRes[0].size}) COMMENT '${req.body['name']}' AFTER \`creatime\``, (err, results) => {
-                    console.log(err);
                     if (results) {
                         db.query(`ALTER TABLE ${promiseRes[3]}.${promiseRes[4]} MODIFY COLUMN creatime datetime(0) DEFAULT NULL COMMENT '创建时间' AFTER ${req.body['field']}`, () => {
                             res.send({ status: 200, message: "添加字段信息成功。" })
