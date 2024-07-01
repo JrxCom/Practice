@@ -24,18 +24,28 @@
     <!-- 数据展示 -->
     <div class="main_view">
       <div class="tools">
-        <vs-button icon color="primary" relief @click="data('add')">
-          <img src="@/assets/web/add.png" /> Add Data
-        </vs-button>
-        <vs-button icon color="success" relief @click="data('edit')">
-          <img src="@/assets/web/edit.png" alt="" /> Edit Data
-        </vs-button>
-        <vs-button icon color="danger" relief @click="removeDialog = true">
-          <img src="@/assets/web/remove.png" alt="" />
-          Remove Data
-        </vs-button>
+        <el-button
+          type="primary"
+          icon="el-icon-circle-plus"
+          @click="data('add')"
+          size="small"
+          >Add Data</el-button
+        >
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          @click="data('edit')"
+          size="small"
+          >Edit Data</el-button
+        >
+        <el-button
+          type="danger"
+          icon="el-icon-remove"
+          @click="removeDialog = true"
+          size="small"
+          >Remove Data</el-button
+        >
       </div>
-
       <div class="table">
         <div>
           <vs-input
@@ -49,59 +59,51 @@
             </template>
           </vs-input>
         </div>
-        <vs-table v-model="selected">
-          <template #thead>
-            <vs-tr>
-              <vs-th>
-                <vs-checkbox
-                  :indeterminate="selected.length == dataList.length"
-                  v-model="allCheck"
-                  @change="selected = $vs.checkAll(selected, dataList)"
-                />
-              </vs-th>
-              <vs-th> ID </vs-th>
-              <vs-th v-for="(item, index) in headerList" :key="index">
-                {{ item.name }}
-              </vs-th>
-              <vs-th> 创建时间 </vs-th>
-            </vs-tr>
-          </template>
-          <template #tbody>
-            <vs-tr
-              :key="i"
-              v-for="(tr, i) in dataList"
-              :data="tr"
-              :is-selected="!!selected.includes(tr)"
-            >
-              <vs-td checkbox>
-                <vs-checkbox :val="tr" v-model="selected" />
-              </vs-td>
-              <vs-td>{{ tr["id"] }}</vs-td>
-              <vs-td v-for="(item, index) in headerList" :key="index">
-                <p>{{ tr[`${item.field}`] }}</p>
-              </vs-td>
-              <vs-td>{{ new Date(tr["creatime"]).toLocaleString() }}</vs-td>
-            </vs-tr>
-          </template>
-          <template #footer>
-            <vs-pagination
-              v-model="page"
-              :length="Math.ceil(dataCount / max)"
-            />
-          </template>
-        </vs-table>
+        <el-table
+          ref="multipleTable"
+          :data="dataList"
+          tooltip-effect="dark"
+          style="width: 100%"
+        >
+          <el-table-column type="selection" width="55"> </el-table-column>
+          <el-table-column prop="id" label="id" show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in headerList"
+            :key="index"
+            :prop="item.field"
+            :label="item.name"
+            show-overflow-tooltip
+          >
+          </el-table-column>
+          <el-table-column
+            prop="creatime"
+            label="creatime"
+            show-overflow-tooltip
+          >
+            <template slot-scope="scope">{{
+              new Date(scope.row.creatime).toLocaleString()
+            }}</template>
+          </el-table-column>
+        </el-table>
       </div>
     </div>
     <!-- 数据添加、修改、删除弹窗 -->
     <div class="dialog_view">
-      <transition name="dialog">
+      <el-collapse-transition>
         <div class="add_edit" v-if="dataDialog">
           <div class="card">
-            <div class="close" @click="dataDialog = false">
-              <vs-button icon border :success="dialogType">
-                <img v-if="dialogType" src="@/assets/common/editClose.png" />
-                <img v-else src="@/assets/common/addClose.png" />
-              </vs-button>
+            <div
+              class="close"
+              :style="{
+                'border-color':
+                  buttonType === 'primary' ? '#195BFF' : '#46C93A',
+              }"
+              @click="dataDialog = false"
+            >
+              <el-link :type="buttonType" :underline="false"
+                ><i class="el-icon-close"></i
+              ></el-link>
             </div>
             <div class="header">
               {{ dataTitle }}
@@ -112,181 +114,78 @@
                 v-for="(item, index) in headerList"
                 :key="index"
               >
-                <div class="formItem" v-if="item.creatway === '文本'">
-                  <vs-input
-                    primary
-                    :success="dialogType"
-                    :label="item.name"
+                <div class="formItem">
+                  <label>{{ item.name }}：</label>
+                  <el-input
+                    v-if="item.creatway === '文本'"
                     v-model="dataForm[`${item.field}`]"
+                    size="small"
                   >
-                  </vs-input>
-                </div>
-                <div class="formItem" v-else-if="item.creatway === '单选'">
-                  <p class="label">{{ item.name }}</p>
-                  <div class="value">
-                    <vs-radio
-                      :success="dialogType"
+                  </el-input>
+                  <div class="radioView" v-else-if="item.creatway === '单选'">
+                    <el-radio
                       v-for="item_ in item.size.split(',')"
-                      :key="item_.id"
-                      :val="item_"
-                      v-model="dataForm[`${item.field}`]"
-                    >
-                      {{ item_ }}
-                    </vs-radio>
-                  </div>
-                </div>
-                <div class="formItem" v-else-if="item.creatway === '多选'">
-                  <p class="label">{{ item.name }}</p>
-                  <div class="value">
-                    <vs-checkbox
-                      :success="dialogType"
-                      v-for="item_ in item.size.split(',')"
+                      v-model="dataForm[item.field]"
                       :key="item_"
                       :val="item_"
-                      v-model="dataForm[`${item.field}`]"
+                      :label="item_"
+                      >{{ item_ }}</el-radio
                     >
-                      {{ item_ }}
-                    </vs-checkbox>
                   </div>
-                </div>
-                <div class="formItem" v-else-if="item.creatway === '下拉'">
-                  <vs-select
-                    :label="item.name"
+                  <el-select
                     v-model="dataForm[`${item.field}`]"
+                    v-else-if="item.creatway === '下拉'"
+                    size="small"
                   >
-                    <vs-option
+                    <el-option
                       v-for="item_ in item.size.split(',')"
                       :key="item_"
                       :label="item_"
                       :value="item_"
                     >
-                      {{ item_ }}
-                    </vs-option>
-                  </vs-select>
-                </div>
-                <div class="formItem" v-else-if="item.creatway === '图片'">
-                  <p class="label">{{ item.name }}</p>
-
-                  <vs-button
-                    block
-                    :success="dialogType"
-                    @click="$refs.imageRef.click()"
-                    v-if="!dataForm[`${item.field}`]"
-                  >
-                    <img src="@/assets/common/image.png" /> image
-                  </vs-button>
-
-                  <vs-tooltip border top v-else>
-                    <vs-button
-                      block
-                      :success="dialogType"
-                      @click="$refs.imageRef.click()"
-                    >
-                      <img src="@/assets/common/check.png" />
-                    </vs-button>
-                    <template #tooltip>
-                      <img
-                        :src="apiUrl + dataForm[`${item.field}`]"
-                        width="80"
-                        height="80"
-                      />
-                    </template>
-                  </vs-tooltip>
-
-                  <input
-                    v-show="false"
-                    ref="imageRef"
-                    type="file"
-                    accept="image/*"
-                    @change="upload($event, item.field)"
-                  />
-                </div>
-                <div class="formItem" v-else-if="item.creatway === '音频'">
-                  <p class="label">{{ item.name }}</p>
-
-                  <vs-button
-                    block
-                    :success="dialogType"
-                    v-if="!dataForm[`${item.field}`]"
-                  >
-                    <img src="@/assets/common/audio.png" /> audio
-                  </vs-button>
-
-                  <vs-tooltip border top v-else>
-                    <vs-button
-                      block
-                      :success="dialogType"
-                      @click="$refs.audioRef.click()"
-                    >
-                      <img src="@/assets/common/check.png" />
-                    </vs-button>
-                    <template #tooltip>
-                      <audio :src="apiUrl + dataForm[`${item.field}`]"></audio>
-                    </template>
-                  </vs-tooltip>
-
-                  <input
-                    v-show="false"
-                    ref="audioRef"
-                    type="file"
-                    accept="audio/*"
-                    @change="upload($event, item.field)"
-                  />
-                </div>
-                <div class="formItem" v-else-if="item.creatway === '视频'">
-                  <p class="label">{{ item.name }}</p>
-
-                  <vs-button
-                    block
-                    :success="dialogType"
-                    v-if="!dataForm[`${item.field}`]"
-                  >
-                    <img src="@/assets/common/video.png" /> video
-                  </vs-button>
-
-                  <vs-tooltip border top v-else>
-                    <vs-button
-                      block
-                      :success="dialogType"
-                      @click="$refs.videoRef.click()"
-                    >
-                      <img src="@/assets/common/check.png" />
-                    </vs-button>
-                    <template #tooltip>
-                      <img
-                        :src="apiUrl + dataForm[`${item.field}`]"
-                        width="80"
-                        height="80"
-                      />
-                    </template>
-                  </vs-tooltip>
-
-                  <input
-                    v-show="false"
-                    ref="videoRef"
-                    type="file"
-                    accept="video/*"
-                    @change="upload($event, item.field)"
-                  />
+                    </el-option>
+                  </el-select>
+                  <div class="radioView" v-else-if="item.creatway === '多选'">
+                    <el-checkbox-group v-model="dataForm[`${item.field}`]">
+                      <el-checkbox
+                        v-for="item_ in item.size.split(',')"
+                        :key="item_"
+                        :label="item_"
+                      ></el-checkbox>
+                    </el-checkbox-group>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="footer">
-              <vs-button
-                icon
-                :success="dialogType"
+              <div
+                class="button"
                 @click="controls_data_info()"
+                :style="{
+                  'background-color':
+                    buttonType === 'primary' ? '#195BFF' : '#46C93A',
+                }"
               >
-                <img src="@/assets/common/confirm.png" />
-              </vs-button>
-              <vs-button icon color="#808b96" @click="dataDialog = false">
-                <img src="@/assets/common/cancel.png" />
-              </vs-button>
+                <img
+                  width="14"
+                  height="14"
+                  src="@/assets/common/confirm.png"
+                  alt=""
+                />
+              </div>
+              <div class="cancel_button" @click="dataDialog = false">
+                <img
+                  width="14"
+                  height="14"
+                  src="@/assets/common/cancel.png"
+                  alt=""
+                />
+              </div>
             </div>
           </div>
         </div>
-      </transition>
-      <transition name="dialog">
+      </el-collapse-transition>
+      <el-collapse-transition>
         <div class="remove" v-show="removeDialog">
           <div class="card_remove">
             <div class="close" @click="removeDialog = false">
@@ -309,7 +208,7 @@
             </div>
           </div>
         </div>
-      </transition>
+      </el-collapse-transition>
     </div>
   </div>
 </template>
@@ -336,7 +235,7 @@ export default {
       navCode: "" /* 当前栏目（表） */,
       navList: [] /* 栏目列表 */,
       headerList: [] /* 表头列表 */,
-      dataList: new Array(1) /* 数据列表表 */,
+      dataList: [] /* 数据列表表 */,
       search_id: "" /* 搜索输入id */,
       dataCount: 0 /* 数据总数 */,
       page: 1 /* 数据展示当前页 */,
@@ -345,7 +244,7 @@ export default {
       selected: [] /* 选择的数据 */,
       dataDialog: false /* 数据添加、修改弹窗显示参数 */,
       dataTitle: "" /* 弹窗标题 */,
-      dialogType: false /* 弹窗主题 */,
+      buttonType: "" /* 弹窗主题 */,
       dataForm: {} /* 数据表单 */,
       removeDialog: false /* 删除弹窗显示参数 */,
       apiUrl: process.env.VUE_APP_BASE_API /* api地址与端口号 */,
@@ -432,8 +331,13 @@ export default {
           this.headerList.forEach((item) => {
             if (item.creatway === "多选") {
               this.dataForm[item.field] = [];
+              this.$set(item, "size", []);
             } else if (item.creatway === "单选") {
               this.dataForm[item.field] = "";
+              this.dataForm[item.size] = "";
+            } else if (item.creatway === "下拉") {
+              this.dataForm[item.field] = "";
+              this.dataForm[item.size] = [];
             }
           });
           this.get_data_list(this.$route.query.id, this.navCode);
@@ -466,7 +370,7 @@ export default {
       type === "edit" ? this.get_data_info() : null;
       type === "add" ? this.get_select_data() : null;
       this.dataTitle = type === "add" ? "Add Data" : "Edit Data";
-      this.dialogTheme = type === "add" ? false : true;
+      this.buttonType = type === "add" ? "primary" : "success";
       this.dataForm = type === "add" ? {} : this.selected[0];
       this.dataDialog = true;
     },
@@ -500,7 +404,7 @@ export default {
         if (item.creatway === "下拉" && item.relevance === "2") {
           getSelectData(this.$route.query.id, item.type, item.size).then(
             (res) => {
-              this.$set(item, "size", res.data.obj.records.join());
+              this.$set(item, "size", res.data.obj.records);
             }
           );
         }

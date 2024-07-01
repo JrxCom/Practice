@@ -464,13 +464,14 @@
                   v-model="fieldTypeCode"
                   placeholder="Table Relevance"
                   size="small"
+                  @change="fieldForm['type'] = fieldTypeCode"
                 >
                   <el-option
                     v-for="item in relevanceTableArray"
                     :key="item"
                     :label="item.value + '(' + item.value + ')'"
                     :value="item.id"
-                    @change="fieldForm['type'] = fieldTypeCode"
+                   
                   >
                   </el-option>
                 </el-select>
@@ -497,13 +498,14 @@
                   v-model="fieldSizeCode"
                   placeholder="Field Relevance"
                   size="small"
+                  @change="fieldForm['size'] = fieldSizeCode"
                 >
                   <el-option
                     v-for="item in relevanceFieldArray"
                     :key="item"
                     :label="item.value + '(' + item.value + ')'"
                     :value="item.id"
-                    @change="fieldForm['size'] = fieldSizeCode"
+                    
                   >
                   </el-option>
                 </el-select>
@@ -695,13 +697,31 @@ export default {
     isRelevance(newvalue) {
       if (newvalue == "2") {
         this.fieldForm["creatway"] = this.creatWayCode = "下拉";
+        this.creatWayArray = ["下拉"];
+        this.get_select_table();
+      } else {
+        this.fieldForm["creatway"] = this.creatWayCode = "";
+        this.creatWayArray = [
+          "文本",
+          "图片",
+          "音频",
+          "视频",
+          "下拉",
+          "单选",
+          "多选",
+        ];
       }
-      newvalue === "2" ? this.get_select_table() : null;
-      this.relevanceFieldArray = [];
+      this.fieldForm["showay"] = this.showWayCode = "";
+      this.fieldForm["type"] = this.fieldTypeCode = "";
+      this.fieldForm["size"] = this.fieldSizeCode = "";
     },
     /* 监听选中类型 */
     fieldTypeCode(newvalue) {
-      // this.get_select_field(newvalue);
+      if (typeof newvalue === "number") {
+        this.get_select_field(newvalue);
+      } else {
+        return;
+      }
     },
   },
   created() {
@@ -783,9 +803,8 @@ export default {
             this.show_tips(res.data.status, res.data.message);
             this.webDialog = false;
             this.get_web_list();
-            setTimeout(() => {
-              location.reload();
-            }, 500);
+            console.log(this.webCode);
+            this.$bus.$emit("update-menu");
           } else {
             this.show_tips(res.data.status, res.data.message);
           }
@@ -971,6 +990,7 @@ export default {
           if (res.data.status === 200) {
             this.get_table_list();
             this.removeDialog = false;
+            this.$bus.$emit("update-menu");
           }
           this.show_tips(res.data.status, res.data.message);
         });
@@ -991,9 +1011,6 @@ export default {
           if (res.data.status === 200) {
             this.get_web_list();
             this.removeDialog = false;
-            setTimeout(() => {
-              location.reload();
-            }, 500);
           }
           this.show_tips(res.data.status, res.data.message);
         });
