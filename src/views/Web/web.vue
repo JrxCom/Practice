@@ -66,7 +66,7 @@
           style="width: 100%"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="id" label="id" show-overflow-tooltip>
+          <el-table-column prop="id" label="用户ID" show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             v-for="(item, index) in headerList"
@@ -78,7 +78,7 @@
           </el-table-column>
           <el-table-column
             prop="creatime"
-            label="creatime"
+            label="创建时间"
             show-overflow-tooltip
           >
             <template slot-scope="scope">{{
@@ -117,41 +117,46 @@
                 <div class="formItem">
                   <label>{{ item.name }}：</label>
                   <el-input
-                    v-if="item.creatway === '文本'"
                     v-model="dataForm[`${item.field}`]"
                     size="small"
                   >
                   </el-input>
-                  <div class="radioView" v-else-if="item.creatway === '单选'">
-                    <el-radio
+                  <div class="radioView">
+                    <el-radio label='男'>男</el-radio>
+                    <el-radio label='女'>女</el-radio>
+                   <!--  <el-radio
                       v-for="item_ in item.size.split(',')"
                       v-model="dataForm[item.field]"
                       :key="item_"
                       :val="item_"
                       :label="item_"
                       >{{ item_ }}</el-radio
-                    >
+                    > -->
                   </div>
                   <el-select
                     v-model="dataForm[`${item.field}`]"
-                    v-else-if="item.creatway === '下拉'"
                     size="small"
                   >
-                    <el-option
+                  <el-option label='启用'></el-option>
+                  <el-option label='禁用'></el-option>
+                    <!-- <el-option
                       v-for="item_ in item.size.split(',')"
                       :key="item_"
                       :label="item_"
                       :value="item_"
                     >
-                    </el-option>
+                    </el-option> -->
                   </el-select>
-                  <div class="radioView" v-else-if="item.creatway === '多选'">
+                  <div class="radioView">
                     <el-checkbox-group v-model="dataForm[`${item.field}`]">
-                      <el-checkbox
+                      <el-checkbox label="A"></el-checkbox>
+                      <el-checkbox label="B"></el-checkbox>
+                      <el-checkbox label="C"></el-checkbox>
+                      <!-- <el-checkbox
                         v-for="item_ in item.size.split(',')"
                         :key="item_"
                         :label="item_"
-                      ></el-checkbox>
+                      ></el-checkbox> -->
                     </el-checkbox-group>
                   </div>
                 </div>

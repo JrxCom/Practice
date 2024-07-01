@@ -201,7 +201,6 @@
                   size="small"
                   @click="$refs.fileRef.click()"
                   v-if="!webUploadSrc"
-                  v-show="webCode"
                   style="width: 100%"
                 ></el-button>
                 <el-popover placement="top" trigger="hover" border v-else>
@@ -776,7 +775,7 @@ export default {
       getWebInfo(this.webCode).then((res) => {
         if (res.data.status === 200) {
           const { name, describe, database, website, logo } = res.data.obj;
-          this.webUploadSrc = process.env.VUE_APP_BASE_API + res.data.obj.logo;
+          this.webUploadSrc =  res.data.obj.logo;
           this.webForm = { name, describe, database, website, logo };
         } else {
           this.show_tips(res.data.status, res.data.message);
@@ -791,7 +790,7 @@ export default {
       upload(formData, 1, 1).then((res) => {
         if (res.data.status === 200) {
           this.webForm["logo"] = res.data.path;
-          this.webUploadSrc = process.env.VUE_APP_BASE_API + res.data.path;
+          this.webUploadSrc =  res.data.path;
         }
       });
     },
