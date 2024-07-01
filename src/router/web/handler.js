@@ -122,8 +122,12 @@ exports.editWebInfo = (req, res) => {
                         });
                     }
                     db.query(`DROP DATABASE ${promiseRes[2]};`, (err, results) => {
+                        console.log(promiseRes[2]);
+                        console.log(err);
                         if (results) {
                             fs.rename(`./../upload/${promiseRes[2]}`, `./../upload/${req.body['database']}`, () => {
+                                console.log(req.body['database']);
+                                console.log(promiseRes);
                                 res.send({ status: 200, message: "修改网站信息成功。" })
                             })
                         }
