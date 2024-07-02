@@ -2,7 +2,7 @@
   <div class="home">
     <div class="card" v-for="(item, index) in webArray" :key="index">
       <div class="header">
-        <img :src="apiUrl + item.logo" alt="" />
+        <img :src="fileUrl + item.logo" alt="" />
         <p>{{ item.name }}</p>
       </div>
       <p>
@@ -25,7 +25,7 @@ export default {
     return {
       webArray: [] /* 网站列表 */,
       tips: undefined /* 提示实体 */,
-      apiUrl: process.env.VUE_APP_BASE_API /* api路径 */,
+      fileUrl: process.env.VUE_APP_FILE_URL /* api路径 */,
     };
   },
   created() {

@@ -9,7 +9,7 @@
         <i class="el-icon-s-home"></i>
         <span slot="title">Home</span>
       </el-menu-item>
-      <el-submenu index="2">
+      <el-submenu index="web">
         <template slot="title">
           <i class="el-icon-monitor"></i>
           <span>Web</span>
@@ -20,7 +20,7 @@
           :index="item.id.toString()"
           @click="go_menu('/web', item.id)"
         >
-          <img width="20" height="20" src="@/assets/common/logo.png" alt="" />
+          <img width="20" height="20" :src="fileUrl + item.logo" alt="" />
           {{ item.name }}
         </el-menu-item>
       </el-submenu>
@@ -128,7 +128,7 @@ export default {
       logoutTipsMessage: "" /* 退出提示文字 */,
       menuArray: new Array(20) /* 菜单列表 */,
       screenCode: false /* 全屏参数 */,
-      apiUrl: process.env.VUE_APP_BASE_API /* api路径 */,
+      fileUrl: process.env.VUE_APP_FILE_URL /* api路径 */,
     };
   },
   watch: {
@@ -147,7 +147,6 @@ export default {
     /* 页面存在id视为web下网站数据页面，则为home或者manage页面 */
     if (this.$route.query.id) {
       this.active = this.$route.query.id;
-      console.log(this.active);
     } else {
       this.active = this.$route.name;
     }

@@ -2,8 +2,7 @@
 import axios from 'axios'        
 
 /* 2.全局默认配置 */
-// const baseURL = process.env.VUE_APP_BASE_API
-const baseURL = '/api'
+const baseURL = process.env.VUE_APP_API
 
 // 配置axios的属性
 const request = axios.create({

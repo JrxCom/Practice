@@ -802,7 +802,6 @@ export default {
             this.show_tips(res.data.status, res.data.message);
             this.webDialog = false;
             this.get_web_list();
-            console.log(this.webCode);
             this.$bus.$emit("update-menu");
           } else {
             this.show_tips(res.data.status, res.data.message);
