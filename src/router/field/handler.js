@@ -55,7 +55,6 @@ exports.addFieldInfo = (req, res) => {
     const is_relevance = new Promise((resolve, reject) => {
         console.log(req.body['relevance']);
         if (req.body['relevance'] === '1') {
-            console.log(22222);
             let size = ''
             if (req.body['type'] === 'enum' || req.body['type'] === 'set') {
                 size = "'" + req.body['size'].split(',').join("','") + "'"
